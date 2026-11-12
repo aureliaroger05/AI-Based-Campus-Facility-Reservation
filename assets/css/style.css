@@ -51,6 +51,10 @@ body::before {
     height: clamp(3rem, 8vw, 5rem);
 }
 
+.welcome-page .aclc-logo {
+    position: absolute !important;
+}
+
 .navbar.bg-primary {
     background: linear-gradient(110deg, #123b66, #1769aa) !important;
     box-shadow: 0 5px 18px rgba(18, 59, 102, 0.2);
