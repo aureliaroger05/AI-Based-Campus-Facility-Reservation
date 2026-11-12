@@ -13,6 +13,9 @@ if (!isAdmin()) {
     exit;
 }
 
+$dashboardNotification = $_SESSION['dashboard_notification'] ?? null;
+unset($_SESSION['dashboard_notification']);
+
 require '../header.php';
 
 $pdo = getDB();
@@ -194,8 +197,29 @@ $facilities = $pdo->query("SELECT * FROM facilities ORDER BY id DESC")->fetchAll
     </div>
     </div>
 
-
-
-
+<?php if (is_string($dashboardNotification) && $dashboardNotification !== ''): ?>
+    <div class="modal fade" id="dashboardSuccessModal" tabindex="-1" aria-labelledby="dashboardSuccessTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title fs-5" id="dashboardSuccessTitle">Success</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body"><?php echo htmlspecialchars($dashboardNotification, ENT_QUOTES, 'UTF-8'); ?></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const successModal = document.getElementById('dashboardSuccessModal');
+            if (successModal && window.bootstrap) {
+                bootstrap.Modal.getOrCreateInstance(successModal).show();
+            }
+        });
+    </script>
+<?php endif; ?>
 
 <?php require '../footer.php'; ?>
