@@ -1,13 +1,12 @@
 <?php $page_title = 'Manage Reservations - Admin';
 $body_class = 'admin-reservations-page';
-require '../header.php';
-
-if (session_status() === PHP_SESSION_NONE) session_start();
 require '../auth.php';
 if (!isAdmin()) {
     header('Location: ../login.php');
     exit;
 }
+
+require '../header.php';
 
 $pdo = getDB();
 ?>

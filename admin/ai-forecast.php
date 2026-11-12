@@ -1,9 +1,6 @@
 <?php
 $page_title = 'AI Usage Forecast - Admin';
 $body_class = 'admin-forecast-page';
-require '../header.php';
-
-if (session_status() === PHP_SESSION_NONE) session_start();
 require '../auth.php';
 if (!isLoggedIn()) {
     header('Location: ../login.php');
@@ -15,6 +12,7 @@ if (!isAdmin()) {
     exit;
 }
 
+require '../header.php';
 
 $pdo = getDB();
 require '../ai_forecast.php';

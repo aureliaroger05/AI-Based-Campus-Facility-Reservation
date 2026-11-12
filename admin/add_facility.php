@@ -1,12 +1,14 @@
-<?php $page_title = 'Add Facility'; $body_class = 'admin-form-page'; require '../header.php'; ?>
-
 <?php
-    if (session_status() === PHP_SESSION_NONE) session_start();
-    require '../auth.php';
-    if (!isAdmin()) {
-        header('Location: ../login.php');
-        exit;
-    }
+$page_title = 'Add Facility';
+$body_class = 'admin-form-page';
+require '../auth.php';
+
+if (!isAdmin()) {
+    header('Location: ../login.php');
+    exit;
+}
+
+require '../header.php';
 ?>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">

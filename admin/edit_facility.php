@@ -1,9 +1,6 @@
-<?php $page_title = 'Edit Facility'; $body_class = 'admin-form-page'; require '../header.php'; ?>
-
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+$page_title = 'Edit Facility';
+$body_class = 'admin-form-page';
 require '../auth.php';
 require '../facilities.php';
 
@@ -11,6 +8,8 @@ if (!isAdmin()) {
     header('Location: ../login.php');
     exit;
 }
+
+require '../header.php';
 
 $pdo = getDB();
 $facilityId = (int)($_GET['id'] ?? $_POST['id'] ?? 0);
