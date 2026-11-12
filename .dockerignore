@@ -1,0 +1,10 @@
+.git
+.vscode
+vendor
+uploads
+.env
+.env.*
+db_init.sql
+migrations
+README.md
+TODO*.md

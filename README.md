@@ -21,6 +21,14 @@
 7. Admin: Add facilities/users, dashboard at /admin/
 8. Reserve: Select facility/date/time, view QR/profile
 
+## Deploying on Render
+- Render runs this app as a Docker web service. Push the project to GitHub with the `Dockerfile` and `.dockerignore` included, then create a new Render Web Service from that repository and select the Docker runtime.
+- Create a MySQL database with an external provider that permits connections from Render. Render does not provide a managed MySQL database. Import `db_init.sql` into that database, then apply the required migrations.
+- In the Render service's Environment settings, set `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, and `DB_PASS` to the values from the MySQL provider. The container listens on Render's `PORT` environment variable.
+- The app writes profile photos and QR codes to `uploads/`. Render's container filesystem is temporary, so configure persistent storage mounted at `/var/www/html/uploads` if these files must survive redeployments.
+- The AI chat expects Ollama on the same machine and will not work on Render without a separately hosted Ollama service and a configurable endpoint.
+- Change the seeded admin password immediately after importing the database.
+
 ## AI system assistant
 - The AI chat widget is available across pages and can explain system features and workflows. It does not access private user records or perform reservation/admin actions.
 - Install [Ollama for Windows](https://ollama.com/download), then open PowerShell or Command Prompt and run `ollama pull qwen2.5:3b` to download the default model.
