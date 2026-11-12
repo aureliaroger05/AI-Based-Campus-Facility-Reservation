@@ -9,8 +9,6 @@ if (!isAdmin()) {
     exit;
 }
 
-require '../header.php';
-
 $pdo = getDB();
 $facilityId = (int)($_GET['id'] ?? $_POST['id'] ?? 0);
 $facility = $facilityId > 0 ? getFacility($facilityId) : null;
@@ -22,7 +20,6 @@ if (!$facility) {
 }
 
 $formError = '';
-$formSuccess = false;
 $facilityName = (string)$facility['name'];
 
 if (isset($_POST['save'])) {
@@ -32,8 +29,14 @@ if (isset($_POST['save'])) {
         $formError = 'Facility name is required.';
     } else {
         try {
-            $formSuccess = updateFacility($facilityId, ['name' => $facilityName]);
-            if (!$formSuccess) {
+            if (updateFacility($facilityId, ['name' => $facilityName])) {
+                $_SESSION['dashboard_notification'] = [
+                    'type' => 'success',
+                    'message' => 'Facility updated successfully.',
+                ];
+                header('Location: index.php');
+                exit;
+            } else {
                 $formError = 'The facility could not be updated.';
             }
         } catch (PDOException $exception) {
@@ -42,6 +45,8 @@ if (isset($_POST['save'])) {
         }
     }
 }
+
+require '../header.php';
 ?>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
@@ -78,9 +83,7 @@ if (isset($_POST['save'])) {
                 <span><i class="bi bi-building me-2"></i>Facility information</span>
             </div>
             <div class="card-body p-4">
-                <?php if ($formSuccess): ?>
-                    <div class="alert alert-success" role="alert">Facility updated.</div>
-                <?php elseif ($formError !== ''): ?>
+                <?php if ($formError !== ''): ?>
                     <div class="alert alert-danger" role="alert"><?php echo htmlspecialchars($formError); ?></div>
                 <?php endif; ?>
 

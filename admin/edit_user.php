@@ -6,7 +6,6 @@ if (!isAdmin()) {
     header('Location: ../login.php');
     exit;
 }
-require '../header.php';
 
 $pdo = getDB();
 
@@ -23,6 +22,7 @@ if (!$user) {
     exit;
 }
 
+$updateError = '';
 if (isset($_POST['save'])) {
     $data = [
         'username' => $_POST['username'],
@@ -44,13 +44,18 @@ if (isset($_POST['save'])) {
     }
 
     if (updateUser((int)$_POST['id'], $data)) {
-        echo '<div class="container mt-4"><div class="alert alert-success">User updated.</div><a href="index.php" class="btn btn-primary">Back to Dashboard</a></div>';
-        require '../footer.php';
+        $_SESSION['dashboard_notification'] = [
+            'type' => 'success',
+            'message' => 'User updated successfully.',
+        ];
+        header('Location: index.php');
         exit;
     }
 
-    echo '<div class="container mt-4"><div class="alert alert-danger">Failed to update user.</div></div>';
+    $updateError = 'Failed to update user. Check the submitted information and try again.';
 }
+
+require '../header.php';
 ?>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
@@ -86,6 +91,9 @@ if (isset($_POST['save'])) {
                 <span><i class="bi bi-person-vcard me-2"></i>User information</span>
             </div>
             <div class="card-body p-4">
+                <?php if ($updateError !== ''): ?>
+                    <div class="alert alert-danger" role="alert"><?php echo htmlspecialchars($updateError, ENT_QUOTES, 'UTF-8'); ?></div>
+                <?php endif; ?>
                 <form method="POST" class="admin-user-form admin-edit-user-form">
                     <input type="hidden" name="id" value="<?php echo (int)$user['id']; ?>">
 
