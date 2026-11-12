@@ -270,8 +270,6 @@
                     <option value="" <?php echo ($g === '' || $g === null) ? 'selected' : ''; ?> disabled>Choose gender</option>
                     <option value="male" <?php echo ($g === 'male') ? 'selected' : ''; ?>>Male</option>
                     <option value="female" <?php echo ($g === 'female') ? 'selected' : ''; ?>>Female</option>
-                    <option value="other" <?php echo ($g === 'other') ? 'selected' : ''; ?>>Other</option>
-                    <option value="prefer_not_to_say" <?php echo ($g === 'prefer_not_to_say') ? 'selected' : ''; ?>>Prefer not to say</option>
                 </select>
             </div>
 

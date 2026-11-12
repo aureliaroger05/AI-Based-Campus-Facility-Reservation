@@ -54,7 +54,7 @@ function buildFullName($parts) {
 }
 
 function isValidGender($gender) {
-    return in_array($gender, ['male', 'female', 'other', 'prefer_not_to_say'], true);
+    return in_array($gender, ['male', 'female'], true);
 }
 
 function addUser($data) {

@@ -128,7 +128,7 @@ if (isset($_POST['save'])) {
                         <select id="edit-gender" class="form-select" name="gender" required>
                             <?php
                                 $g = $user['gender'] ?? '';
-                                $options = ['male'=>'Male','female'=>'Female','other'=>'Other','prefer_not_to_say'=>'Prefer not to say'];
+                                $options = ['male'=>'Male','female'=>'Female'];
                             ?>
                             <option value="" <?php echo ($g === '' || $g === null) ? 'selected' : ''; ?> disabled>Choose gender</option>
                             <?php foreach ($options as $val => $label): ?>
