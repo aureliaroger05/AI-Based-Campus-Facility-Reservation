@@ -125,12 +125,12 @@ if (isset($_POST['save'])) {
 
                     <div class="mb-3">
                         <label class="form-label" for="edit-gender">Gender</label>
-                        <select id="edit-gender" class="form-select" name="gender">
+                        <select id="edit-gender" class="form-select" name="gender" required>
                             <?php
                                 $g = $user['gender'] ?? '';
                                 $options = ['male'=>'Male','female'=>'Female','other'=>'Other','prefer_not_to_say'=>'Prefer not to say'];
                             ?>
-                            <option value="" <?php echo ($g === '' || $g === null) ? 'selected' : ''; ?>>Prefer not to say / N/A</option>
+                            <option value="" <?php echo ($g === '' || $g === null) ? 'selected' : ''; ?> disabled>Choose gender</option>
                             <?php foreach ($options as $val => $label): ?>
                                 <option value="<?php echo $val; ?>" <?php echo ($g === $val) ? 'selected' : ''; ?>><?php echo $label; ?></option>
                             <?php endforeach; ?>

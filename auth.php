@@ -53,8 +53,13 @@ function buildFullName($parts) {
     return $name;
 }
 
+function isValidGender($gender) {
+    return in_array($gender, ['male', 'female', 'other', 'prefer_not_to_say'], true);
+}
+
 function addUser($data) {
     if (!isAdmin()) return false;
+    if (!isValidGender($data['gender'] ?? null)) return false;
     $pdo = getDB();
     $hash = password_hash($data['password'], PASSWORD_DEFAULT);
 
@@ -71,7 +76,7 @@ function addUser($data) {
         $data['last_name'] ?? null,
         $data['suffix'] ?? null,
         !empty($data['birthdate']) ? $data['birthdate'] : null,
-        $data['gender'] ?? null,
+        $data['gender'],
         $data['email'] ?? null,
         $data['phone'] ?? null,
     ]);
@@ -83,6 +88,7 @@ function addUser($data) {
 if (!function_exists('updateUser')) {
 function updateUser($id, $data) {
     if (!isAdmin()) return false;
+    if (!isValidGender($data['gender'] ?? null)) return false;
 
     $pdo = getDB();
 
@@ -95,7 +101,7 @@ function updateUser($id, $data) {
         'last_name' => $data['last_name'] ?? null,
         'suffix' => $data['suffix'] ?? null,
         'birthdate' => !empty($data['birthdate']) ? $data['birthdate'] : null,
-        'gender' => $data['gender'] ?? null,
+        'gender' => $data['gender'],
         'email' => $data['email'],
         'phone' => $data['phone']
     ];

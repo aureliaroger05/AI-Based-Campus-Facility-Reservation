@@ -109,34 +109,38 @@
     }
 
     if (isset($_POST['update'])) {
-        $pdo = getDB();
+        if (!isValidGender($_POST['gender'] ?? null)) {
+            $profileMessage = ['warning', 'Choose a valid gender before updating your profile.'];
+        } else {
+            $pdo = getDB();
 
-        $first = trim((string)($_POST['first_name'] ?? ''));
-        $middle = trim((string)($_POST['middle_name'] ?? ''));
-        $last = trim((string)($_POST['last_name'] ?? ''));
-        $suffix = trim((string)($_POST['suffix'] ?? ''));
+            $first = trim((string)($_POST['first_name'] ?? ''));
+            $middle = trim((string)($_POST['middle_name'] ?? ''));
+            $last = trim((string)($_POST['last_name'] ?? ''));
+            $suffix = trim((string)($_POST['suffix'] ?? ''));
 
-        $fullName = trim(implode(' ', array_filter([$first, $middle, $last], fn($v) => $v !== '')));
-        if ($suffix !== '') {
-            $fullName = trim($fullName . ', ' . $suffix);
+            $fullName = trim(implode(' ', array_filter([$first, $middle, $last], fn($v) => $v !== '')));
+            if ($suffix !== '') {
+                $fullName = trim($fullName . ', ' . $suffix);
+            }
+
+            $stmt = $pdo->prepare("UPDATE users SET full_name = ?, first_name = ?, middle_name = ?, last_name = ?, suffix = ?, birthdate = ?, gender = ?, email = ?, phone = ? WHERE id = ?");
+            $stmt->execute([
+                $fullName,
+                $first ?: null,
+                $middle ?: null,
+                $last ?: null,
+                $suffix ?: null,
+                !empty($_POST['birthdate']) ? $_POST['birthdate'] : null,
+                $_POST['gender'],
+                $_POST['email'],
+                $_POST['phone'],
+                $user['id']
+            ]);
+
+            $user = getCurrentUser();
+            $profileMessage = ['success', 'Profile updated.'];
         }
-
-        $stmt = $pdo->prepare("UPDATE users SET full_name = ?, first_name = ?, middle_name = ?, last_name = ?, suffix = ?, birthdate = ?, gender = ?, email = ?, phone = ? WHERE id = ?");
-        $stmt->execute([
-            $fullName,
-            $first ?: null,
-            $middle ?: null,
-            $last ?: null,
-            $suffix ?: null,
-            !empty($_POST['birthdate']) ? $_POST['birthdate'] : null,
-            $_POST['gender'] ?? null,
-            $_POST['email'],
-            $_POST['phone'],
-            $user['id']
-        ]);
-
-        $user = getCurrentUser();  // Refresh
-        $profileMessage = ['success', 'Profile updated.'];
     }
 
     require 'reservations.php';
@@ -261,9 +265,9 @@
 
             <div class="mb-3 profile-form-field">
                 <label class="form-label">Gender</label>
-                <select class="form-select" name="gender">
+                <select class="form-select" name="gender" required>
                     <?php $g = $user['gender'] ?? ''; ?>
-                    <option value="" <?php echo ($g === '' || $g === null) ? 'selected' : ''; ?>>Prefer not to say / N/A</option>
+                    <option value="" <?php echo ($g === '' || $g === null) ? 'selected' : ''; ?> disabled>Choose gender</option>
                     <option value="male" <?php echo ($g === 'male') ? 'selected' : ''; ?>>Male</option>
                     <option value="female" <?php echo ($g === 'female') ? 'selected' : ''; ?>>Female</option>
                     <option value="other" <?php echo ($g === 'other') ? 'selected' : ''; ?>>Other</option>

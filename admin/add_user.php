@@ -10,7 +10,9 @@ if (!isAdmin()) {
 
 $notification = null;
 if (isset($_POST['add'])) {
-    if (addUser($_POST)) {
+    if (!isValidGender($_POST['gender'] ?? null)) {
+        $notification = ['danger', 'Choose a valid gender before adding the user.'];
+    } elseif (addUser($_POST)) {
         $notification = ['success', 'User added.'];
     } else {
         $notification = ['danger', 'Error adding user.'];
@@ -106,8 +108,8 @@ require '../header.php';
 
             <div class="mb-3">
                 <label class="form-label">Gender</label>
-                <select class="form-control" name="gender">
-                    <option value="">Prefer not to say / N/A</option>
+                <select class="form-control" name="gender" required>
+                    <option value="" selected disabled>Choose gender</option>
                     <option value="male">Male</option>
                     <option value="female">Female</option>
                     <option value="other">Other</option>
