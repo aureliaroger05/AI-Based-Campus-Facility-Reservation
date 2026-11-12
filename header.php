@@ -1,5 +1,8 @@
 <?php
 if (!defined('HEADER_INCLUDED')) {
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
     define('HEADER_INCLUDED', true);
 ?>
 <!DOCTYPE html>

@@ -1,8 +1,5 @@
 <?php
 if (defined('HEADER_INCLUDED')):
-    if (session_status() === PHP_SESSION_NONE) {
-        session_start();
-    }
     if (empty($_SESSION['ai_chat_csrf'])) {
         $_SESSION['ai_chat_csrf'] = bin2hex(random_bytes(32));
     }
