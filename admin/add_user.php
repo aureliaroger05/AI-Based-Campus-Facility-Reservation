@@ -13,7 +13,8 @@ if (isset($_POST['add'])) {
     if (!isValidGender($_POST['gender'] ?? null)) {
         $notification = ['danger', 'Choose a valid gender before adding the user.'];
     } elseif (addUser($_POST)) {
-        $notification = ['success', 'User added.'];
+        header('Location: index.php');
+        exit;
     } else {
         $notification = ['danger', 'Error adding user.'];
     }

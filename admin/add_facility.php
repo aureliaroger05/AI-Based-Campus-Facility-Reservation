@@ -8,6 +8,28 @@ if (!isAdmin()) {
     exit;
 }
 
+require '../facilities.php';
+
+$formError = '';
+if (isset($_POST['add'])) {
+    $name = trim((string)($_POST['name'] ?? ''));
+
+    if ($name === '') {
+        $formError = 'Facility name is required.';
+    } else {
+        try {
+            if (addFacility(['name' => $name])) {
+                header('Location: index.php');
+                exit;
+            }
+            $formError = 'The facility could not be added.';
+        } catch (PDOException $e) {
+            error_log('Failed to add facility: ' . $e->getMessage());
+            $formError = 'The facility could not be saved. Please check the database and try again.';
+        }
+    }
+}
+
 require '../header.php';
 ?>
 
@@ -30,32 +52,6 @@ require '../header.php';
         </div>
     </div>
 </nav>
-
-
-<?php
-    $formError = '';
-    $formSuccess = false;
-
-    if (isset($_POST['add'])) {
-        $name = trim((string)($_POST['name'] ?? ''));
-
-        if ($name === '') {
-            $formError = 'Facility name is required.';
-        } else {
-            require '../facilities.php';
-
-            try {
-                $formSuccess = addFacility(['name' => $name]);
-                if (!$formSuccess) {
-                    $formError = 'The facility could not be added.';
-                }
-            } catch (PDOException $e) {
-                error_log('Failed to add facility: ' . $e->getMessage());
-                $formError = 'The facility could not be saved. Please check the database and try again.';
-            }
-        }
-    }
-?>
 <main class="py-4 admin-form-main">
     <div class="container admin-form-container">
         <div class="admin-page-heading">
@@ -71,9 +67,7 @@ require '../header.php';
                 <span><i class="bi bi-building me-2"></i>Facility information</span>
             </div>
             <div class="card-body">
-                <?php if ($formSuccess): ?>
-                    <div class="alert alert-success" role="status">Facility added.</div>
-                <?php elseif ($formError !== ''): ?>
+                <?php if ($formError !== ''): ?>
                     <div class="alert alert-danger" role="alert"><?php echo htmlspecialchars($formError); ?></div>
                 <?php endif; ?>
 
