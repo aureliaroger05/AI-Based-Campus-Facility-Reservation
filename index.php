@@ -53,6 +53,19 @@ if (!function_exists('getFacilityMonthStatuses')) {
 
         $intervalsByDate = [];
 
+        $classStmt = $pdo->prepare(
+            "SELECT class_date, start_time, end_time FROM class_schedules " .
+            "WHERE facility_id = ? AND class_date BETWEEN ? AND ? " .
+            "ORDER BY class_date ASC, start_time ASC"
+        );
+        $classStmt->execute([$facility_id, $firstDate, $lastDate]);
+        foreach ($classStmt->fetchAll() as $class) {
+            $intervalsByDate[$class['class_date']][] = [
+                max(0, timeToMinutesFromString($class['start_time'])),
+                min(1440, timeToMinutesFromString($class['end_time'])),
+            ];
+        }
+
         foreach ($reservations as $reservation) {
             $hasRange = isset($reservation['start_time'], $reservation['end_time'])
                 && ($reservation['start_time'] !== '00:00:00' || $reservation['end_time'] !== '00:00:00');
@@ -701,7 +714,7 @@ $today = date('Y-m-d');
                                     <div id="selected-facility-times" class="alert alert-light border mb-3" hidden aria-live="polite">
                                         <div class="row g-3">
                                             <div class="col-md-6">
-                                                <h4 class="h6 text-danger">Reserved times</h4>
+                                                <h4 class="h6 text-danger">Unavailable times (classes/bookings)</h4>
                                                 <ul id="reserved-time-list" class="mb-0 small"></ul>
                                             </div>
                                             <div class="col-md-6">
@@ -875,7 +888,7 @@ function formatTimeRange(range) {
             renderTimeRanges(
                 'reserved-time-list',
                 dateAvailability.reserved_times || [],
-                'No bookings yet.'
+                'No classes or bookings.'
             );
             renderTimeRanges(
                 'available-time-list',
@@ -921,7 +934,7 @@ function formatTimeRange(range) {
 
             if (overlapsReservation) {
                 event.preventDefault();
-                alert('That time conflicts with an existing reservation. Choose a time from the available times list.');
+                alert('That time conflicts with a class or reservation. Choose a time from the available times list.');
                 return;
             }
 

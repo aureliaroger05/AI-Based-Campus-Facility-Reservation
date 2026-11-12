@@ -69,6 +69,15 @@ function isAvailable($facility_id, $date, $start_time, $end_time) {
         return false;
     }
 
+    $classSchedule = $pdo->prepare(
+        "SELECT id FROM class_schedules " .
+        "WHERE facility_id = ? AND class_date = ? AND start_time < ? AND end_time > ? LIMIT 1"
+    );
+    $classSchedule->execute([$facility_id, $date, $end_time, $start_time]);
+    if ($classSchedule->fetch() !== false) {
+        return false;
+    }
+
     try {
         $stmt = $pdo->prepare(
             "SELECT id FROM reservations " .

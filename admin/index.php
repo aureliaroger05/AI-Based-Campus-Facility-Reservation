@@ -206,6 +206,7 @@ $reservations = $pdo->query("SELECT COUNT(*) as total FROM reservations")->fetch
             </table>
             </div>
             <a href="add_facility.php" class="btn btn-success mt-2">Add Facility</a>
+            <a href="class_schedules.php" class="btn btn-outline-primary mt-2 ms-1">Import Class Schedule</a>
             </div>
             </section>
         </div>
