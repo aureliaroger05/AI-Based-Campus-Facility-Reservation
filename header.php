@@ -10,7 +10,7 @@ if (!defined('HEADER_INCLUDED')) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo isset($page_title) ? $page_title : 'AI Campus Facility Reservation'; ?></title>
+    <title><?php echo htmlspecialchars((isset($page_title) ? $page_title : 'Home') . ' | ACLC Facility Reservation System', ENT_QUOTES, 'UTF-8'); ?></title>
     <link rel="icon" type="image/png" href="<?php echo (strpos($_SERVER['PHP_SELF'], '/admin/') !== false) ? '../images/aclc%20logo.png' : 'images/aclc%20logo.png'; ?>?v=<?php echo (int)filemtime(__DIR__ . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'aclc logo.png'); ?>">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
