@@ -1,20 +1,23 @@
-<?php $page_title = 'Add User'; $body_class = 'admin-form-page'; require '../header.php'; ?>
-
 <?php
-    if (session_status() === PHP_SESSION_NONE) session_start();
-    require '../auth.php';
-    if (!isAdmin()) {
-        header('Location: ../login.php');
-        exit;
-    }
+$page_title = 'Add User';
+$body_class = 'admin-form-page';
+require '../auth.php';
 
-    if (isset($_POST['add'])) {
-        if (addUser($_POST)) {
-            echo '<div class="alert alert-success">User added.</div>';
-        } else {
-            echo '<div class="alert alert-danger">Error adding user.</div>';
-        }
+if (!isAdmin()) {
+    header('Location: ../login.php');
+    exit;
+}
+
+$notification = null;
+if (isset($_POST['add'])) {
+    if (addUser($_POST)) {
+        $notification = ['success', 'User added.'];
+    } else {
+        $notification = ['danger', 'Error adding user.'];
     }
+}
+
+require '../header.php';
 ?>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
@@ -138,5 +141,32 @@
         </section>
     </div>
 </main>
+
+<?php if ($notification !== null): ?>
+    <div class="modal fade" id="userNotificationModal" tabindex="-1" aria-labelledby="userNotificationTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title fs-5" id="userNotificationTitle">
+                        <?php echo $notification[0] === 'success' ? 'Success' : 'Unable to add user'; ?>
+                    </h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body"><?php echo htmlspecialchars($notification[1], ENT_QUOTES, 'UTF-8'); ?></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const notificationModal = document.getElementById('userNotificationModal');
+            if (notificationModal && window.bootstrap) {
+                bootstrap.Modal.getOrCreateInstance(notificationModal).show();
+            }
+        });
+    </script>
+<?php endif; ?>
 
 <?php require '../footer.php'; ?>
