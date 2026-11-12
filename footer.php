@@ -7,6 +7,22 @@ if (defined('HEADER_INCLUDED')):
     $chatAssetPrefix = $isAdminPage ? '../' : '';
 ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <div class="modal fade action-confirm-modal" id="action-confirm-dialog" tabindex="-1" aria-labelledby="action-confirm-title" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="action-confirm-icon" aria-hidden="true"><i class="bi bi-question-lg"></i></div>
+                <div class="modal-header border-0 justify-content-center pb-0">
+                    <h2 class="modal-title fs-4" id="action-confirm-title">Please confirm</h2>
+                </div>
+                <div class="modal-body text-center px-4" data-confirm-message>Are you sure you want to continue?</div>
+                <div class="modal-footer border-0 justify-content-center pt-0">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">No, go back</button>
+                    <button type="button" class="btn btn-primary px-4" data-confirm-accept>Yes, continue</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="<?php echo $chatAssetPrefix; ?>assets/js/confirm-dialog.js?v=<?php echo (int)filemtime(__DIR__ . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'confirm-dialog.js'); ?>"></script>
     <section class="ai-chat-widget" data-endpoint="<?php echo $chatAssetPrefix; ?>ai-chat.php" data-csrf="<?php echo htmlspecialchars($_SESSION['ai_chat_csrf'], ENT_QUOTES, 'UTF-8'); ?>">
         <button class="ai-chat-launcher" type="button" aria-expanded="false" aria-controls="ai-chat-panel" aria-label="Open AI system assistant">
             <i class="bi bi-chat-dots-fill" aria-hidden="true"></i>

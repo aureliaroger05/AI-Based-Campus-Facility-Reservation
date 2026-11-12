@@ -341,6 +341,48 @@ h2 {
     background: var(--site-blue-dark);
 }
 
+.action-confirm-modal .modal-content {
+    position: relative;
+    overflow: visible;
+    padding: 1.35rem 0.75rem 0.75rem;
+    border: 1px solid rgba(220, 229, 239, 0.95);
+    border-radius: 1.35rem;
+    background: linear-gradient(160deg, #fff 55%, #f2f7fc);
+    box-shadow: 0 24px 70px rgba(8, 33, 61, 0.3);
+}
+
+.action-confirm-modal .modal-dialog {
+    max-width: 430px;
+}
+
+.action-confirm-modal .action-confirm-icon {
+    display: grid;
+    width: 4.25rem;
+    height: 4.25rem;
+    margin: -3.4rem auto 0.4rem;
+    place-items: center;
+    border: 5px solid #fff;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #1d76b7, #123b66);
+    box-shadow: 0 8px 20px rgba(18, 59, 102, 0.25);
+    color: #fff;
+    font-size: 1.65rem;
+}
+
+.action-confirm-modal .modal-title {
+    color: var(--site-blue-dark);
+    font-weight: 750;
+}
+
+.action-confirm-modal .modal-body {
+    color: #5b6b80;
+    font-size: 1rem;
+}
+
+.action-confirm-modal .modal-footer .btn {
+    min-width: 8.5rem;
+}
+
 .form-label {
     margin-bottom: 0.45rem;
     color: #344761;

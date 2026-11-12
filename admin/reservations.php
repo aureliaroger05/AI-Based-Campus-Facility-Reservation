@@ -26,7 +26,7 @@ $pdo = getDB();
                 <a class="nav-link" href="ai-forecast.php"><i class="bi bi-graph-up"></i> Forecast</a>
                 <a class="nav-link active" href="reservations.php"><i class="bi bi-clipboard-check"></i> Reservations</a>
 
-                <a class="nav-link" href="../logout.php" onclick="return confirm('Are you sure you want to log out?');"><i class="bi bi-box-arrow-right"></i> Logout (<?php echo htmlspecialchars($_SESSION['username']); ?>)</a>
+                <a class="nav-link" href="../logout.php" data-confirm="Are you sure you want to log out?"><i class="bi bi-box-arrow-right"></i> Logout (<?php echo htmlspecialchars($_SESSION['username']); ?>)</a>
 
             </div>
         </div>
@@ -160,7 +160,7 @@ $reservations = $currentReservations;
                                 ?>
                                 <form method="POST" class="d-inline">
                                     <input type="hidden" name="res_id" value="<?php echo (int)$r['id']; ?>">
-                                    <button type="submit" name="cancel" class="btn btn-warning btn-sm" onclick="return confirm('Cancel this reservation?')">Cancel</button>
+                                    <button type="submit" name="cancel" class="btn btn-warning btn-sm" data-confirm="Cancel this reservation?">Cancel</button>
                                 </form>
                                 <?php
                             } else {
@@ -170,7 +170,7 @@ $reservations = $currentReservations;
                                     <?php if ($r['status'] === 'pending'): ?>
                                         <button type="submit" name="confirm" class="btn btn-success btn-sm">Confirm</button>
                                     <?php endif; ?>
-                                    <button type="submit" name="cancel" class="btn btn-warning btn-sm" onclick="return confirm('Cancel this reservation?')">Cancel</button>
+                                    <button type="submit" name="cancel" class="btn btn-warning btn-sm" data-confirm="Cancel this reservation?">Cancel</button>
                                 </form>
                             <?php } ?>
                         <?php else: ?>

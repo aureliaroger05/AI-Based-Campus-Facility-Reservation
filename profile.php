@@ -155,7 +155,7 @@
                     
 
                     <?php if (isAdmin()): ?><a class="nav-link" href="admin/"><i class="bi bi-gear"></i> Admin</a><?php endif; ?>
-                    <a class="nav-link" href="logout.php" onclick="return confirm('Are you sure you want to log out?');"><i class="bi bi-box-arrow-right"></i> Logout (<?php echo htmlspecialchars($_SESSION['username']); ?>)</a>
+                    <a class="nav-link" href="logout.php" data-confirm="Are you sure you want to log out?"><i class="bi bi-box-arrow-right"></i> Logout (<?php echo htmlspecialchars($_SESSION['username']); ?>)</a>
 
                 </div>
             </div>
@@ -323,7 +323,7 @@
 <td><?php if ($r['status'] == 'confirmed' && $r['qr_code_path']): ?><a href="view_res.php?id=<?php echo (int)$r['id']; ?>" target="_blank">View QR</a><?php else: ?>QR on approval<?php endif; ?></td>
                     <td>
                         <?php if (in_array($r['status'], ['pending', 'confirmed'], true)): ?>
-                            <form method="POST" class="d-inline" onsubmit="return confirm('Cancel this reservation?');">
+                            <form method="POST" class="d-inline" data-confirm="Cancel this reservation?">
                                 <input type="hidden" name="res_id" value="<?php echo (int)$r['id']; ?>">
                                 <button type="submit" name="cancel_reservation" class="btn btn-outline-danger btn-sm">Cancel</button>
                             </form>

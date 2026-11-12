@@ -514,7 +514,7 @@ $today = date('Y-m-d');
                     <?php if (isAdmin()): ?>
                         <a class="nav-link" href="admin/"><i class="bi bi-gear"></i> Admin</a>
                     <?php endif; ?>
-                    <a class="nav-link" href="logout.php" onclick="return confirm('Are you sure you want to log out?');"><i class="bi bi-box-arrow-right"></i> Logout (<?php echo htmlspecialchars($_SESSION['username'] ?? ''); ?>)</a>
+                    <a class="nav-link" href="logout.php" data-confirm="Are you sure you want to log out?"><i class="bi bi-box-arrow-right"></i> Logout (<?php echo htmlspecialchars($_SESSION['username'] ?? ''); ?>)</a>
                 </div>
             <?php else: ?>
                 <a class="nav-link ms-auto btn btn-outline-light" href="login.php"><i class="bi bi-box-arrow-in-right me-1"></i>Sign in</a>
@@ -644,7 +644,7 @@ $today = date('Y-m-d');
                             <div id="no-facilities-message" class="alert alert-warning" hidden>
                                 No facilities are available on this date.
                             </div>
-                            <form method="POST" action="reservations.php" class="reservation-form">
+                            <form method="POST" action="reservations.php" class="reservation-form" data-confirm="Are you sure you want to reserve this facility?">
                                 <input type="hidden" name="reserve_date">
                                 <div id="reservation-fields" hidden>
                                     <div class="mb-3">
@@ -897,9 +897,6 @@ function formatTimeRange(range) {
                 return;
             }
 
-            if (!confirm('Are you sure you want to reserve this facility?')) {
-                event.preventDefault();
-            }
         });
     });
 

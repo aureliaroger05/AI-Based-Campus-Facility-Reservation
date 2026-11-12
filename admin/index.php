@@ -36,7 +36,7 @@ $reservations = $pdo->query("SELECT COUNT(*) as total FROM reservations")->fetch
                 <a class="nav-link" href="ai-forecast.php"><i class="bi bi-graph-up"></i> Forecast</a>
                 <a class="nav-link" href="reservations.php"><i class="bi bi-clipboard-check"></i> Reservations</a>
 
-                <a class="nav-link" href="../logout.php" onclick="return confirm('Are you sure you want to log out?');"><i class="bi bi-box-arrow-right"></i> Logout (<?php echo htmlspecialchars($_SESSION['username']); ?>)</a>
+                <a class="nav-link" href="../logout.php" data-confirm="Are you sure you want to log out?"><i class="bi bi-box-arrow-right"></i> Logout (<?php echo htmlspecialchars($_SESSION['username']); ?>)</a>
 
             </div>
         </div>
@@ -136,7 +136,7 @@ $facilities = $pdo->query("SELECT * FROM facilities ORDER BY id DESC")->fetchAll
                         <td>
                             <div class="d-flex gap-2">
                                 <a href="edit_user.php?id=<?php echo (int)$u['id']; ?>" class="btn btn-sm btn-primary">Edit</a>
-                                <form method="POST" onsubmit="return confirm('Delete this user?');">
+                                <form method="POST" data-confirm="Delete this user?">
                                     <input type="hidden" name="user_id" value="<?php echo (int)$u['id']; ?>">
                                     <button type="submit" name="delete_user" class="btn btn-sm btn-danger">Delete</button>
                                 </form>
@@ -176,7 +176,7 @@ $facilities = $pdo->query("SELECT * FROM facilities ORDER BY id DESC")->fetchAll
                         <td>
                             <div class="d-flex gap-2">
                                 <a href="edit_facility.php?id=<?php echo (int)$f['id']; ?>" class="btn btn-sm btn-primary">Edit</a>
-                                <form method="POST" onsubmit="return confirm('Delete this facility?');">
+                                <form method="POST" data-confirm="Delete this facility?">
                                     <input type="hidden" name="facility_id" value="<?php echo (int)$f['id']; ?>">
                                     <button type="submit" name="delete_facility" class="btn btn-sm btn-danger">Delete</button>
                                 </form>

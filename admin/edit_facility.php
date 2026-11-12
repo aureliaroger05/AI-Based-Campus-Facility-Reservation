@@ -58,7 +58,7 @@ if (isset($_POST['save'])) {
                 <a class="nav-link" href="index.php"><i class="bi bi-gear"></i> Admin</a>
                 <a class="nav-link" href="ai-forecast.php"><i class="bi bi-graph-up"></i> Forecast</a>
                 <a class="nav-link" href="reservations.php"><i class="bi bi-clipboard-check"></i> Reservations</a>
-                <a class="nav-link" href="../logout.php" onclick="return confirm('Are you sure you want to log out?');"><i class="bi bi-box-arrow-right"></i> Logout (<?php echo htmlspecialchars($_SESSION['username']); ?>)</a>
+                <a class="nav-link" href="../logout.php" data-confirm="Are you sure you want to log out?"><i class="bi bi-box-arrow-right"></i> Logout (<?php echo htmlspecialchars($_SESSION['username']); ?>)</a>
             </div>
         </div>
     </div>
