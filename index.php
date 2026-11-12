@@ -529,8 +529,36 @@ $today = date('Y-m-d');
                 <div class="alert alert-danger" role="alert">
                     The reservation could not be completed. The selected time may conflict with another reservation; please choose another time and try again.
                 </div>
-            <?php elseif (isset($_GET['reserved']) && $_GET['reserved'] === '1'): ?>
-                <div class="alert alert-success" role="status">Reservation submitted successfully.</div>
+        <?php endif; ?>
+        <?php if (isset($_GET['reserved']) && $_GET['reserved'] === '1'): ?>
+            <div class="modal fade action-result-modal" id="reservationSuccessModal" tabindex="-1" aria-labelledby="reservationSuccessTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="action-result-icon" aria-hidden="true"><i class="bi bi-check-lg"></i></div>
+                        <div class="modal-header border-0 justify-content-center pb-0">
+                            <h2 class="modal-title fs-4" id="reservationSuccessTitle">Reservation submitted</h2>
+                        </div>
+                        <div class="modal-body text-center px-4">Your reservation was submitted successfully.</div>
+                        <div class="modal-footer border-0 justify-content-center pt-0">
+                            <button type="button" class="btn btn-primary px-4" data-bs-dismiss="modal">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    const reservationModal = document.getElementById('reservationSuccessModal');
+                    if (reservationModal && window.bootstrap) {
+                        const modal = bootstrap.Modal.getOrCreateInstance(reservationModal);
+                        reservationModal.addEventListener('hidden.bs.modal', function () {
+                            const cleanUrl = new URL(window.location.href);
+                            cleanUrl.searchParams.delete('reserved');
+                            window.history.replaceState({}, '', cleanUrl);
+                        }, { once: true });
+                        modal.show();
+                    }
+                });
+            </script>
         <?php endif; ?>
         <?php
             require 'facilities.php';
