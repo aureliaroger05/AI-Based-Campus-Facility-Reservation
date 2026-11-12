@@ -1,9 +1,6 @@
 <?php
 $page_title = 'Admin Dashboard';
 $body_class = 'admin-dashboard-page';
-require '../header.php';
-
-session_start();
 require '../auth.php';
 
 if (!isLoggedIn()) {
@@ -16,6 +13,7 @@ if (!isAdmin()) {
     exit;
 }
 
+require '../header.php';
 
 $pdo = getDB();
 $users = $pdo->query("SELECT * FROM users ORDER BY id DESC")->fetchAll();
