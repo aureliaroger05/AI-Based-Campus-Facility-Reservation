@@ -5,6 +5,18 @@ require 'auth.php';
 $id = (int)($_GET['id'] ?? 0);
 $isQrScan = isset($_GET['scan']) && $_GET['scan'] === '1';
 $providedQrToken = $_GET['token'] ?? '';
+if (!isLoggedIn()) {
+    if ($isQrScan && is_string($providedQrToken) && preg_match('/^[a-f0-9]{64}$/', $providedQrToken)) {
+        $_SESSION['admin_scan_return'] = 'view_res.php?' . http_build_query([
+            'id' => $id,
+            'scan' => '1',
+            'token' => $providedQrToken,
+        ]);
+    }
+    header('Location: login.php');
+    exit;
+}
+
 $pdo = getDB();
 $stmt = $pdo->prepare("SELECT r.*, u.username, u.full_name, f.name FROM reservations r JOIN users u ON r.user_id = u.id JOIN facilities f ON r.facility_id = f.id WHERE r.id = ?");
 $stmt->execute([$id]);

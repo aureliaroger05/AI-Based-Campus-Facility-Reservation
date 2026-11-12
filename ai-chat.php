@@ -14,6 +14,11 @@ function respondToChat(int $statusCode, array $payload): void
     exit;
 }
 
+require_once __DIR__ . '/auth.php';
+if (!isLoggedIn()) {
+    respondToChat(401, ['error' => 'Sign in to use the campus assistant.']);
+}
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Allow: POST');
     respondToChat(405, ['error' => 'Use POST to send a chat message.']);

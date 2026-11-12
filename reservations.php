@@ -3,6 +3,11 @@ require_once 'config.php';
 require_once 'auth.php';
 require_once 'facilities.php';
 
+if (!isLoggedIn()) {
+    header('Location: login.php');
+    exit;
+}
+
 if (!function_exists('makeReservation')) {
     function makeReservation($facility_id, $date, $start_time, $end_time, $reason) {
         $bookingDate = DateTimeImmutable::createFromFormat('!Y-m-d', (string)$date);
