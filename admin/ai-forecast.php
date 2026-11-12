@@ -47,7 +47,7 @@ foreach ($forecasts as $fcast) {
                 <a class="nav-link" href="index.php"><i class="bi bi-speedometer2"></i> Dashboard</a>
                 <a class="nav-link active" href="ai-forecast.php"><i class="bi bi-graph-up"></i> Forecast</a>
                 <a class="nav-link" href="reservations.php"><i class="bi bi-clipboard-check"></i> Reservations</a>
-                <a class="nav-link" href="../logout.php"><i class="bi bi-box-arrow-right"></i> Logout (<?php echo htmlspecialchars($_SESSION['username']); ?>)</a>
+                <a class="nav-link" href="../logout.php" onclick="return confirm('Are you sure you want to log out?');"><i class="bi bi-box-arrow-right"></i> Logout (<?php echo htmlspecialchars($_SESSION['username']); ?>)</a>
             </div>
         </div>
     </div>

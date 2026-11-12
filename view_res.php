@@ -216,7 +216,7 @@ $body_class = 'reservation-view-page';
                 <?php else: ?>
                     <a class="nav-link" href="profile.php"><i class="bi bi-person"></i> Profile</a>
                 <?php endif; ?>
-                <a class="nav-link" href="logout.php"><i class="bi bi-box-arrow-right"></i> Logout (<?php echo htmlspecialchars($_SESSION['username']); ?>)</a>
+                <a class="nav-link" href="logout.php" onclick="return confirm('Are you sure you want to log out?');"><i class="bi bi-box-arrow-right"></i> Logout (<?php echo htmlspecialchars($_SESSION['username']); ?>)</a>
             </div>
         </div>
     </div>

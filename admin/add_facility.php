@@ -23,7 +23,7 @@
                 <a class="nav-link" href="ai-forecast.php"><i class="bi bi-graph-up"></i> Forecast</a>
                 <a class="nav-link" href="reservations.php"><i class="bi bi-clipboard-check"></i> Reservations</a>
 
-                <a class="nav-link" href="../logout.php"><i class="bi bi-box-arrow-right"></i> Logout (<?php echo htmlspecialchars($_SESSION['username']); ?>)</a>
+                <a class="nav-link" href="../logout.php" onclick="return confirm('Are you sure you want to log out?');"><i class="bi bi-box-arrow-right"></i> Logout (<?php echo htmlspecialchars($_SESSION['username']); ?>)</a>
             </div>
         </div>
     </div>
@@ -75,7 +75,7 @@
                     <div class="alert alert-danger" role="alert"><?php echo htmlspecialchars($formError); ?></div>
                 <?php endif; ?>
 
-                <form method="POST" class="admin-facility-form">
+                <form method="POST" class="admin-facility-form" onsubmit="return confirm('Are you sure you want to add this facility?');">
                     <div class="mb-3">
                         <label class="form-label" for="facility-name">Facility name</label>
                         <input id="facility-name" type="text" class="form-control" name="name" value="<?php echo htmlspecialchars($_POST['name'] ?? ''); ?>" maxlength="100" required>

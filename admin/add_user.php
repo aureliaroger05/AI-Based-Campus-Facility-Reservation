@@ -35,7 +35,7 @@ require '../header.php';
                 <a class="nav-link" href="ai-forecast.php"><i class="bi bi-graph-up"></i> Forecast</a>
                 <a class="nav-link" href="reservations.php"><i class="bi bi-clipboard-check"></i> Reservations</a>
 
-                <a class="nav-link" href="../logout.php"><i class="bi bi-box-arrow-right"></i> Logout (<?php echo htmlspecialchars($_SESSION['username']); ?>)</a>
+                <a class="nav-link" href="../logout.php" onclick="return confirm('Are you sure you want to log out?');"><i class="bi bi-box-arrow-right"></i> Logout (<?php echo htmlspecialchars($_SESSION['username']); ?>)</a>
             </div>
         </div>
     </div>
@@ -55,7 +55,7 @@ require '../header.php';
                 <span><i class="bi bi-person-vcard me-2"></i>User information</span>
             </div>
             <div class="card-body p-4">
-        <form method="POST" class="admin-user-form">
+        <form method="POST" class="admin-user-form" onsubmit="return confirm('Are you sure you want to add this user?');">
             <div class="mb-3">
                 <label class="form-label">Username</label>
                 <input type="text" class="form-control" name="username" required>

@@ -36,7 +36,7 @@ $logoutHref = 'logout.php';
         <?php endforeach; ?>
 
         <?php if (isLoggedIn()): ?>
-            <a class="bb-sidebar__link bb-sidebar__logout" href="<?php echo htmlspecialchars($logoutHref); ?>">
+            <a class="bb-sidebar__link bb-sidebar__logout" href="<?php echo htmlspecialchars($logoutHref); ?>" onclick="return confirm('Are you sure you want to log out?');">
                 <i class="bi bi-box-arrow-right"></i>
                 <span>Logout (<?php echo htmlspecialchars($_SESSION['username'] ?? ''); ?>)</span>
             </a>
@@ -60,4 +60,3 @@ $logoutHref = 'logout.php';
         };
     })();
 </script>
-

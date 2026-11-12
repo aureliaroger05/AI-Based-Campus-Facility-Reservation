@@ -155,7 +155,7 @@
                     
 
                     <?php if (isAdmin()): ?><a class="nav-link" href="admin/"><i class="bi bi-gear"></i> Admin</a><?php endif; ?>
-                    <a class="nav-link" href="logout.php"><i class="bi bi-box-arrow-right"></i> Logout (<?php echo htmlspecialchars($_SESSION['username']); ?>)</a>
+                    <a class="nav-link" href="logout.php" onclick="return confirm('Are you sure you want to log out?');"><i class="bi bi-box-arrow-right"></i> Logout (<?php echo htmlspecialchars($_SESSION['username']); ?>)</a>
 
                 </div>
             </div>
