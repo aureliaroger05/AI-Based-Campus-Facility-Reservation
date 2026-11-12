@@ -34,4 +34,3 @@ function getDB() {
     global $pdo;
     return $pdo;
 }
-?>

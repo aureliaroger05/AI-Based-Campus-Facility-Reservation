@@ -168,6 +168,3 @@ function getCurrentUser() {
     return $stmt->fetch();
 }
 }
-?>
-
-
