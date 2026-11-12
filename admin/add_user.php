@@ -1,0 +1,142 @@
+<?php $page_title = 'Add User'; $body_class = 'admin-form-page'; require '../header.php'; ?>
+
+<?php
+    if (session_status() === PHP_SESSION_NONE) session_start();
+    require '../auth.php';
+    if (!isAdmin()) {
+        header('Location: ../login.php');
+        exit;
+    }
+
+    if (isset($_POST['add'])) {
+        if (addUser($_POST)) {
+            echo '<div class="alert alert-success">User added.</div>';
+        } else {
+            echo '<div class="alert alert-danger">Error adding user.</div>';
+        }
+    }
+?>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="index.php"><i class="bi bi-building me-2"></i>AI Reservation</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="../index.php"><i class="bi bi-house"></i> Home</a>
+                <a class="nav-link" href="../profile.php"><i class="bi bi-person"></i> Profile</a>
+
+                <a class="nav-link" href="index.php"><i class="bi bi-speedometer2"></i> Dashboard</a>
+                <a class="nav-link" href="ai-forecast.php"><i class="bi bi-graph-up"></i> Forecast</a>
+                <a class="nav-link" href="reservations.php"><i class="bi bi-clipboard-check"></i> Reservations</a>
+
+                <a class="nav-link" href="../logout.php"><i class="bi bi-box-arrow-right"></i> Logout (<?php echo htmlspecialchars($_SESSION['username']); ?>)</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<main class="py-4 admin-form-main">
+    <div class="container admin-form-container">
+        <div class="admin-page-heading">
+            <span class="admin-heading-icon"><i class="bi bi-person-plus"></i></span>
+            <div>
+                <h2 class="mb-1">Add New User</h2>
+                <p class="mb-0">Create a campus account and assign its role.</p>
+            </div>
+        </div>
+        <section class="card admin-form-card">
+            <div class="card-header admin-section-heading">
+                <span><i class="bi bi-person-vcard me-2"></i>User information</span>
+            </div>
+            <div class="card-body p-4">
+        <form method="POST" class="admin-user-form">
+            <div class="mb-3">
+                <label class="form-label">Username</label>
+                <input type="text" class="form-control" name="username" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                <input type="password" class="form-control" name="password" required minlength="8" pattern="(?=.*\d)(?=.*[A-Za-z]).{8,}" title="Password must be at least 8 characters and include at least one letter and one number" id="passwordField">
+                <div class="form-check mt-2">
+                    <input class="form-check-input" type="checkbox" id="showPassword" />
+                    <label class="form-check-label" for="showPassword">Show password</label>
+                </div>
+            </div>
+
+            <script>
+                (function(){
+                    const cb = document.getElementById('showPassword');
+                    const pw = document.getElementById('passwordField');
+                    if(!cb || !pw) return;
+                    cb.addEventListener('change', function(){
+                        pw.type = cb.checked ? 'text' : 'password';
+                    });
+                })();
+            </script>
+
+            <div class="mb-3">
+                <label class="form-label">Name</label>
+                <div class="row g-2">
+                    <div class="col-6 col-md-3">
+                        <input type="text" class="form-control form-control-sm" name="first_name" placeholder="First" required>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <input type="text" class="form-control form-control-sm" name="middle_name" placeholder="Middle">
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <input type="text" class="form-control form-control-sm" name="last_name" placeholder="Last" required>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <input type="text" class="form-control form-control-sm" name="suffix" placeholder="Suffix (Jr.)">
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="mb-3">
+                <label class="form-label">Birthdate</label>
+                <input type="date" class="form-control" name="birthdate">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Gender</label>
+                <select class="form-control" name="gender">
+                    <option value="">Prefer not to say / N/A</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                    <option value="prefer_not_to_say">Prefer not to say</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control" name="email" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Phone (10 digits after +63)</label>
+                <input type="tel" class="form-control" name="phone" required pattern="^\d{10}$" inputmode="numeric" placeholder="e.g., 9123456789" title="Phone must be exactly 10 digits (without +63)">
+                <small class="text-muted">Prefix is automatically assumed as +63</small>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Role</label>
+                <select class="form-control" name="role" required>
+                    <option value="user">User</option>
+                    <option value="admin">Admin</option>
+                </select>
+            </div>
+            <div class="d-flex flex-wrap gap-2 pt-2">
+            <button type="submit" name="add" class="btn btn-success"><i class="bi bi-person-plus me-1"></i>Add User</button>
+
+            <a href="index.php" class="btn btn-outline-secondary">Back to Dashboard</a>
+            </div>
+        </form>
+        </section>
+    </div>
+</main>
+
+<?php require '../footer.php'; ?>
