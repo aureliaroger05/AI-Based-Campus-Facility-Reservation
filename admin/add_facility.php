@@ -19,7 +19,10 @@ if (isset($_POST['add'])) {
     } else {
         try {
             if (addFacility(['name' => $name])) {
-                $_SESSION['dashboard_notification'] = 'Facility added successfully.';
+                $_SESSION['dashboard_notification'] = [
+                    'type' => 'success',
+                    'message' => 'Facility added successfully.',
+                ];
                 header('Location: index.php');
                 exit;
             }

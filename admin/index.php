@@ -13,6 +13,44 @@ if (!isAdmin()) {
     exit;
 }
 
+require_once '../facilities.php';
+
+if (isset($_POST['delete_facility'])) {
+    try {
+        $deleted = deleteFacility((int)($_POST['facility_id'] ?? 0));
+        $_SESSION['dashboard_notification'] = [
+            'type' => $deleted ? 'success' : 'danger',
+            'message' => $deleted ? 'Facility deleted successfully.' : 'Unable to delete facility.',
+        ];
+    } catch (PDOException $exception) {
+        error_log('Failed to delete facility from admin dashboard: ' . $exception->getMessage());
+        $_SESSION['dashboard_notification'] = [
+            'type' => 'danger',
+            'message' => 'Unable to delete facility. It may still be linked to reservations.',
+        ];
+    }
+    header('Location: index.php');
+    exit;
+}
+
+if (isset($_POST['delete_user'])) {
+    try {
+        $deleted = deleteUser((int)($_POST['user_id'] ?? 0));
+        $_SESSION['dashboard_notification'] = [
+            'type' => $deleted ? 'success' : 'danger',
+            'message' => $deleted ? 'User deleted successfully.' : 'Unable to delete user.',
+        ];
+    } catch (PDOException $exception) {
+        error_log('Failed to delete user from admin dashboard: ' . $exception->getMessage());
+        $_SESSION['dashboard_notification'] = [
+            'type' => 'danger',
+            'message' => 'Unable to delete user. The account may still be linked to reservations.',
+        ];
+    }
+    header('Location: index.php');
+    exit;
+}
+
 $dashboardNotification = $_SESSION['dashboard_notification'] ?? null;
 unset($_SESSION['dashboard_notification']);
 
@@ -57,29 +95,6 @@ $reservations = $pdo->query("SELECT COUNT(*) as total FROM reservations")->fetch
                 </div>
             </div>
         </div>
-
-<?php
-require_once '../facilities.php';
-require_once '../auth.php';
-
-
-// Handle delete actions from dashboard
-if (isset($_POST['delete_facility'])) {
-    $ok = deleteFacility((int)$_POST['facility_id']);
-    echo $ok ? '<div class="alert alert-success">Facility deleted.</div>' : '<div class="alert alert-danger">Unable to delete facility.</div>';
-}
-
-if (isset($_POST['delete_user'])) {
-    $ok = deleteUser((int)$_POST['user_id']);
-    echo $ok ? '<div class="alert alert-success">User deleted.</div>' : '<div class="alert alert-danger">Unable to delete user.</div>';
-}
-
-// Refresh lists after any delete action
-$users = $pdo->query("SELECT * FROM users ORDER BY id DESC")->fetchAll();
-$facilities = $pdo->query("SELECT * FROM facilities ORDER BY id DESC")->fetchAll();
-?>
-
-
 
     <div class="row g-3 admin-stat-row">
         <div class="col-sm-6 col-xl-4">
@@ -197,26 +212,29 @@ $facilities = $pdo->query("SELECT * FROM facilities ORDER BY id DESC")->fetchAll
     </div>
     </div>
 
-<?php if (is_string($dashboardNotification) && $dashboardNotification !== ''): ?>
-    <div class="modal fade" id="dashboardSuccessModal" tabindex="-1" aria-labelledby="dashboardSuccessTitle" aria-hidden="true">
+<?php if (is_array($dashboardNotification) && isset($dashboardNotification['message'])): ?>
+    <?php $notificationIsSuccess = ($dashboardNotification['type'] ?? '') === 'success'; ?>
+    <div class="modal fade action-result-modal<?php echo $notificationIsSuccess ? '' : ' action-result-modal-error'; ?>" id="dashboardResultModal" tabindex="-1" aria-labelledby="dashboardResultTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h2 class="modal-title fs-5" id="dashboardSuccessTitle">Success</h2>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="action-result-icon" aria-hidden="true">
+                    <i class="bi <?php echo $notificationIsSuccess ? 'bi-check-lg' : 'bi-exclamation-lg'; ?>"></i>
                 </div>
-                <div class="modal-body"><?php echo htmlspecialchars($dashboardNotification, ENT_QUOTES, 'UTF-8'); ?></div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+                <div class="modal-header border-0 justify-content-center pb-0">
+                    <h2 class="modal-title fs-4" id="dashboardResultTitle"><?php echo $notificationIsSuccess ? 'Success' : 'Action not completed'; ?></h2>
+                </div>
+                <div class="modal-body text-center px-4"><?php echo htmlspecialchars((string)$dashboardNotification['message'], ENT_QUOTES, 'UTF-8'); ?></div>
+                <div class="modal-footer border-0 justify-content-center pt-0">
+                    <button type="button" class="btn btn-primary px-4" data-bs-dismiss="modal">OK</button>
                 </div>
             </div>
         </div>
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const successModal = document.getElementById('dashboardSuccessModal');
-            if (successModal && window.bootstrap) {
-                bootstrap.Modal.getOrCreateInstance(successModal).show();
+            const resultModal = document.getElementById('dashboardResultModal');
+            if (resultModal && window.bootstrap) {
+                bootstrap.Modal.getOrCreateInstance(resultModal).show();
             }
         });
     </script>

@@ -48,7 +48,7 @@ function deleteFacility($id) {
 
     // Reservations may reference facilities; rely on FK constraints / schema behavior.
     $stmt = $pdo->prepare("DELETE FROM facilities WHERE id = ?");
-    return $stmt->execute([$id]);
+    return $stmt->execute([$id]) && $stmt->rowCount() > 0;
 }
 }
 

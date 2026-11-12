@@ -161,7 +161,7 @@ function deleteUser($id) {
 
     $pdo = getDB();
     $stmt = $pdo->prepare("DELETE FROM users WHERE id = ?");
-    return $stmt->execute([$id]);
+    return $stmt->execute([$id]) && $stmt->rowCount() > 0;
 }
 }
 
