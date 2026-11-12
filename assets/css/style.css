@@ -32,21 +32,23 @@ body::before {
 
 .aclc-logo {
     position: fixed !important;
-    top: 0.25rem;
+    top: max(0.25rem, env(safe-area-inset-top, 0px));
     left: max(0.75rem, calc((100vw - 1320px) / 2));
     z-index: 1031;
-    width: 3.4rem;
-    height: 3.4rem;
+    width: clamp(2.5rem, 4vw, 3.4rem);
+    height: clamp(2.5rem, 4vw, 3.4rem);
+    max-width: calc(100vw - 1rem);
+    max-height: calc(100dvh - 1rem);
     object-fit: contain;
     pointer-events: none;
 }
 
 .login-page .aclc-logo,
 .welcome-page .aclc-logo {
-    top: 1rem;
-    left: 1rem;
-    width: 5rem;
-    height: 5rem;
+    top: max(0.75rem, env(safe-area-inset-top, 0px));
+    left: max(0.75rem, env(safe-area-inset-left, 0px));
+    width: clamp(3rem, 8vw, 5rem);
+    height: clamp(3rem, 8vw, 5rem);
 }
 
 .navbar.bg-primary {
@@ -1825,7 +1827,7 @@ a {
 }
 
 .navbar-brand {
-    margin-left: 3.7rem;
+    margin-left: clamp(2.9rem, 4.5vw, 3.7rem);
     letter-spacing: -0.015em;
 }
 
@@ -2823,6 +2825,26 @@ a {
 }
 
 @media (max-width: 575.98px) {
+    .aclc-logo {
+        top: max(0.25rem, env(safe-area-inset-top, 0px));
+        left: max(0.5rem, env(safe-area-inset-left, 0px));
+        width: clamp(2.35rem, 10vw, 2.8rem);
+        height: clamp(2.35rem, 10vw, 2.8rem);
+    }
+
+    .login-page .aclc-logo,
+    .welcome-page .aclc-logo {
+        top: max(0.65rem, env(safe-area-inset-top, 0px));
+        left: max(0.65rem, env(safe-area-inset-left, 0px));
+        width: clamp(3rem, 13vw, 3.75rem);
+        height: clamp(3rem, 13vw, 3.75rem);
+    }
+
+    .navbar-brand {
+        margin-left: clamp(2.7rem, 11vw, 3.1rem);
+        font-size: clamp(0.9rem, 4vw, 1.05rem);
+    }
+
     .ai-chat-widget {
         right: 0.75rem;
         bottom: 0.75rem;
