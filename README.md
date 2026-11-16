@@ -34,15 +34,16 @@
 - Create a MySQL database with an external provider that permits connections from Render. Render does not provide a managed MySQL database. Import `db_init.sql` into that database, then apply the required migrations.
 - In the Render service's Environment settings, set `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, and `DB_PASS` to the values from the MySQL provider. The container listens on Render's `PORT` environment variable.
 - The app writes profile photos and QR codes to `uploads/`. Render's container filesystem is temporary, so configure persistent storage mounted at `/var/www/html/uploads` if these files must survive redeployments.
-- The AI chat expects Ollama on the same machine and will not work on Render without a separately hosted Ollama service and a configurable endpoint.
+- The AI chat uses Gemini from the PHP server. Set `GEMINI_API_KEY` in the Render service Environment settings; do not put the key in frontend code or commit it.
 - Change the seeded admin password immediately after importing the database.
 
 ## AI system assistant
 - The AI chat widget is available across pages and can explain system features and workflows. It does not access private user records or perform reservation/admin actions.
-- Install [Ollama for Windows](https://ollama.com/download), then open PowerShell or Command Prompt and run `ollama pull qwen2.5:3b` to download the default model.
-- Keep Ollama running while using the chat. The PHP endpoint connects to Ollama at `http://127.0.0.1:11434`; no API key or paid provider account is required.
-- Optionally set the `OLLAMA_MODEL` environment variable to another model already downloaded in Ollama. The default is `qwen2.5:3b`.
-- Model downloads use disk space, and responses use your PC's memory and processing power. If Ollama or the model is unavailable, the chat shows a setup message.
+- Create a Gemini API key in [Google AI Studio](https://aistudio.google.com/app/apikey) and configure it as the server environment variable `GEMINI_API_KEY`. The key stays on the server and is never sent to the browser.
+- For XAMPP, add `SetEnv GEMINI_API_KEY "your-key"` to Apache's `httpd.conf`, then restart Apache. Do not commit the key. For Render, add `GEMINI_API_KEY` in the service Environment settings.
+- The default model is `gemini-3.5-flash-lite`. Set the optional `GEMINI_MODEL` server environment variable to use another supported Gemini model.
+- Because Gemini is called by the PHP server, client devices do not need Ollama or a local AI model. They do need to open the site using a host/IP reachable from that device; `localhost` only refers to the device itself.
+- Gemini requires internet access from the server and an active API key/quota. Provider outages and rate limits can still cause temporary interruptions; the chat reports these clearly.
 
 ## Automatic reservation completion
 - Apply `migrations/20261015_add_completed_reservation_status.sql` to the `reservation_sys` database to add the `completed` status.
@@ -51,7 +52,7 @@
 
 ## Tech
 - PHP8+, MySQL, PDO, Bootstrap5, Chart.js
-- AI: PHP stats (extend ai_forecast.php for ML)
+- AI chat: Google Gemini API; usage forecast: historical usage estimates
 - QR: Locally generated SVG QR codes using `chillerlan/php-qrcode` (no external QR service)
 
 ## Usage

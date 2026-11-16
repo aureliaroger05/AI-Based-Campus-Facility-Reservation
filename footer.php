@@ -32,7 +32,7 @@ if (defined('HEADER_INCLUDED')):
             <header class="ai-chat-header">
                 <span class="ai-chat-avatar"><i class="bi bi-stars" aria-hidden="true"></i></span>
                 <div class="ai-chat-heading">
-                    <strong>AI System Assistant</strong>
+                    <strong>Gemini AI Assistant</strong>
                     <span>Ask about reservations and features</span>
                 </div>
                 <button class="ai-chat-close" type="button" aria-label="Close chat">
@@ -56,7 +56,7 @@ if (defined('HEADER_INCLUDED')):
                     <i class="bi bi-send-fill" aria-hidden="true"></i>
                 </button>
             </form>
-            <p class="ai-chat-note">AI responses may be inaccurate. Don’t share passwords or sensitive information.</p>
+            <p class="ai-chat-note">Gemini responses may be inaccurate. Your message and recent chat context are sent to Google; don’t share passwords or sensitive information.</p>
         </div>
     </section>
     <script src="<?php echo $chatAssetPrefix; ?>assets/js/ai-chat.js?v=<?php echo (int)filemtime(__DIR__ . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'ai-chat.js'); ?>"></script>

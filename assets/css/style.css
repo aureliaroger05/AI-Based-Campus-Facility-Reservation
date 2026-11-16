@@ -1764,6 +1764,25 @@ canvas {
     padding: 0.75rem 1rem 1rem;
 }
 
+.reservation-month-group {
+    margin-bottom: 1rem;
+    overflow: hidden;
+}
+
+.reservation-month-group:last-child {
+    margin-bottom: 0;
+}
+
+.reservation-month-group .forecast-report-month-heading {
+    align-items: center;
+    margin: 0;
+    padding: 0.85rem 1rem;
+}
+
+.reservation-month-group .card-body {
+    padding: 0;
+}
+
 .reservations-data-table {
     min-width: 1050px;
     margin: 0;

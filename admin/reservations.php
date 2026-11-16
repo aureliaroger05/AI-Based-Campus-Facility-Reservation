@@ -127,13 +127,14 @@ $reservationHistoryByMonth = $groupReservationsByMonth($reservationHistory, true
     <?php else: ?>
         <?php foreach ($reservationsByMonth as $monthKey => $monthReservations): ?>
             <?php $monthLabel = $monthKey === 'unknown' ? 'Date not set' : (new DateTimeImmutable($monthKey . '-01'))->format('F Y'); ?>
-            <section class="forecast-report-month reservation-month-group">
-                <div class="forecast-report-month-heading">
+            <section class="card reservation-month-group">
+                <div class="card-header forecast-report-month-heading">
                     <h4><?php echo htmlspecialchars($monthLabel, ENT_QUOTES, 'UTF-8'); ?></h4>
                     <span><?php echo count($monthReservations); ?> reservation<?php echo count($monthReservations) === 1 ? '' : 's'; ?></span>
                 </div>
-                <div class="table-responsive">
-                    <table class="table table-striped admin-data-table reservations-data-table">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-striped admin-data-table reservations-data-table">
                         <thead>
                             <tr>
                                 <th>ID</th>
@@ -220,7 +221,8 @@ $reservationHistoryByMonth = $groupReservationsByMonth($reservationHistory, true
                 </tr>
                 <?php endforeach; ?>
                         </tbody>
-                    </table>
+                        </table>
+                    </div>
                 </div>
             </section>
         <?php endforeach; ?>
@@ -238,13 +240,14 @@ $reservationHistoryByMonth = $groupReservationsByMonth($reservationHistory, true
     <?php else: ?>
             <?php foreach ($reservationHistoryByMonth as $monthKey => $monthReservations): ?>
                 <?php $monthLabel = $monthKey === 'unknown' ? 'Date not set' : (new DateTimeImmutable($monthKey . '-01'))->format('F Y'); ?>
-                <section class="forecast-report-month reservation-month-group">
-                    <div class="forecast-report-month-heading">
+                <section class="card reservation-month-group">
+                    <div class="card-header forecast-report-month-heading">
                         <h4><?php echo htmlspecialchars($monthLabel, ENT_QUOTES, 'UTF-8'); ?></h4>
                         <span><?php echo count($monthReservations); ?> reservation<?php echo count($monthReservations) === 1 ? '' : 's'; ?></span>
                     </div>
-                    <div class="table-responsive">
-                        <table class="table table-striped admin-data-table reservations-data-table">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-striped admin-data-table reservations-data-table">
                             <thead>
                                 <tr>
                                     <th>ID</th>
@@ -293,7 +296,8 @@ $reservationHistoryByMonth = $groupReservationsByMonth($reservationHistory, true
                 </tr>
                 <?php endforeach; ?>
                             </tbody>
-                        </table>
+                            </table>
+                        </div>
                     </div>
                 </section>
             <?php endforeach; ?>
