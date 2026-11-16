@@ -297,7 +297,6 @@ $today = date('Y-m-d');
     body.calendar-page .calendar-days {
         flex: 1 1 auto;
         min-height: 0;
-        grid-template-rows: repeat(6, minmax(0, 1fr));
         gap: 0;
         background: #fff;
     }
@@ -512,6 +511,204 @@ $today = date('Y-m-d');
             font-size: 0.58rem;
         }
     }
+
+    body.calendar-page {
+        background: #f7f8fb;
+    }
+
+    body.calendar-page > .navbar.bg-primary {
+        border-bottom: 1px solid #e8ebf2;
+        background: #fff !important;
+        box-shadow: 0 3px 14px rgba(24, 35, 58, 0.055);
+    }
+
+    body.calendar-page > .navbar .navbar-brand,
+    body.calendar-page > .navbar .nav-link {
+        color: #29364d !important;
+    }
+
+    body.calendar-page > .navbar .nav-link {
+        border-color: #e7e9f0;
+    }
+
+    body.calendar-page > .navbar .nav-link:hover,
+    body.calendar-page > .navbar .nav-link:focus-visible {
+        border-color: #d7d5ff;
+        background: #f3f2ff;
+        color: #625fe0 !important;
+    }
+
+    body.calendar-page > .navbar .navbar-toggler {
+        border-color: #e2e5ed;
+    }
+
+    body.calendar-page > .navbar .navbar-toggler-icon {
+        filter: invert(0.7);
+    }
+
+    body.calendar-page .reservation-calendar-card {
+        border-color: #eceef4;
+        border-radius: 1rem;
+        background: #fff;
+        box-shadow: 0 8px 26px rgba(28, 38, 63, 0.06);
+    }
+
+    body.calendar-page .reservation-calendar-card > .card-body {
+        padding: clamp(0.65rem, 2vh, 1.25rem);
+    }
+
+    body.calendar-page .calendar-intro {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem 1rem;
+        padding: 0;
+        background: transparent;
+        color: #27334a !important;
+        font-size: clamp(1rem, 2.4vh, 1.2rem);
+        letter-spacing: -0.02em;
+    }
+
+    body.calendar-page .calendar-intro > span {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+    }
+
+    body.calendar-page .calendar-intro > span i {
+        color: #6865e8;
+    }
+
+    body.calendar-page .calendar-intro small {
+        color: #8992a2;
+        font-size: 0.72rem;
+        font-weight: 500;
+        letter-spacing: 0;
+    }
+
+    body.calendar-page .facility-calendar {
+        border-color: #eceef4;
+        border-radius: 0.85rem;
+        box-shadow: 0 3px 12px rgba(28, 38, 63, 0.035);
+    }
+
+    body.calendar-page .calendar-heading {
+        background: #fff;
+        border-bottom-color: #f0f1f5;
+    }
+
+    body.calendar-page .calendar-heading h5,
+    body.calendar-page .calendar-heading h5 > span:first-child {
+        color: #27334a;
+    }
+
+    body.calendar-page .calendar-heading .calendar-year {
+        background: #f0efff;
+        color: #625fe0;
+    }
+
+    body.calendar-page .calendar-heading .btn {
+        border-color: #e6e8f0;
+        color: #68748a;
+    }
+
+    body.calendar-page .calendar-heading .btn:hover {
+        border-color: #d7d5ff;
+        background: #f3f2ff;
+        color: #625fe0;
+    }
+
+    body.calendar-page .calendar-weekdays {
+        background: #fafbfc;
+    }
+
+    body.calendar-page .calendar-weekdays span {
+        color: #8690a1;
+        font-weight: 700;
+    }
+
+    body.calendar-page .calendar-days {
+        background: #f0f1f5;
+    }
+
+    body.calendar-page .calendar-day.available {
+        background: #edf8f2;
+        color: #26734f;
+    }
+
+    body.calendar-page .calendar-day.partial {
+        background: linear-gradient(135deg, #f8e9c9 0%, #f8e9c9 48%, #fff 52%, #fff 100%);
+        color: #465166;
+    }
+
+    body.calendar-page .calendar-day.reserved {
+        background: linear-gradient(145deg, #e97778, #d9575c);
+        color: #fff;
+    }
+
+    body.calendar-page .calendar-day.closed {
+        background: repeating-linear-gradient(135deg, #f2f3f6, #f2f3f6 8px, #e9ebf0 8px, #e9ebf0 16px);
+        color: #9299a7;
+    }
+
+    body.calendar-page .calendar-day.today .day-number {
+        background: #6865e8;
+    }
+
+    body.calendar-page .calendar-day.selected {
+        outline-color: #6865e8;
+    }
+
+    body.calendar-page .calendar-legend {
+        color: #758096 !important;
+    }
+
+    @media (max-width: 575.98px) {
+        body.calendar-page .calendar-intro {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        body.calendar-page .calendar-intro small {
+            padding-left: 1.65rem;
+        }
+    }
+
+    @media (max-height: 700px) {
+        body.calendar-page {
+            height: auto;
+            min-height: 100vh;
+            min-height: 100dvh;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        body.calendar-page main#reservation-main {
+            flex: 0 0 auto;
+            min-height: calc(100vh - 4.5rem) !important;
+            min-height: calc(100dvh - 4.5rem) !important;
+            overflow: visible;
+        }
+
+        body.calendar-page main#reservation-main > .container {
+            height: auto;
+            min-height: 0;
+        }
+
+        body.calendar-page .reservation-calendar-card,
+        body.calendar-page .facility-calendar {
+            flex: 0 0 auto;
+        }
+
+        body.calendar-page .calendar-days {
+            flex: 0 0 auto;
+            min-height: 240px;
+        }
+
+        body.calendar-page .calendar-day {
+            min-height: 40px;
+        }
+    }
 </style>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
@@ -618,7 +815,10 @@ $today = date('Y-m-d');
 
             <div class="card shadow-sm mb-4 reservation-calendar-card">
                 <div class="card-body">
-                    <h3 class="calendar-intro">Choose a reservation date</h3>
+                    <h3 class="calendar-intro">
+                        <span><i class="bi bi-calendar2-week" aria-hidden="true"></i>Choose a reservation date</span>
+                        <small>Select an open day to explore facilities and available times.</small>
+                    </h3>
                     <div class="facility-calendar mb-3">
                         <div class="calendar-heading">
                             <a class="btn btn-sm btn-outline-secondary" href="index.php?month=<?php echo htmlspecialchars($previousMonth); ?>" aria-label="Previous month">
@@ -635,7 +835,7 @@ $today = date('Y-m-d');
                         <div class="calendar-weekdays" aria-hidden="true">
                             <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
                         </div>
-                        <div class="calendar-days" id="reservation-calendar">
+                        <div class="calendar-days" id="reservation-calendar" style="grid-template-rows: repeat(<?php echo (int)ceil(($firstWeekday + $daysInMonth) / 7); ?>, minmax(0, 1fr));">
                             <?php for ($day = 1; $day <= $daysInMonth; $day++):
                                 $dateString = $monthStart->format('Y-m-') . str_pad((string)$day, 2, '0', STR_PAD_LEFT);
                                 $status = $allDateStatuses[$dateString];
@@ -664,10 +864,10 @@ $today = date('Y-m-d');
                         </div>
                     </div>
                     <div class="calendar-legend d-flex flex-wrap gap-3 small text-muted">
-                        <span><span class="d-inline-block rounded me-1" style="width:12px;height:12px;background:#f0fdf4;"></span>Available</span>
-                        <span><span class="d-inline-block rounded me-1" style="width:12px;height:12px;background:linear-gradient(135deg,#dc3545 50%,#fff 50%);"></span>Some facilities reserved</span>
-                        <span><span class="d-inline-block rounded me-1" style="width:12px;height:12px;background:#dc3545;"></span>No facilities available</span>
-                        <span><span class="d-inline-block rounded me-1" style="width:12px;height:12px;background:#e2e8f0;"></span>School closed</span>
+                        <span><span class="d-inline-block rounded me-1" style="width:12px;height:12px;background:#edf8f2;"></span>Available</span>
+                        <span><span class="d-inline-block rounded me-1" style="width:12px;height:12px;background:linear-gradient(135deg,#f8e9c9 50%,#fff 50%);"></span>Some facilities reserved</span>
+                        <span><span class="d-inline-block rounded me-1" style="width:12px;height:12px;background:#d9575c;"></span>No facilities available</span>
+                        <span><span class="d-inline-block rounded me-1" style="width:12px;height:12px;background:#e9ebf0;"></span>School closed</span>
                     </div>
                 </div>
             </div>

@@ -60,6 +60,36 @@ $pdo = getDB();
 $users = $pdo->query("SELECT * FROM users ORDER BY id DESC")->fetchAll();
 $facilities = $pdo->query("SELECT * FROM facilities ORDER BY id DESC")->fetchAll();
 $reservations = $pdo->query("SELECT COUNT(*) as total FROM reservations")->fetch();
+$pendingReservations = $pdo->query("SELECT COUNT(*) AS total FROM reservations WHERE status = 'pending'")->fetch();
+
+$chartMonthStart = new DateTimeImmutable('first day of this month');
+$chartStart = $chartMonthStart->modify('-5 months');
+$chartEnd = $chartMonthStart->modify('+1 month');
+$chartStmt = $pdo->prepare(
+    "SELECT DATE_FORMAT(reserve_date, '%Y-%m') AS reservation_month, COUNT(*) AS total " .
+    "FROM reservations WHERE reserve_date >= ? AND reserve_date < ? AND status <> 'cancelled' " .
+    "GROUP BY reservation_month ORDER BY reservation_month"
+);
+$chartStmt->execute([$chartStart->format('Y-m-d'), $chartEnd->format('Y-m-d')]);
+$reservationTotalsByMonth = [];
+foreach ($chartStmt->fetchAll() as $monthTotal) {
+    $reservationTotalsByMonth[$monthTotal['reservation_month']] = (int)$monthTotal['total'];
+}
+$reservationChartLabels = [];
+$reservationChartData = [];
+for ($month = $chartStart; $month < $chartEnd; $month = $month->modify('+1 month')) {
+    $monthKey = $month->format('Y-m');
+    $reservationChartLabels[] = $month->format('M');
+    $reservationChartData[] = $reservationTotalsByMonth[$monthKey] ?? 0;
+}
+
+$recentReservations = $pdo->query(
+    "SELECT r.id, r.reserve_date, r.status, u.username, f.name AS facility " .
+    "FROM reservations r " .
+    "LEFT JOIN users u ON r.user_id = u.id " .
+    "LEFT JOIN facilities f ON r.facility_id = f.id " .
+    "ORDER BY r.created_at DESC LIMIT 6"
+)->fetchAll();
 ?>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
@@ -90,14 +120,18 @@ $reservations = $pdo->query("SELECT COUNT(*) as total FROM reservations")->fetch
             <div class="admin-dashboard-heading">
                 <span class="admin-heading-icon"><i class="bi bi-speedometer2"></i></span>
                 <div>
-                    <h2 class="mb-1">Admin Dashboard</h2>
-                    <p class="mb-0">Overview and management for campus reservations.</p>
+                    <h2 class="mb-1">Dashboard</h2>
+                    <p class="mb-0">A quick overview of campus reservations and activity.</p>
                 </div>
+            </div>
+            <div class="admin-dashboard-actions">
+                <a href="class_schedules.php" class="btn btn-outline-primary"><i class="bi bi-upload me-2"></i>Import schedule</a>
+                <a href="add_facility.php" class="btn btn-primary"><i class="bi bi-plus-lg me-2"></i>Add facility</a>
             </div>
         </div>
 
     <div class="row g-3 admin-stat-row">
-        <div class="col-sm-6 col-xl-4">
+        <div class="col-sm-6 col-xl-3">
             <div class="card admin-stat-card admin-stat-users">
                 <div class="card-body">
                     <span class="admin-stat-icon"><i class="bi bi-people-fill"></i></span>
@@ -106,7 +140,7 @@ $reservations = $pdo->query("SELECT COUNT(*) as total FROM reservations")->fetch
                 </div>
             </div>
         </div>
-        <div class="col-sm-6 col-xl-4">
+        <div class="col-sm-6 col-xl-3">
             <div class="card admin-stat-card admin-stat-facilities">
                 <div class="card-body">
                     <span class="admin-stat-icon"><i class="bi bi-building"></i></span>
@@ -115,7 +149,7 @@ $reservations = $pdo->query("SELECT COUNT(*) as total FROM reservations")->fetch
                 </div>
             </div>
         </div>
-        <div class="col-sm-6 col-xl-4">
+        <div class="col-sm-6 col-xl-3">
             <div class="card admin-stat-card admin-stat-reservations">
                 <div class="card-body">
                     <span class="admin-stat-icon"><i class="bi bi-calendar2-check"></i></span>
@@ -124,6 +158,76 @@ $reservations = $pdo->query("SELECT COUNT(*) as total FROM reservations")->fetch
                     <a href="reservations.php" class="btn btn-sm btn-outline-primary ms-auto">Manage</a>
                 </div>
             </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+            <div class="card admin-stat-card admin-stat-pending">
+                <div class="card-body">
+                    <span class="admin-stat-icon"><i class="bi bi-hourglass-split"></i></span>
+                    <div><p class="admin-stat-label">Pending requests</p>
+                    <h2><?php echo (int)$pendingReservations['total']; ?></h2></div>
+                    <a href="reservations.php" class="btn btn-sm btn-outline-primary ms-auto">Review</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mt-1 admin-insights-row">
+        <div class="col-xl-8">
+            <section class="card admin-insights-card h-100">
+                <div class="card-header admin-insights-heading">
+                    <div>
+                        <h3 class="h6 mb-1">Reservation activity</h3>
+                        <p class="small mb-0">Non-cancelled reservations over the last six months</p>
+                    </div>
+                    <span class="admin-insights-icon"><i class="bi bi-calendar3"></i></span>
+                </div>
+                <div class="card-body">
+                    <div class="admin-reservation-chart-wrap">
+                        <canvas id="adminReservationChart" aria-label="Reservations by month" role="img"></canvas>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div class="col-xl-4">
+            <section class="card admin-insights-card h-100">
+                <div class="card-header admin-insights-heading">
+                    <div>
+                        <h3 class="h6 mb-1">Recent reservations</h3>
+                        <p class="small mb-0">Latest booking activity</p>
+                    </div>
+                    <a class="admin-insights-link" href="reservations.php">View all <i class="bi bi-arrow-up-right"></i></a>
+                </div>
+                <div class="card-body p-0">
+                    <?php if ($recentReservations): ?>
+                        <ul class="admin-recent-list">
+                            <?php foreach ($recentReservations as $recentReservation): ?>
+                                <?php
+                                $statusClass = [
+                                    'pending' => 'pending',
+                                    'confirmed' => 'confirmed',
+                                    'used' => 'used',
+                                    'completed' => 'completed',
+                                    'cancelled' => 'cancelled',
+                                ][$recentReservation['status']] ?? 'pending';
+                                ?>
+                                <li class="admin-recent-item">
+                                    <span class="admin-recent-icon"><i class="bi bi-calendar2-check"></i></span>
+                                    <div class="admin-recent-details">
+                                        <strong><?php echo htmlspecialchars($recentReservation['facility'] ?? 'Facility unavailable', ENT_QUOTES, 'UTF-8'); ?></strong>
+                                        <span><?php echo htmlspecialchars($recentReservation['username'] ?? 'User unavailable', ENT_QUOTES, 'UTF-8'); ?> · <?php echo htmlspecialchars(date('M j', strtotime($recentReservation['reserve_date'])), ENT_QUOTES, 'UTF-8'); ?></span>
+                                    </div>
+                                    <span class="admin-status-pill admin-status-<?php echo htmlspecialchars($statusClass, ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars(ucfirst($recentReservation['status']), ENT_QUOTES, 'UTF-8'); ?></span>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php else: ?>
+                        <div class="admin-recent-empty">
+                            <i class="bi bi-calendar2-x"></i>
+                            <span>No reservations yet</span>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </section>
         </div>
     </div>
 
@@ -212,6 +316,52 @@ $reservations = $pdo->query("SELECT COUNT(*) as total FROM reservations")->fetch
         </div>
     </div>
     </div>
+    </main>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const chartCanvas = document.getElementById('adminReservationChart');
+        if (!chartCanvas || !window.Chart) return;
+
+        new Chart(chartCanvas, {
+            type: 'line',
+            data: {
+                labels: <?php echo json_encode($reservationChartLabels, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>,
+                datasets: [{
+                    label: 'Reservations',
+                    data: <?php echo json_encode($reservationChartData, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>,
+                    borderColor: '#6865e8',
+                    backgroundColor: 'rgba(104, 101, 232, 0.12)',
+                    borderWidth: 3,
+                    pointRadius: 3,
+                    pointHoverRadius: 5,
+                    pointBackgroundColor: '#fff',
+                    pointBorderWidth: 2,
+                    fill: true,
+                    tension: 0.38
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { intersect: false, mode: 'index' }
+                },
+                scales: {
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: '#788397' }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        ticks: { precision: 0, color: '#788397' },
+                        grid: { color: 'rgba(120, 131, 151, 0.14)', borderDash: [4, 4] }
+                    }
+                }
+            }
+        });
+    });
+</script>
 
 <?php if (is_array($dashboardNotification) && isset($dashboardNotification['message'])): ?>
     <?php $notificationIsSuccess = ($dashboardNotification['type'] ?? '') === 'success'; ?>

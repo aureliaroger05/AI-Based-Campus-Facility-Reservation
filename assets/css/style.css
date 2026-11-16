@@ -2951,3 +2951,381 @@ body:not(.calendar-page) footer .container {
         transform: none;
     }
 }
+
+.admin-dashboard-page {
+    background: #f7f8fb;
+}
+
+.admin-dashboard-page > .navbar.bg-primary {
+    border-bottom: 1px solid #e8ebf2;
+    background: #fff !important;
+    box-shadow: 0 3px 14px rgba(24, 35, 58, 0.045);
+}
+
+.admin-dashboard-page > .navbar .navbar-brand,
+.admin-dashboard-page > .navbar .nav-link {
+    color: #29364d;
+}
+
+.admin-dashboard-page > .navbar .nav-link:hover,
+.admin-dashboard-page > .navbar .nav-link.active {
+    color: #625fe0;
+}
+
+.admin-dashboard-content {
+    max-width: 1680px;
+    padding-right: clamp(1rem, 3vw, 2.75rem);
+    padding-left: clamp(1rem, 3vw, 2.75rem);
+}
+
+.admin-dashboard-page .admin-dashboard-content > .d-flex {
+    align-items: flex-end !important;
+}
+
+.admin-dashboard-page .admin-dashboard-heading {
+    width: auto;
+    gap: 0.9rem;
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+    color: var(--site-ink);
+}
+
+.admin-dashboard-page .admin-dashboard-heading::after {
+    display: none;
+}
+
+.admin-dashboard-page .admin-dashboard-heading h2 {
+    color: #1d273b;
+    font-size: clamp(1.45rem, 2vw, 1.8rem);
+    font-weight: 750;
+    letter-spacing: -0.035em;
+}
+
+.admin-dashboard-page .admin-dashboard-heading p {
+    color: #7a8497;
+    font-size: 0.92rem;
+}
+
+.admin-dashboard-page .admin-heading-icon {
+    width: 2.85rem;
+    height: 2.85rem;
+    flex-basis: 2.85rem;
+    border-radius: 0.85rem;
+    background: #efefff;
+    color: #625fe0;
+    box-shadow: none;
+    font-size: 1.2rem;
+}
+
+.admin-dashboard-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+}
+
+.admin-dashboard-actions .btn {
+    min-height: 2.65rem;
+    border-radius: 0.7rem;
+    font-size: 0.87rem;
+    font-weight: 650;
+}
+
+.admin-dashboard-page .admin-stat-row {
+    margin-bottom: 0.25rem;
+}
+
+.admin-dashboard-page .admin-stat-card {
+    min-height: 7.6rem;
+    border: 1px solid #eceef4;
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: 0 5px 18px rgba(28, 38, 63, 0.045);
+    color: #1d273b;
+}
+
+.admin-dashboard-page .admin-stat-card:hover {
+    transform: translateY(-2px);
+    border-color: #dfe2f5;
+    box-shadow: 0 10px 24px rgba(28, 38, 63, 0.08);
+}
+
+.admin-dashboard-page .admin-stat-card .card-body {
+    gap: 0.85rem;
+    padding: 1.1rem 1.15rem;
+}
+
+.admin-dashboard-page .admin-stat-icon {
+    width: 2.85rem;
+    height: 2.85rem;
+    flex-basis: 2.85rem;
+    border: 0;
+    border-radius: 0.85rem;
+    background: #efefff;
+    color: #625fe0;
+    font-size: 1.15rem;
+}
+
+.admin-dashboard-page .admin-stat-label {
+    margin-bottom: 0.25rem;
+    color: #788397;
+    font-size: 0.83rem;
+}
+
+.admin-dashboard-page .admin-stat-card h2 {
+    color: #202a3e !important;
+    font-size: 1.8rem !important;
+    font-weight: 750;
+    letter-spacing: -0.035em;
+}
+
+.admin-dashboard-page .admin-stat-users .admin-stat-icon {
+    background: #eaf3ff;
+    color: #4686df;
+}
+
+.admin-dashboard-page .admin-stat-facilities .admin-stat-icon {
+    background: #e8f7f2;
+    color: #2ba582;
+}
+
+.admin-dashboard-page .admin-stat-reservations .admin-stat-icon {
+    background: #f1ecff;
+    color: #8062dc;
+}
+
+.admin-dashboard-page .admin-stat-pending .admin-stat-icon {
+    background: #fff4e5;
+    color: #d58b23;
+}
+
+.admin-dashboard-page .admin-stat-reservations .btn,
+.admin-dashboard-page .admin-stat-pending .btn {
+    border-color: #e3e5ee;
+    color: #625fe0;
+}
+
+.admin-dashboard-page .admin-stat-reservations .btn:hover,
+.admin-dashboard-page .admin-stat-pending .btn:hover {
+    border-color: #625fe0;
+    background: #625fe0;
+    color: #fff;
+}
+
+.admin-insights-row {
+    margin-bottom: 0.25rem;
+}
+
+.admin-dashboard-page .admin-insights-card {
+    min-height: 340px;
+    overflow: hidden;
+    border: 1px solid #eceef4;
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: 0 5px 18px rgba(28, 38, 63, 0.045);
+}
+
+.admin-dashboard-page .admin-insights-card:hover {
+    transform: none;
+    border-color: #e1e4ed;
+    box-shadow: 0 8px 22px rgba(28, 38, 63, 0.06);
+}
+
+.admin-insights-heading {
+    min-height: 4.65rem;
+    padding: 1rem 1.15rem;
+    border-bottom: 1px solid #f0f1f5 !important;
+    background: #fff !important;
+}
+
+.admin-insights-heading h3 {
+    color: #28334a;
+    font-weight: 700;
+}
+
+.admin-insights-heading p {
+    color: #8a93a3;
+}
+
+.admin-insights-icon {
+    display: grid;
+    width: 2.3rem;
+    height: 2.3rem;
+    place-items: center;
+    border-radius: 0.7rem;
+    background: #f0efff;
+    color: #6865e8;
+}
+
+.admin-reservation-chart-wrap {
+    position: relative;
+    height: 250px;
+}
+
+.admin-reservation-chart-wrap canvas {
+    max-height: none !important;
+}
+
+.admin-insights-link {
+    color: #6865e8;
+    font-size: 0.82rem;
+    font-weight: 650;
+    text-decoration: none;
+}
+
+.admin-insights-link:hover {
+    color: #4845c5;
+}
+
+.admin-recent-list {
+    margin: 0;
+    padding: 0 1.15rem;
+    list-style: none;
+}
+
+.admin-recent-item {
+    display: flex;
+    min-height: 3.8rem;
+    align-items: center;
+    gap: 0.7rem;
+    border-bottom: 1px solid #f0f1f5;
+}
+
+.admin-recent-item:last-child {
+    border-bottom: 0;
+}
+
+.admin-recent-icon {
+    display: grid;
+    width: 2.15rem;
+    height: 2.15rem;
+    flex: 0 0 2.15rem;
+    place-items: center;
+    border-radius: 0.7rem;
+    background: #f4f3ff;
+    color: #7772df;
+}
+
+.admin-recent-details {
+    display: flex;
+    min-width: 0;
+    flex: 1 1 auto;
+    flex-direction: column;
+    gap: 0.1rem;
+}
+
+.admin-recent-details strong,
+.admin-recent-details span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.admin-recent-details strong {
+    color: #303a50;
+    font-size: 0.82rem;
+    font-weight: 650;
+}
+
+.admin-recent-details span {
+    color: #8992a2;
+    font-size: 0.74rem;
+}
+
+.admin-status-pill {
+    flex: 0 0 auto;
+    padding: 0.25rem 0.45rem;
+    border-radius: 99px;
+    font-size: 0.66rem;
+    font-weight: 700;
+}
+
+.admin-status-pending {
+    background: #fff5e6;
+    color: #b77617;
+}
+
+.admin-status-confirmed,
+.admin-status-completed {
+    background: #e8f7f0;
+    color: #25835f;
+}
+
+.admin-status-used {
+    background: #eaf3ff;
+    color: #3d76c1;
+}
+
+.admin-status-cancelled {
+    background: #fff0ef;
+    color: #c45b57;
+}
+
+.admin-recent-empty {
+    display: flex;
+    min-height: 250px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.65rem;
+    color: #8992a2;
+    font-size: 0.88rem;
+}
+
+.admin-recent-empty i {
+    color: #b3b8c5;
+    font-size: 1.8rem;
+}
+
+.admin-dashboard-page .admin-management-card {
+    border-color: #eceef4;
+    border-radius: 1rem;
+}
+
+.admin-dashboard-page .admin-section-heading {
+    background: #fff;
+}
+
+.admin-dashboard-page .admin-data-table thead th {
+    background: #f8f9fc;
+    color: #758096;
+    font-size: 0.77rem;
+    letter-spacing: 0.035em;
+    text-transform: uppercase;
+}
+
+@media (max-width: 767.98px) {
+    .admin-dashboard-page .admin-dashboard-content > .d-flex {
+        align-items: flex-start !important;
+    }
+
+    .admin-dashboard-page .admin-dashboard-heading {
+        align-items: flex-start;
+    }
+
+    .admin-dashboard-actions {
+        width: 100%;
+    }
+
+    .admin-dashboard-actions .btn {
+        flex: 1 1 auto;
+    }
+
+    .admin-dashboard-page .admin-stat-card .card-body {
+        padding: 0.95rem;
+    }
+
+    .admin-status-pill {
+        font-size: 0.62rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .admin-dashboard-page .admin-stat-card,
+    .admin-dashboard-page .admin-insights-card {
+        transition: none;
+    }
+}
