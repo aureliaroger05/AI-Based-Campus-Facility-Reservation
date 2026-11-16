@@ -99,10 +99,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['mark_used'])) {
         $lockedReservation = $lock->fetch();
 
         if ($lockedReservation && $lockedReservation['status'] === 'confirmed') {
-            $markUsed = $pdo->prepare("UPDATE reservations SET status = 'used', usage_confirmed = 1 WHERE id = ? AND status = 'confirmed'");
+            $markUsed = $pdo->prepare("UPDATE reservations SET status = 'completed', usage_confirmed = 1 WHERE id = ? AND status = 'confirmed'");
             $markUsed->execute([$id]);
             $checkinResult = $markUsed->rowCount() === 1 ? 'used' : 'unavailable';
-        } elseif ($lockedReservation && $lockedReservation['status'] === 'used') {
+        } elseif ($lockedReservation && $lockedReservation['status'] === 'completed') {
             $checkinResult = 'already-used';
         } else {
             $checkinResult = 'unavailable';
@@ -129,7 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['mark_used'])) {
 $checkinResult = $_GET['checkin'] ?? '';
 $isAdminViewer = isAdmin();
 if ($validQrScan) {
-    $checkinResult = $res['status'] === 'used'
+    $checkinResult = $res['status'] === 'completed'
         ? (($_GET['checkin'] ?? '') === 'already-used' ? 'already-used' : 'used')
         : ($res['status'] === 'confirmed' ? '' : 'unavailable');
 }
@@ -249,7 +249,7 @@ $body_class = 'reservation-view-page';
         <section class="card reservation-view-card">
             <div class="card-header profile-panel-heading">
                 <span><i class="bi bi-calendar2-check me-2"></i>Reservation details</span>
-                <span class="badge text-bg-<?php echo in_array($res['status'], ['confirmed', 'used'], true) ? 'success' : ($res['status'] === 'cancelled' ? 'danger' : ($res['status'] === 'completed' ? 'primary' : ($res['status'] === 'pending' ? 'warning text-dark' : 'secondary'))); ?>">
+                <span class="badge text-bg-<?php echo in_array($res['status'], ['confirmed', 'completed'], true) ? 'success' : ($res['status'] === 'cancelled' ? 'danger' : ($res['status'] === 'pending' ? 'warning text-dark' : 'secondary')); ?>">
                     <?php echo htmlspecialchars(ucfirst($res['status'])); ?>
                 </span>
             </div>
