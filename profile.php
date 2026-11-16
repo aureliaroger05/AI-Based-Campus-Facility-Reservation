@@ -302,7 +302,7 @@
             </div>
         <?php else: ?>
         <div class="table-responsive">
-        <table class="table profile-reservations-table">
+        <table class="table profile-reservations-table" data-pagination-page-size="10" data-pagination-label="My reservations">
             <thead><tr><th>Facility</th><th>Day</th><th>Start Time</th><th>End Time</th><th>Status</th><th>QR</th><th>Actions</th></tr></thead>
             <tbody>
             <?php foreach ($res as $r): ?>

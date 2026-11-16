@@ -23,6 +23,7 @@ if (defined('HEADER_INCLUDED')):
         </div>
     </div>
     <script src="<?php echo $chatAssetPrefix; ?>assets/js/confirm-dialog.js?v=<?php echo (int)filemtime(__DIR__ . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'confirm-dialog.js'); ?>"></script>
+    <script src="<?php echo $chatAssetPrefix; ?>assets/js/table-pagination.js?v=<?php echo (int)filemtime(__DIR__ . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'table-pagination.js'); ?>"></script>
     <section class="ai-chat-widget" data-endpoint="<?php echo $chatAssetPrefix; ?>ai-chat.php" data-csrf="<?php echo htmlspecialchars($_SESSION['ai_chat_csrf'], ENT_QUOTES, 'UTF-8'); ?>">
         <button class="ai-chat-launcher" type="button" aria-expanded="false" aria-controls="ai-chat-panel" aria-label="Open AI system assistant">
             <i class="bi bi-chat-dots-fill" aria-hidden="true"></i>

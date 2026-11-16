@@ -83,11 +83,13 @@ function isAvailable($facility_id, $date, $start_time, $end_time) {
             "SELECT id FROM reservations " .
             "WHERE facility_id = ? AND reserve_date = ? AND status != 'cancelled' " .
             "AND (" .
-            "((start_time <> '00:00:00' OR end_time <> '00:00:00') AND start_time < ? AND end_time > ?) " .
-            "OR (start_time = '00:00:00' AND end_time = '00:00:00' AND reserve_time >= ? AND reserve_time < ?)" .
+            "((start_time <> '00:00:00' OR end_time <> '00:00:00') " .
+            "AND start_time < ADDTIME(?, '01:00:00') AND ADDTIME(end_time, '01:00:00') > ?) " .
+            "OR (start_time = '00:00:00' AND end_time = '00:00:00' " .
+            "AND reserve_time < ADDTIME(?, '01:00:00') AND ADDTIME(reserve_time, '02:00:00') > ?)" .
             ") LIMIT 1"
         );
-        $stmt->execute([$facility_id, $date, $end_time, $start_time, $start_time, $end_time]);
+        $stmt->execute([$facility_id, $date, $end_time, $start_time, $end_time, $start_time]);
         return $stmt->fetch() === false;
     } catch (PDOException $e) {
         if ($e->getCode() !== '42S22' && (int)($e->errorInfo[1] ?? 0) !== 1054) {
@@ -97,9 +99,10 @@ function isAvailable($facility_id, $date, $start_time, $end_time) {
         // Fallback old schema uses reserve_time only
         $stmt = $pdo->prepare(
             "SELECT id FROM reservations " .
-            "WHERE facility_id = ? AND reserve_date = ? AND reserve_time = ? AND status != 'cancelled' LIMIT 1"
+            "WHERE facility_id = ? AND reserve_date = ? AND reserve_time < ADDTIME(?, '01:00:00') " .
+            "AND ADDTIME(reserve_time, '02:00:00') > ? AND status != 'cancelled' LIMIT 1"
         );
-        $stmt->execute([$facility_id, $date, $start_time]);
+        $stmt->execute([$facility_id, $date, $end_time, $start_time]);
         return $stmt->fetch() === false;
     }
 }

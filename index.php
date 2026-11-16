@@ -66,18 +66,23 @@ if (!function_exists('getFacilityMonthStatuses')) {
             ];
         }
 
+        $reservationIntervalsByDate = [];
         foreach ($reservations as $reservation) {
             $hasRange = isset($reservation['start_time'], $reservation['end_time'])
                 && ($reservation['start_time'] !== '00:00:00' || $reservation['end_time'] !== '00:00:00');
             if (!$hasRange) {
                 $startMinutes = timeToMinutesFromString($reservation['reserve_time'] ?? '00:00:00');
-                $endMinutes = $startMinutes + 1;
+                $endMinutes = $startMinutes + 60;
             } else {
                 $startMinutes = timeToMinutesFromString($reservation['start_time']);
                 $endMinutes = timeToMinutesFromString($reservation['end_time']);
             }
 
             $intervalsByDate[$reservation['reserve_date']][] = [
+                max(0, $startMinutes),
+                min(1440, $endMinutes),
+            ];
+            $reservationIntervalsByDate[$reservation['reserve_date']][] = [
                 max(0, $startMinutes),
                 min(1440, $endMinutes),
             ];
@@ -143,6 +148,7 @@ if (!function_exists('getFacilityMonthStatuses')) {
                 'label' => $isFullDay ? 'Reserved' : 'Partially reserved',
                 'reserved_times' => $reservedTimes,
                 'available_times' => $availableTimes,
+                'reservation_times' => $reservationIntervalsByDate[$date] ?? [],
             ];
         }
 
@@ -150,9 +156,11 @@ if (!function_exists('getFacilityMonthStatuses')) {
     }
 }
 
-$requestedMonth = $_GET['month'] ?? date('Y-m');
+$manilaTimezone = new DateTimeZone('Asia/Manila');
+$manilaNow = new DateTimeImmutable('now', $manilaTimezone);
+$requestedMonth = $_GET['month'] ?? $manilaNow->format('Y-m');
 if (!preg_match('/^\d{4}-(0[1-9]|1[0-2])$/', $requestedMonth)) {
-    $requestedMonth = date('Y-m');
+    $requestedMonth = $manilaNow->format('Y-m');
 }
 $monthStart = DateTimeImmutable::createFromFormat('!Y-m-d', $requestedMonth . '-01');
 if (!$monthStart) {
@@ -161,7 +169,8 @@ if (!$monthStart) {
 $monthEnd = $monthStart->modify('last day of this month');
 $previousMonth = $monthStart->modify('-1 month')->format('Y-m');
 $nextMonth = $monthStart->modify('+1 month')->format('Y-m');
-$today = date('Y-m-d');
+$today = $manilaNow->format('Y-m-d');
+$minimumReservationDate = $manilaNow->setTime(0, 0)->modify('+3 days')->format('Y-m-d');
 ?>
 
 <style>
@@ -737,7 +746,7 @@ $today = date('Y-m-d');
     <div class="container">
         <?php if (isset($_GET['reserved']) && $_GET['reserved'] === '0'): ?>
                 <div class="alert alert-danger" role="alert">
-                    The reservation could not be completed. The selected time may conflict with another reservation; please choose another time and try again.
+                    The reservation could not be completed. Submit before 5:00 PM, book at least 3 days ahead, and choose an available time longer than 30 minutes.
                 </div>
         <?php endif; ?>
         <?php if (isset($_GET['reserved']) && $_GET['reserved'] === '1'): ?>
@@ -846,13 +855,18 @@ $today = date('Y-m-d');
                                 $dateString = $monthStart->format('Y-m-') . str_pad((string)$day, 2, '0', STR_PAD_LEFT);
                                 $status = $allDateStatuses[$dateString];
                                 $isPastDate = $dateString < $today;
+                                $isTooSoon = $dateString < $minimumReservationDate;
                                 $isSunday = (int)$monthStart->setDate(
                                     (int)$monthStart->format('Y'),
                                     (int)$monthStart->format('n'),
                                     $day
                                 )->format('w') === 0;
-                                $isDisabled = $isPastDate || $isSunday || !$status['available'];
-                                $dateLabel = $isPastDate ? 'Past date' : ($isSunday ? 'School closed' : $status['label']);
+                                $isDisabled = $isPastDate || $isTooSoon || $isSunday || !$status['available'];
+                                $dateLabel = $isPastDate
+                                    ? 'Past date'
+                                    : ($isTooSoon
+                                        ? 'Book at least 3 days ahead'
+                                        : ($isSunday ? 'School closed' : $status['label']));
                                 ?>
                                 <button
                                     type="button"
@@ -888,6 +902,9 @@ $today = date('Y-m-d');
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
+                            <div class="alert alert-info py-2" id="reservation-policy-note" role="note" aria-live="polite">
+                                Requests must be submitted before 5 PM and reservations must be booked at least 3 days ahead.
+                            </div>
                             <div id="no-facilities-message" class="alert alert-warning" hidden>
                                 No facilities are available on this date.
                             </div>
@@ -900,16 +917,9 @@ $today = date('Y-m-d');
                                             <option value="" selected disabled>Choose a facility</option>
                                 <?php foreach ($facilities as $facility):
                                     $facilityId = (int)($facility['id'] ?? 0);
-                                    $reservedDates = [];
-                                    foreach ($facilityStatuses[$facilityId] as $date => $status) {
-                                        if ($status['state'] === 'reserved') {
-                                            $reservedDates[] = $date;
-                                        }
-                                    }
                                     ?>
                                             <option
                                                 value="<?php echo $facilityId; ?>"
-                                                data-reserved-dates="<?php echo htmlspecialchars(json_encode($reservedDates), ENT_QUOTES, 'UTF-8'); ?>"
                                                 data-booking-times="<?php echo htmlspecialchars(json_encode($facilityStatuses[$facilityId]), ENT_QUOTES, 'UTF-8'); ?>"
                                                 disabled
                                                 hidden
@@ -947,17 +957,17 @@ $today = date('Y-m-d');
                                         </div>
                                     </div>
                                     <div id="selected-facility-times" class="alert alert-light border mb-3" hidden aria-live="polite">
-                                        <h4 class="h6 text-success">Available times (7:30 AM–9:00 PM)</h4>
+                                        <h4 class="h6 text-success">Available times</h4>
                                         <ul id="available-time-list" class="mb-0 small"></ul>
                                     </div>
                                     <div class="row g-2 align-items-end">
                                         <div class="col-6 col-lg-3">
                                             <label class="form-label" for="reservation-start-time">Start Time</label>
-                                            <input type="time" id="reservation-start-time" name="start_time" class="form-control" min="07:30" max="21:00" required>
+                                            <input type="time" id="reservation-start-time" name="start_time" class="form-control" min="07:30" max="20:29" step="60" required>
                                         </div>
                                         <div class="col-6 col-lg-3">
                                             <label class="form-label" for="reservation-end-time">End Time</label>
-                                            <input type="time" id="reservation-end-time" name="end_time" class="form-control" min="07:30" max="21:00" required>
+                                            <input type="time" id="reservation-end-time" name="end_time" class="form-control" min="08:01" max="21:00" step="60" required>
                                         </div>
                                         <div class="col-lg">
                                             <label class="form-label" for="reservation-reason">Purpose of reservation</label>
@@ -1080,6 +1090,68 @@ function formatTimeRange(range) {
     const reservationForm = document.querySelector('.reservation-form');
     const startTimeInput = document.getElementById('reservation-start-time');
     const endTimeInput = document.getElementById('reservation-end-time');
+    const reservationSubmitButton = reservationForm.querySelector('button[name="reserve_fac"]');
+    const reservationPolicyNote = document.getElementById('reservation-policy-note');
+
+    function minutesToTime(minutes) {
+        return String(Math.floor(minutes / 60)).padStart(2, '0') + ':' +
+            String(minutes % 60).padStart(2, '0');
+    }
+
+    function getMinimumBookingDate() {
+        const parts = getManilaClock().date.split('-').map(Number);
+        const minimumDate = new Date(Date.UTC(parts[0], parts[1] - 1, parts[2] + 3));
+        return minimumDate.toISOString().slice(0, 10);
+    }
+
+    function timeToMinutes(time) {
+        return Number(time.slice(0, 2)) * 60 + Number(time.slice(3, 5));
+    }
+
+    function getAvailableReservationRanges(dateAvailability, selectedDate) {
+        const availableTimes = dateAvailability.available_times || [[450, 1260]];
+        const reservationTimes = dateAvailability.reservation_times || [];
+        const earliestStart = getEarliestStartTime(selectedDate);
+        const earliestMinutes = Number(earliestStart.slice(0, 2)) * 60 + Number(earliestStart.slice(3, 5));
+        let ranges = availableTimes.map(function (range) {
+            return [Math.max(range[0], earliestMinutes), range[1]];
+        });
+
+        reservationTimes.forEach(function (reservation) {
+            ranges = ranges.map(function (range) {
+                let start = range[0];
+                let end = range[1];
+                if (reservation[1] <= start) {
+                    start = Math.max(start, reservation[1] + 60);
+                }
+                if (reservation[0] >= end) {
+                    end = Math.min(end, reservation[0] - 60);
+                }
+                return [start, end];
+            });
+        });
+
+        return ranges.filter(function (range) {
+            return range[1] - range[0] > 30;
+        });
+    }
+
+    function getSelectedFacilityAvailability(selectedDate) {
+        const selectedOption = facilitySelect.options[facilitySelect.selectedIndex];
+        if (!selectedOption || !selectedOption.value) {
+            return {};
+        }
+
+        const availabilityByDate = JSON.parse(selectedOption.getAttribute('data-booking-times') || '{}');
+        return availabilityByDate[selectedDate] || {};
+    }
+
+    function updateReservationSubmissionState() {
+        const cutoffPassed = getManilaClock().time >= '17:00';
+        reservationSubmitButton.disabled = cutoffPassed;
+        reservationPolicyNote.textContent =
+            'Requests must be submitted before 5 PM and reservations must be booked at least 3 days ahead.';
+    }
 
     function updateReservationTimeOptions() {
         if (!reservationForm || !reservationForm.elements.reserve_date.value) {
@@ -1087,60 +1159,64 @@ function formatTimeRange(range) {
         }
 
         const selectedDate = reservationForm.elements.reserve_date.value;
+        const selectedOption = facilitySelect.options[facilitySelect.selectedIndex];
+        const hasSelectedFacility = Boolean(selectedOption && selectedOption.value);
+        const dateAvailability = hasSelectedFacility ? getSelectedFacilityAvailability(selectedDate) : {};
+        const ranges = hasSelectedFacility ? getAvailableReservationRanges(dateAvailability, selectedDate) : [];
         const earliestStart = getEarliestStartTime(selectedDate);
+        const previousStart = startTimeInput.value;
+        const previousEnd = endTimeInput.value;
+        startTimeInput.disabled = !hasSelectedFacility || ranges.length === 0;
+        endTimeInput.disabled = !hasSelectedFacility || ranges.length === 0;
         startTimeInput.min = earliestStart;
-        endTimeInput.min = startTimeInput.value || earliestStart;
+        startTimeInput.max = '20:29';
+        endTimeInput.max = '21:00';
 
-        if (startTimeInput.value && startTimeInput.value < earliestStart) {
+        const startMinutes = previousStart ? timeToMinutes(previousStart) : NaN;
+        const rangeForStart = ranges.find(function (range) {
+            return startMinutes >= range[0] && startMinutes + 31 <= range[1];
+        });
+        if (!rangeForStart) {
             startTimeInput.value = '';
             endTimeInput.value = '';
-            endTimeInput.min = earliestStart;
-        } else if (endTimeInput.value && startTimeInput.value && endTimeInput.value <= startTimeInput.value) {
+        }
+
+        if (startTimeInput.value) {
+            const selectedStart = timeToMinutes(startTimeInput.value);
+            const selectedRange = ranges.find(function (range) {
+                return selectedStart >= range[0] && selectedStart + 31 <= range[1];
+            });
+            endTimeInput.min = minutesToTime(selectedStart + 31);
+            const endMinutes = previousEnd ? timeToMinutes(previousEnd) : NaN;
+            if (!selectedRange || endMinutes - selectedStart <= 30 || endMinutes > selectedRange[1]) {
+                endTimeInput.value = '';
+            }
+        } else {
+            endTimeInput.min = '08:01';
             endTimeInput.value = '';
         }
 
-        const selectedOption = facilitySelect.options[facilitySelect.selectedIndex];
-        if (!selectedOption || !selectedOption.value) {
-            return;
-        }
-
-        const availabilityByDate = JSON.parse(selectedOption.getAttribute('data-booking-times') || '{}');
-        const dateAvailability = availabilityByDate[selectedDate] || {};
-        let availableTimes = dateAvailability.available_times || [[450, 1260]];
-        if (selectedDate === getManilaClock().date) {
-            const earliestMinutes = Number(earliestStart.slice(0, 2)) * 60 + Number(earliestStart.slice(3, 5));
-            availableTimes = availableTimes
-                .map(function (range) {
-                    return [Math.max(range[0], earliestMinutes), range[1]];
-                })
-                .filter(function (range) {
-                    return range[0] < range[1];
-                });
-        }
         renderTimeRanges(
             'available-time-list',
-            availableTimes,
-            'No available times remain.'
+            ranges,
+            'No available times longer than 30 minutes remain.'
         );
+        updateReservationSubmissionState();
     }
 
     if (facilitySelect) {
         facilitySelect.addEventListener('change', function () {
             const selectedOption = facilitySelect.options[facilitySelect.selectedIndex];
+            const selectedTimes = document.getElementById('selected-facility-times');
             if (!selectedOption || !selectedOption.value) {
+                selectedTimes.hidden = true;
+                startTimeInput.value = '';
+                endTimeInput.value = '';
+                updateReservationTimeOptions();
                 return;
             }
-            const selectedDate = document.querySelector('.reservation-form [name="reserve_date"]').value;
-            const availabilityByDate = JSON.parse(selectedOption.getAttribute('data-booking-times') || '{}');
-            const dateAvailability = availabilityByDate[selectedDate] || {};
-            const reservedTimes = dateAvailability.reserved_times || [];
 
-            renderTimeRanges(
-                'available-time-list',
-                dateAvailability.available_times || [[450, 1260]],
-                'No available times remain.'
-            );
-            document.getElementById('selected-facility-times').hidden = reservedTimes.length === 0;
+            selectedTimes.hidden = false;
             updateReservationTimeOptions();
         });
     }
@@ -1182,44 +1258,54 @@ function formatTimeRange(range) {
                 return;
             }
 
-            const startTime = form.elements.start_time.value;
-            const endTime = form.elements.end_time.value;
-            const earliestStart = getEarliestStartTime(form.elements.reserve_date.value);
-            if (startTime < earliestStart) {
+            if (form.elements.reserve_date.value < getMinimumBookingDate()) {
                 event.preventDefault();
-                alert('That start time has already passed. Choose a later available time.');
-                updateReservationTimeOptions();
+                alert('Reservations must be made at least 3 days before the reservation date.');
                 return;
             }
-            if (startTime < '07:30' || endTime > '21:00' || startTime >= endTime) {
+
+            if (getManilaClock().time >= '17:00') {
                 event.preventDefault();
-                alert('Choose a valid time between 7:30 AM and 9:00 PM. End time must be after start time.');
+                updateReservationSubmissionState();
+                alert('The daily reservation cutoff is 5:00 PM Manila time. Submit your request before the cutoff.');
+                return;
+            }
+
+            const startTime = form.elements.start_time.value;
+            const endTime = form.elements.end_time.value;
+            if (!startTime || !endTime) {
+                event.preventDefault();
+                alert('Choose an available time longer than 30 minutes.');
                 return;
             }
 
             const selectedOption = facilitySelect.options[facilitySelect.selectedIndex];
-            const availabilityByDate = JSON.parse(selectedOption.getAttribute('data-booking-times') || '{}');
-            const dateAvailability = availabilityByDate[form.elements.reserve_date.value] || {};
-            const startMinutes = Number(startTime.slice(0, 2)) * 60 + Number(startTime.slice(3, 5));
-            const endMinutes = Number(endTime.slice(0, 2)) * 60 + Number(endTime.slice(3, 5));
-            const overlapsReservation = (dateAvailability.reserved_times || []).some(function (range) {
-                return startMinutes < range[1] && endMinutes > range[0];
+            const dateAvailability = getSelectedFacilityAvailability(form.elements.reserve_date.value);
+            const startMinutes = timeToMinutes(startTime);
+            const endMinutes = timeToMinutes(endTime);
+            const hasAvailableRange = selectedOption && selectedOption.value &&
+                endMinutes - startMinutes > 30 &&
+                getAvailableReservationRanges(dateAvailability, form.elements.reserve_date.value).some(function (range) {
+                    return startMinutes >= range[0] && endMinutes <= range[1];
             });
 
-            if (overlapsReservation) {
+            if (!hasAvailableRange) {
                 event.preventDefault();
-                alert('That time conflicts with a class or reservation. Choose a time from the available times list.');
+                alert('That time is no longer available. Choose another available time longer than 30 minutes.');
                 return;
             }
-
         });
     });
 
     if (startTimeInput && endTimeInput) {
         startTimeInput.addEventListener('change', updateReservationTimeOptions);
-        endTimeInput.addEventListener('focus', updateReservationTimeOptions);
+        endTimeInput.addEventListener('change', updateReservationTimeOptions);
         window.clearInterval(window.reservationTimeUpdateInterval);
-        window.reservationTimeUpdateInterval = window.setInterval(updateReservationTimeOptions, 10000);
+        window.reservationTimeUpdateInterval = window.setInterval(function () {
+            updateReservationTimeOptions();
+            updateReservationSubmissionState();
+        }, 10000);
+        updateReservationSubmissionState();
     }
 
     function handleReservationCalendarClick(event) {
@@ -1260,8 +1346,9 @@ function formatTimeRange(range) {
             if (!option.value) {
                 return;
             }
-            const reservedDates = JSON.parse(option.getAttribute('data-reserved-dates') || '[]');
-            const isAvailable = !reservedDates.includes(selectedDate);
+            const availabilityByDate = JSON.parse(option.getAttribute('data-booking-times') || '{}');
+            const dateAvailability = availabilityByDate[selectedDate] || {};
+            const isAvailable = getAvailableReservationRanges(dateAvailability, selectedDate).length > 0;
             option.hidden = !isAvailable;
             option.disabled = !isAvailable;
             const row = availableFacilityRows.querySelector('[data-facility-row="' + option.value + '"]');
@@ -1269,11 +1356,10 @@ function formatTimeRange(range) {
                 row.hidden = false;
                 const radio = row.querySelector('input[name="facility_id"]');
                 radio.disabled = !isAvailable;
-                const dateAvailability = JSON.parse(option.getAttribute('data-booking-times') || '{}')[selectedDate] || {};
                 const isPartiallyBooked = (dateAvailability.reserved_times || []).length > 0;
                 const availabilityLabel = row.querySelector('[data-facility-availability]');
                 availabilityLabel.textContent = !isAvailable
-                    ? 'Fully booked'
+                    ? 'No reservable times'
                     : (isPartiallyBooked ? 'Limited times' : 'Available');
                 availabilityLabel.classList.toggle('text-bg-warning', isAvailable && isPartiallyBooked);
                 availabilityLabel.classList.toggle('text-bg-success', !isPartiallyBooked && isAvailable);

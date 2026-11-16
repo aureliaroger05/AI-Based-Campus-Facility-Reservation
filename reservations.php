@@ -10,12 +10,20 @@ if (!isLoggedIn()) {
 
 if (!function_exists('makeReservation')) {
     function makeReservation($facility_id, $date, $start_time, $end_time, $reason) {
-        $bookingDate = DateTimeImmutable::createFromFormat('!Y-m-d', (string)$date);
+        $manilaTimezone = new DateTimeZone('Asia/Manila');
+        $now = new DateTimeImmutable('now', $manilaTimezone);
+        $bookingDate = DateTimeImmutable::createFromFormat('!Y-m-d', (string)$date, $manilaTimezone);
+        $minimumBookingDate = $now->setTime(0, 0)->modify('+3 days');
         if (
             !$bookingDate ||
             $bookingDate->format('Y-m-d') !== $date ||
+            $bookingDate < $minimumBookingDate ||
             $bookingDate->format('w') === '0'
         ) {
+            return false;
+        }
+
+        if ($now->format('H:i') >= '17:00') {
             return false;
         }
 
@@ -30,16 +38,23 @@ if (!function_exists('makeReservation')) {
 
         $start_time = substr($start_time, 0, 5);
         $end_time = substr($end_time, 0, 5);
-        if ($start_time < '07:30' || $end_time > '21:00' || $start_time >= $end_time) {
+        $startMinutes = ((int)substr($start_time, 0, 2) * 60) + (int)substr($start_time, 3, 2);
+        $endMinutes = ((int)substr($end_time, 0, 2) * 60) + (int)substr($end_time, 3, 2);
+        if (
+            $start_time < '07:30' ||
+            $end_time > '21:00' ||
+            $startMinutes < 450 ||
+            $endMinutes - $startMinutes <= 30
+        ) {
             return false;
         }
 
         $bookingStart = DateTimeImmutable::createFromFormat(
             '!Y-m-d H:i',
             $bookingDate->format('Y-m-d') . ' ' . $start_time,
-            new DateTimeZone('Asia/Manila')
+            $manilaTimezone
         );
-        if (!$bookingStart || $bookingStart <= new DateTimeImmutable('now', new DateTimeZone('Asia/Manila'))) {
+        if (!$bookingStart || $bookingStart <= $now) {
             return false;
         }
 

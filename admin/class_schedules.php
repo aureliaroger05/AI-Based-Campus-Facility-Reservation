@@ -165,7 +165,7 @@ require '../header.php';
                 <p class="text-muted mb-0">No upcoming classes have been imported.</p>
             <?php else: ?>
                 <div class="table-responsive">
-                    <table class="table table-striped align-middle mb-0">
+                    <table class="table table-striped align-middle mb-0" data-pagination-page-size="10" data-pagination-label="Upcoming class schedules">
                         <thead>
                             <tr>
                                 <th>Date</th>

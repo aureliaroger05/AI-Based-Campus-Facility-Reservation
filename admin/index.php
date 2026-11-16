@@ -297,7 +297,7 @@ $recentReservations = $pdo->query(
             </div>
             <div class="card-body">
             <div class="table-responsive">
-            <table class="table table-striped align-middle admin-data-table" data-admin-search-table>
+            <table class="table table-striped align-middle admin-data-table" data-admin-search-table data-pagination-page-size="10" data-pagination-label="Users">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -339,7 +339,7 @@ $recentReservations = $pdo->query(
             </div>
             <div class="card-body">
             <div class="table-responsive">
-            <table class="table table-striped align-middle admin-data-table" data-admin-search-table>
+            <table class="table table-striped align-middle admin-data-table" data-admin-search-table data-pagination-page-size="10" data-pagination-label="Facilities">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -511,9 +511,10 @@ $recentReservations = $pdo->query(
 
                 document.querySelectorAll('[data-admin-search-table] tbody tr').forEach(function (row) {
                     const hiddenManagementRow = row.closest('.admin-management-row');
-                    if (hiddenManagementRow && getComputedStyle(hiddenManagementRow).display === 'none') return;
                     const matches = !query || row.textContent.toLocaleLowerCase().includes(query);
+                    row.dataset.tableSearchMatch = matches ? 'true' : 'false';
                     row.hidden = !matches;
+                    if (hiddenManagementRow && getComputedStyle(hiddenManagementRow).display === 'none') return;
                     if (matches && query) visibleMatches++;
                 });
 
@@ -525,6 +526,9 @@ $recentReservations = $pdo->query(
 
                 if (searchEmpty) {
                     searchEmpty.hidden = !query || visibleMatches > 0;
+                }
+                if (document.querySelector('[data-admin-search-table]')) {
+                    document.dispatchEvent(new CustomEvent('table-pagination:refresh'));
                 }
             });
         }
