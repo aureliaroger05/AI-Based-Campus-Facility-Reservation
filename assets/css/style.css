@@ -1784,29 +1784,6 @@ canvas {
     gap: 0.4rem;
 }
 
-.reservation-month-divider td {
-    padding: 0.65rem 0.9rem !important;
-    border-top: 1px solid #dce5ef;
-    background: #edf4fa !important;
-    color: #294766;
-}
-
-.reservation-month-divider-content {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.75rem;
-}
-
-.reservation-month-divider-content strong {
-    font-size: 0.86rem;
-}
-
-.reservation-month-divider-content .badge {
-    border-radius: 999px;
-    font-size: 0.7rem;
-}
-
 @media (max-width: 991.98px) {
     .navbar-collapse {
         padding: 0.5rem 0 0.75rem;
@@ -4651,17 +4628,6 @@ html[data-admin-theme="dark"] .admin-dashboard-shell main .table tbody tr:hover 
     --bs-table-color-type: #fff;
 }
 
-html[data-admin-theme="dark"] body[class*="admin-"] main .reservation-month-divider td {
-    border-color: #39465b !important;
-    background: #25334a !important;
-    color: #e5eaf2 !important;
-}
-
-html[data-admin-theme="dark"] body[class*="admin-"] main .reservation-month-divider .badge.text-bg-light {
-    background: #35445d !important;
-    color: #e5eaf2 !important;
-}
-
 html[data-admin-theme="dark"] .admin-dashboard-shell main .table-responsive {
     scrollbar-color: #52627b #182233;
 }
@@ -5165,4 +5131,12 @@ html[data-admin-theme="dark"] body[class*="admin-"] main table a:not(.btn) {
 
 html[data-admin-theme="dark"] body[class*="admin-"] main table a:not(.btn):hover {
     color: #c6e0ff;
+}
+
+html[data-admin-theme="dark"] body[class*="admin-"] main .reservation-month-group .forecast-report-month-heading h4 {
+    color: #e5eaf2;
+}
+
+html[data-admin-theme="dark"] body[class*="admin-"] main .reservation-month-group .forecast-report-month-heading span {
+    color: #b7c3d4;
 }

@@ -122,33 +122,33 @@ $reservationHistoryByMonth = $groupReservationsByMonth($reservationHistory, true
         <span><i class="bi bi-list-check me-2"></i>Current and upcoming reservations</span>
     </div>
     <div class="card-body">
-    <div class="table-responsive">
-    <table class="table table-striped admin-data-table reservations-data-table">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>User</th>
-                <th>Facility</th>
-                <th>Day</th>
-                <th>Start Time</th>
-                <th>End Time</th>
-                <th>Purpose</th>
-                <th>Status</th>
-                <th>QR</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($reservationsByMonth as $monthKey => $monthReservations): ?>
-                <?php $monthLabel = $monthKey === 'unknown' ? 'Date not set' : (new DateTimeImmutable($monthKey . '-01'))->format('F Y'); ?>
-                <tr class="reservation-month-divider">
-                    <td colspan="10">
-                        <div class="reservation-month-divider-content">
-                            <strong><?php echo htmlspecialchars($monthLabel, ENT_QUOTES, 'UTF-8'); ?></strong>
-                            <span class="badge text-bg-light"><?php echo count($monthReservations); ?> reservation<?php echo count($monthReservations) === 1 ? '' : 's'; ?></span>
-                        </div>
-                    </td>
-                </tr>
+    <?php if (empty($reservationsByMonth)): ?>
+        <p class="text-muted text-center py-3 mb-0">There are no current or upcoming reservations.</p>
+    <?php else: ?>
+        <?php foreach ($reservationsByMonth as $monthKey => $monthReservations): ?>
+            <?php $monthLabel = $monthKey === 'unknown' ? 'Date not set' : (new DateTimeImmutable($monthKey . '-01'))->format('F Y'); ?>
+            <section class="forecast-report-month reservation-month-group">
+                <div class="forecast-report-month-heading">
+                    <h4><?php echo htmlspecialchars($monthLabel, ENT_QUOTES, 'UTF-8'); ?></h4>
+                    <span><?php echo count($monthReservations); ?> reservation<?php echo count($monthReservations) === 1 ? '' : 's'; ?></span>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped admin-data-table reservations-data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>User</th>
+                                <th>Facility</th>
+                                <th>Day</th>
+                                <th>Start Time</th>
+                                <th>End Time</th>
+                                <th>Purpose</th>
+                                <th>Status</th>
+                                <th>QR</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
                 <?php foreach ($monthReservations as $r): ?>
                 <?php
                 $reservationStart = $r['start_time'] ?? '';
@@ -219,13 +219,12 @@ $reservationHistoryByMonth = $groupReservationsByMonth($reservationHistory, true
                     </td>
                 </tr>
                 <?php endforeach; ?>
-            <?php endforeach; ?>
-            <?php if (empty($reservations)): ?>
-                <tr><td colspan="10" class="py-4 text-center text-muted">There are no current or upcoming reservations.</td></tr>
-            <?php endif; ?>
-        </tbody>
-    </table>
-    </div>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        <?php endforeach; ?>
+    <?php endif; ?>
     </div>
     </section>
 
@@ -237,32 +236,29 @@ $reservationHistoryByMonth = $groupReservationsByMonth($reservationHistory, true
     <?php if (empty($reservationHistory)): ?>
         <p class="text-muted mb-0">There are no reservations from past days.</p>
     <?php else: ?>
-    <div class="table-responsive">
-    <table class="table table-striped admin-data-table reservations-data-table">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>User</th>
-                <th>Facility</th>
-                <th>Day</th>
-                <th>Start Time</th>
-                <th>End Time</th>
-                <th>Purpose</th>
-                <th>Status</th>
-                <th>QR</th>
-            </tr>
-        </thead>
-        <tbody>
             <?php foreach ($reservationHistoryByMonth as $monthKey => $monthReservations): ?>
                 <?php $monthLabel = $monthKey === 'unknown' ? 'Date not set' : (new DateTimeImmutable($monthKey . '-01'))->format('F Y'); ?>
-                <tr class="reservation-month-divider">
-                    <td colspan="9">
-                        <div class="reservation-month-divider-content">
-                            <strong><?php echo htmlspecialchars($monthLabel, ENT_QUOTES, 'UTF-8'); ?></strong>
-                            <span class="badge text-bg-light"><?php echo count($monthReservations); ?> reservation<?php echo count($monthReservations) === 1 ? '' : 's'; ?></span>
-                        </div>
-                    </td>
-                </tr>
+                <section class="forecast-report-month reservation-month-group">
+                    <div class="forecast-report-month-heading">
+                        <h4><?php echo htmlspecialchars($monthLabel, ENT_QUOTES, 'UTF-8'); ?></h4>
+                        <span><?php echo count($monthReservations); ?> reservation<?php echo count($monthReservations) === 1 ? '' : 's'; ?></span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped admin-data-table reservations-data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>User</th>
+                                    <th>Facility</th>
+                                    <th>Day</th>
+                                    <th>Start Time</th>
+                                    <th>End Time</th>
+                                    <th>Purpose</th>
+                                    <th>Status</th>
+                                    <th>QR</th>
+                                </tr>
+                            </thead>
+                            <tbody>
                 <?php foreach ($monthReservations as $r): ?>
                 <?php
                 $reservationStart = $r['start_time'] ?? '';
@@ -296,10 +292,11 @@ $reservationHistoryByMonth = $groupReservationsByMonth($reservationHistory, true
                     </td>
                 </tr>
                 <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
             <?php endforeach; ?>
-        </tbody>
-    </table>
-    </div>
     <?php endif; ?>
     </div>
     </section>
