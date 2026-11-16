@@ -101,18 +101,18 @@ $recentReservations = $pdo->query(
 
         <nav class="admin-sidebar-nav">
             <span class="admin-nav-caption">Workspace</span>
-            <a class="admin-sidebar-link is-active" href="index.php" aria-current="page"><i class="bi bi-grid-1x2-fill"></i><span>Dashboard</span></a>
-            <a class="admin-sidebar-link" href="reservations.php"><i class="bi bi-calendar2-check"></i><span>Reservations</span><i class="bi bi-arrow-up-right admin-nav-external"></i></a>
-            <a class="admin-sidebar-link" href="ai-forecast.php"><i class="bi bi-graph-up-arrow"></i><span>Usage forecast</span><i class="bi bi-arrow-up-right admin-nav-external"></i></a>
+            <a class="admin-sidebar-link is-active" href="index.php" data-spa-view="dashboard" aria-current="page"><i class="bi bi-grid-1x2-fill"></i><span>Dashboard</span></a>
+            <a class="admin-sidebar-link" href="reservations.php" data-spa-view="reservations"><i class="bi bi-calendar2-check"></i><span>Reservations</span></a>
+            <a class="admin-sidebar-link" href="ai-forecast.php" data-spa-view="forecast"><i class="bi bi-graph-up-arrow"></i><span>Usage forecast</span></a>
 
             <span class="admin-nav-caption">Management</span>
-            <a class="admin-sidebar-link" href="#users"><i class="bi bi-people"></i><span>Users</span></a>
-            <a class="admin-sidebar-link" href="#facilities"><i class="bi bi-buildings"></i><span>Facilities</span></a>
-            <a class="admin-sidebar-link" href="class_schedules.php"><i class="bi bi-calendar3"></i><span>Class schedules</span></a>
+            <a class="admin-sidebar-link" href="#users" data-spa-view="dashboard" data-spa-section="users"><i class="bi bi-people"></i><span>Users</span></a>
+            <a class="admin-sidebar-link" href="#facilities" data-spa-view="dashboard" data-spa-section="facilities"><i class="bi bi-buildings"></i><span>Facilities</span></a>
+            <a class="admin-sidebar-link" href="class_schedules.php" data-spa-view="schedules"><i class="bi bi-calendar3"></i><span>Class schedules</span></a>
 
             <span class="admin-nav-caption">Account</span>
-            <a class="admin-sidebar-link" href="../index.php"><i class="bi bi-house-door"></i><span>Reservation calendar</span><i class="bi bi-arrow-up-right admin-nav-external"></i></a>
-            <a class="admin-sidebar-link" href="../profile.php"><i class="bi bi-person"></i><span>My profile</span></a>
+            <a class="admin-sidebar-link" href="../index.php" data-spa-view="calendar"><i class="bi bi-house-door"></i><span>Reservation calendar</span></a>
+            <a class="admin-sidebar-link" href="../profile.php" data-spa-view="profile"><i class="bi bi-person"></i><span>My profile</span></a>
         </nav>
 
         <div class="admin-sidebar-footer">
@@ -130,6 +130,10 @@ $recentReservations = $pdo->query(
                 <i class="bi bi-list"></i>
             </button>
             <div class="admin-topbar-breadcrumb"><span>Workspace</span><i class="bi bi-chevron-right"></i><strong>Dashboard</strong></div>
+            <div class="admin-live-status" data-admin-live-status data-state="connecting" role="status" aria-live="polite">
+                <span class="admin-live-status-dot" aria-hidden="true"></span>
+                <span>Connecting</span>
+            </div>
             <label class="admin-dashboard-search">
                 <i class="bi bi-search" aria-hidden="true"></i>
                 <span class="visually-hidden">Filter users, facilities, and recent reservations</span>
@@ -345,14 +349,52 @@ $recentReservations = $pdo->query(
     </div>
     <p class="admin-search-empty" id="adminSearchEmpty" hidden>No matching users, facilities, or recent reservations.</p>
     </div>
-    </main>
 
-<script>
+<?php if (is_array($dashboardNotification) && isset($dashboardNotification['message'])): ?>
+    <?php $notificationIsSuccess = ($dashboardNotification['type'] ?? '') === 'success'; ?>
+    <div class="modal fade action-result-modal<?php echo $notificationIsSuccess ? '' : ' action-result-modal-error'; ?>" id="dashboardResultModal" tabindex="-1" aria-labelledby="dashboardResultTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="action-result-icon" aria-hidden="true">
+                    <i class="bi <?php echo $notificationIsSuccess ? 'bi-check-lg' : 'bi-exclamation-lg'; ?>"></i>
+                </div>
+                <div class="modal-header border-0 justify-content-center pb-0">
+                    <h2 class="modal-title fs-4" id="dashboardResultTitle"><?php echo $notificationIsSuccess ? 'Success' : 'Action not completed'; ?></h2>
+                </div>
+                <div class="modal-body text-center px-4"><?php echo htmlspecialchars((string)$dashboardNotification['message'], ENT_QUOTES, 'UTF-8'); ?></div>
+                <div class="modal-footer border-0 justify-content-center pt-0">
+                    <button type="button" class="btn btn-primary px-4" data-bs-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function showDashboardResultModal() {
+            const resultModal = document.getElementById('dashboardResultModal');
+            if (resultModal && window.bootstrap) {
+                bootstrap.Modal.getOrCreateInstance(resultModal).show();
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', showDashboardResultModal, { once: true });
+        } else {
+            showDashboardResultModal();
+        }
+    </script>
+<?php endif; ?>
+
+</main>
+
+<script data-admin-dashboard-chart>
     document.addEventListener('DOMContentLoaded', function () {
-        const chartCanvas = document.getElementById('adminReservationChart');
-        if (!chartCanvas || !window.Chart) return;
+        window.initializeAdminReservationChart = function () {
+            const chartCanvas = document.getElementById('adminReservationChart');
+            if (!chartCanvas || !window.Chart) return;
+            const existingChart = Chart.getChart(chartCanvas);
+            if (existingChart) existingChart.destroy();
 
-        new Chart(chartCanvas, {
+            new Chart(chartCanvas, {
             type: 'line',
             data: {
                 labels: <?php echo json_encode($reservationChartLabels, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>,
@@ -388,11 +430,19 @@ $recentReservations = $pdo->query(
                     }
                 }
             }
-        });
+            });
+        };
+        window.initializeAdminReservationChart();
+    });
+
+    document.addEventListener('admin:view-loaded', function (event) {
+        if (event.detail && event.detail.view === 'dashboard' && window.initializeAdminReservationChart) {
+            window.initializeAdminReservationChart();
+        }
     });
 </script>
 
-<script>
+<script data-admin-shell-script>
     document.addEventListener('DOMContentLoaded', function () {
         const shell = document.querySelector('.admin-dashboard-shell');
         const sidebarToggle = document.querySelector('.admin-sidebar-toggle');
@@ -456,33 +506,7 @@ $recentReservations = $pdo->query(
     });
 </script>
 
-<?php if (is_array($dashboardNotification) && isset($dashboardNotification['message'])): ?>
-    <?php $notificationIsSuccess = ($dashboardNotification['type'] ?? '') === 'success'; ?>
-    <div class="modal fade action-result-modal<?php echo $notificationIsSuccess ? '' : ' action-result-modal-error'; ?>" id="dashboardResultModal" tabindex="-1" aria-labelledby="dashboardResultTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="action-result-icon" aria-hidden="true">
-                    <i class="bi <?php echo $notificationIsSuccess ? 'bi-check-lg' : 'bi-exclamation-lg'; ?>"></i>
-                </div>
-                <div class="modal-header border-0 justify-content-center pb-0">
-                    <h2 class="modal-title fs-4" id="dashboardResultTitle"><?php echo $notificationIsSuccess ? 'Success' : 'Action not completed'; ?></h2>
-                </div>
-                <div class="modal-body text-center px-4"><?php echo htmlspecialchars((string)$dashboardNotification['message'], ENT_QUOTES, 'UTF-8'); ?></div>
-                <div class="modal-footer border-0 justify-content-center pt-0">
-                    <button type="button" class="btn btn-primary px-4" data-bs-dismiss="modal">OK</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const resultModal = document.getElementById('dashboardResultModal');
-            if (resultModal && window.bootstrap) {
-                bootstrap.Modal.getOrCreateInstance(resultModal).show();
-            }
-        });
-    </script>
-<?php endif; ?>
+<script src="../assets/js/admin-navigation.js?v=<?php echo (int)filemtime(__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'admin-navigation.js'); ?>"></script>
 
 </div>
 </div>

@@ -148,6 +148,7 @@ $reservations = $currentReservations;
                             <?php
                             // Auto-handle reservations created by the admin account (admin-as-user)
                             if (
+                                ($_SERVER['HTTP_X_ADMIN_LIVE_REFRESH'] ?? '') !== 'true' &&
                                 $r['status'] === 'pending' &&
                                 isset($_SESSION['role']) && $_SESSION['role'] === 'admin' &&
                                 isset($r['user_id']) && (int)$r['user_id'] === (int)$_SESSION['user_id']

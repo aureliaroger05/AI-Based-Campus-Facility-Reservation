@@ -756,7 +756,7 @@ $today = date('Y-m-d');
                 </div>
             </div>
             <script>
-                document.addEventListener('DOMContentLoaded', function () {
+                function showReservationSuccessModal() {
                     const reservationModal = document.getElementById('reservationSuccessModal');
                     if (reservationModal && window.bootstrap) {
                         const modal = bootstrap.Modal.getOrCreateInstance(reservationModal);
@@ -767,7 +767,13 @@ $today = date('Y-m-d');
                         }, { once: true });
                         modal.show();
                     }
-                });
+                }
+
+                if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', showReservationSuccessModal, { once: true });
+                } else {
+                    showReservationSuccessModal();
+                }
             </script>
         <?php endif; ?>
         <?php
@@ -1144,10 +1150,11 @@ function formatTimeRange(range) {
     if (startTimeInput && endTimeInput) {
         startTimeInput.addEventListener('change', updateReservationTimeOptions);
         endTimeInput.addEventListener('focus', updateReservationTimeOptions);
-        window.setInterval(updateReservationTimeOptions, 10000);
+        window.clearInterval(window.reservationTimeUpdateInterval);
+        window.reservationTimeUpdateInterval = window.setInterval(updateReservationTimeOptions, 10000);
     }
 
-    document.addEventListener('click', function (event) {
+    function handleReservationCalendarClick(event) {
         const dayButton = event.target.closest('.calendar-day:not(:disabled)');
         if (!dayButton) {
             return;
@@ -1191,7 +1198,20 @@ function formatTimeRange(range) {
         document.getElementById('no-facilities-message').hidden = availableFacilityCount > 0;
         document.getElementById('reservation-fields').hidden = availableFacilityCount === 0;
         bootstrap.Modal.getOrCreateInstance(document.getElementById('facility-modal')).show();
-    });
+    }
+
+    if (window.reservationCalendarClickHandler) {
+        document.removeEventListener('click', window.reservationCalendarClickHandler);
+    }
+    window.reservationCalendarClickHandler = handleReservationCalendarClick;
+    document.addEventListener('click', window.reservationCalendarClickHandler);
+
+    document.addEventListener('admin:view-unloading', function cleanupReservationCalendar() {
+        document.removeEventListener('click', window.reservationCalendarClickHandler);
+        window.clearInterval(window.reservationTimeUpdateInterval);
+        window.reservationCalendarClickHandler = null;
+        window.reservationTimeUpdateInterval = null;
+    }, { once: true });
 </script>
 
 <?php require 'footer.php'; ?>

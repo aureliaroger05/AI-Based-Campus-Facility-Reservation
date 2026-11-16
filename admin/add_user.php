@@ -145,8 +145,6 @@ require '../header.php';
         </form>
         </section>
     </div>
-</main>
-
 <?php if ($notification !== null): ?>
     <div class="modal fade" id="userNotificationModal" tabindex="-1" aria-labelledby="userNotificationTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -165,13 +163,20 @@ require '../header.php';
         </div>
     </div>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        function showUserNotificationModal() {
             const notificationModal = document.getElementById('userNotificationModal');
             if (notificationModal && window.bootstrap) {
                 bootstrap.Modal.getOrCreateInstance(notificationModal).show();
             }
-        });
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', showUserNotificationModal, { once: true });
+        } else {
+            showUserNotificationModal();
+        }
     </script>
 <?php endif; ?>
+</main>
 
 <?php require '../footer.php'; ?>

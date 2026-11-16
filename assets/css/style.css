@@ -3564,6 +3564,43 @@ body:not(.calendar-page) footer .container {
     font-weight: 700;
 }
 
+.admin-live-status {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 0.4rem;
+    color: #25845f;
+    font-size: 0.72rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.admin-live-status-dot {
+    width: 0.48rem;
+    height: 0.48rem;
+    border-radius: 50%;
+    background: #35b77c;
+    box-shadow: 0 0 0 0.18rem rgba(53, 183, 124, 0.12);
+}
+
+.admin-live-status[data-state="connecting"] {
+    color: #8992a2;
+}
+
+.admin-live-status[data-state="connecting"] .admin-live-status-dot {
+    background: #a4acba;
+    box-shadow: none;
+}
+
+.admin-live-status[data-state="offline"] {
+    color: #bd5b55;
+}
+
+.admin-live-status[data-state="offline"] .admin-live-status-dot {
+    background: #d76760;
+    box-shadow: 0 0 0 0.18rem rgba(215, 103, 96, 0.12);
+}
+
 .admin-dashboard-search {
     display: flex;
     width: min(100%, 430px);
@@ -3774,4 +3811,39 @@ body:not(.calendar-page) footer .container {
     .admin-sidebar {
         transition: none;
     }
+}
+
+.admin-dashboard-shell[aria-busy="true"] .admin-topbar {
+    cursor: progress;
+}
+
+.admin-dashboard-page.calendar-page {
+    display: block;
+    width: auto;
+    height: auto;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.admin-dashboard-page.calendar-page main#reservation-main {
+    flex: 0 0 auto;
+    min-height: 0 !important;
+    overflow: visible;
+}
+
+.admin-dashboard-page.calendar-page main#reservation-main > .container {
+    height: auto;
+    min-height: 0;
+    display: block;
+}
+
+.admin-dashboard-page.calendar-page .reservation-calendar-card,
+.admin-dashboard-page.calendar-page .facility-calendar {
+    flex: 0 0 auto;
+}
+
+.admin-dashboard-page.calendar-page .calendar-days {
+    min-height: 240px;
 }
