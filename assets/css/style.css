@@ -1783,6 +1783,44 @@ canvas {
     padding: 0;
 }
 
+.reservation-row-pagination:not([hidden]) {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0.65rem 1rem;
+    border-top: 1px solid #dce5ef;
+}
+
+.reservation-row-pagination .pagination {
+    margin-bottom: 0;
+}
+
+.reservation-row-pagination .page-link {
+    border-color: #dce5ef;
+    background: #fff;
+    color: #315d81;
+    white-space: nowrap;
+}
+
+.reservation-row-pagination button.page-link {
+    font: inherit;
+}
+
+.reservation-row-pagination .page-item.active .page-link {
+    border-color: #1769aa;
+    background: #1769aa;
+    color: #fff;
+}
+
+.reservation-row-pagination .page-item.disabled .page-link {
+    background: #f6f9fc;
+    color: #8a9aab;
+}
+
+.reservation-row-pagination .page-item:not(.active):not(.disabled) .page-link:hover {
+    background: #edf4fa;
+    color: #123b66;
+}
+
 .reservations-data-table {
     min-width: 1050px;
     margin: 0;
@@ -5158,4 +5196,30 @@ html[data-admin-theme="dark"] body[class*="admin-"] main .reservation-month-grou
 
 html[data-admin-theme="dark"] body[class*="admin-"] main .reservation-month-group .forecast-report-month-heading span {
     color: #b7c3d4;
+}
+
+html[data-admin-theme="dark"] body[class*="admin-"] main .reservation-row-pagination {
+    border-color: #303b4e;
+}
+
+html[data-admin-theme="dark"] body[class*="admin-"] main .reservation-row-pagination .page-link {
+    border-color: #39465b;
+    background: #202c40;
+    color: #dce6f3;
+}
+
+html[data-admin-theme="dark"] body[class*="admin-"] main .reservation-row-pagination .page-item.active .page-link {
+    border-color: #557397;
+    background: #31557c;
+    color: #f0f5ff;
+}
+
+html[data-admin-theme="dark"] body[class*="admin-"] main .reservation-row-pagination .page-item.disabled .page-link {
+    background: #182233;
+    color: #8996a9;
+}
+
+html[data-admin-theme="dark"] body[class*="admin-"] main .reservation-row-pagination .page-item:not(.active):not(.disabled) .page-link:hover {
+    background: #2b3a51;
+    color: #fff;
 }

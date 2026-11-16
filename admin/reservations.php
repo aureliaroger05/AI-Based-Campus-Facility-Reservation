@@ -223,6 +223,7 @@ $reservationHistoryByMonth = $groupReservationsByMonth($reservationHistory, true
                         </tbody>
                         </table>
                     </div>
+                    <nav class="reservation-row-pagination" aria-label="Current reservation rows for <?php echo htmlspecialchars($monthLabel, ENT_QUOTES, 'UTF-8'); ?>" hidden></nav>
                 </div>
             </section>
         <?php endforeach; ?>
@@ -298,6 +299,7 @@ $reservationHistoryByMonth = $groupReservationsByMonth($reservationHistory, true
                             </tbody>
                             </table>
                         </div>
+                        <nav class="reservation-row-pagination" aria-label="Reservation history rows for <?php echo htmlspecialchars($monthLabel, ENT_QUOTES, 'UTF-8'); ?>" hidden></nav>
                     </div>
                 </section>
             <?php endforeach; ?>
@@ -309,6 +311,81 @@ $reservationHistoryByMonth = $groupReservationsByMonth($reservationHistory, true
 <div class="container-fluid admin-reservations-content mb-3 mt-3">
     <a href="index.php" class="btn btn-secondary">← Back to Dashboard</a>
 </div>
+<script>
+(function () {
+    const pageSize = 10;
+
+    document.querySelectorAll('.reservation-month-group').forEach(function (group) {
+        const rows = Array.from(group.querySelectorAll('tbody tr'));
+        const pagination = group.querySelector('.reservation-row-pagination');
+        if (!pagination || rows.length <= pageSize) return;
+
+        const pageCount = Math.ceil(rows.length / pageSize);
+        let currentPage = 0;
+        const list = document.createElement('ul');
+        list.className = 'pagination pagination-sm mb-0';
+
+        const previousItem = document.createElement('li');
+        previousItem.className = 'page-item';
+        const previousButton = document.createElement('button');
+        previousButton.type = 'button';
+        previousButton.className = 'page-link';
+        previousButton.textContent = 'Previous';
+        previousButton.setAttribute('aria-label', 'Previous reservation page');
+        previousItem.appendChild(previousButton);
+        list.appendChild(previousItem);
+
+        const statusItem = document.createElement('li');
+        statusItem.className = 'page-item active';
+        const status = document.createElement('span');
+        status.className = 'page-link';
+        status.setAttribute('aria-current', 'page');
+        status.setAttribute('aria-live', 'polite');
+        statusItem.appendChild(status);
+        list.appendChild(statusItem);
+
+        const nextItem = document.createElement('li');
+        nextItem.className = 'page-item';
+        const nextButton = document.createElement('button');
+        nextButton.type = 'button';
+        nextButton.className = 'page-link';
+        nextButton.textContent = 'Next';
+        nextButton.setAttribute('aria-label', 'Next reservation page');
+        nextItem.appendChild(nextButton);
+        list.appendChild(nextItem);
+        pagination.appendChild(list);
+
+        function renderPage() {
+            const firstRow = currentPage * pageSize;
+            const lastRow = Math.min(firstRow + pageSize, rows.length);
+            rows.forEach(function (row, index) {
+                row.hidden = index < firstRow || index >= lastRow;
+            });
+            previousButton.disabled = currentPage === 0;
+            nextButton.disabled = currentPage === pageCount - 1;
+            previousItem.classList.toggle('disabled', previousButton.disabled);
+            nextItem.classList.toggle('disabled', nextButton.disabled);
+            status.textContent = 'Page ' + (currentPage + 1) + ' of ' + pageCount +
+                ' (rows ' + (firstRow + 1) + ' to ' + lastRow + ' of ' + rows.length + ')';
+            pagination.hidden = false;
+        }
+
+        previousButton.addEventListener('click', function () {
+            if (currentPage > 0) {
+                currentPage -= 1;
+                renderPage();
+            }
+        });
+        nextButton.addEventListener('click', function () {
+            if (currentPage < pageCount - 1) {
+                currentPage += 1;
+                renderPage();
+            }
+        });
+        renderPage();
+    });
+})();
+</script>
 </main>
 
 <div style="height: 1px;"></div>
