@@ -173,7 +173,7 @@ $reservationHistoryByMonth = $groupReservationsByMonth($reservationHistory, true
                     <td><?php echo htmlspecialchars($reservationEnd); ?></td>
                     <td><?php echo htmlspecialchars($r['reason'] ?? ''); ?></td>
                     <td>
-                        <span class="badge bg-<?php echo $r['status'] === 'confirmed' ? 'success' : ($r['status'] === 'cancelled' ? 'danger' : ($r['status'] === 'completed' ? 'primary' : ($r['status'] === 'used' ? 'secondary' : 'warning'))); ?>">
+                        <span class="badge bg-<?php echo $r['status'] === 'confirmed' ? 'success' : ($r['status'] === 'cancelled' ? 'danger' : ($r['status'] === 'completed' ? 'primary' : 'warning')); ?>">
                             <?php echo ucfirst($r['status']); ?>
                         </span>
                     </td>
@@ -284,7 +284,7 @@ $reservationHistoryByMonth = $groupReservationsByMonth($reservationHistory, true
                     <td><?php echo htmlspecialchars($reservationEnd); ?></td>
                     <td><?php echo htmlspecialchars($r['reason'] ?? ''); ?></td>
                     <td>
-                        <span class="badge bg-<?php echo $r['status'] === 'confirmed' ? 'success' : ($r['status'] === 'cancelled' ? 'danger' : ($r['status'] === 'completed' ? 'primary' : ($r['status'] === 'used' ? 'secondary' : 'warning'))); ?>">
+                        <span class="badge bg-<?php echo $r['status'] === 'confirmed' ? 'success' : ($r['status'] === 'cancelled' ? 'danger' : ($r['status'] === 'completed' ? 'primary' : 'warning')); ?>">
                             <?php echo htmlspecialchars(ucfirst($r['status'])); ?>
                         </span>
                     </td>

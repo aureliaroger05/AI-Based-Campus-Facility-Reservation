@@ -181,10 +181,6 @@ $recentReservations = $pdo->query(
                     <p class="mb-0">Here is your campus reservation overview.</p>
                 </div>
             </div>
-            <div class="admin-dashboard-actions">
-                <a href="class_schedules.php" class="btn btn-outline-primary"><i class="bi bi-upload me-2"></i>Import schedule</a>
-                <a href="add_facility.php" class="btn btn-primary"><i class="bi bi-plus-lg me-2"></i>Add facility</a>
-            </div>
         </div>
 
     <div class="row g-3 admin-stat-row">
@@ -262,7 +258,6 @@ $recentReservations = $pdo->query(
                                 $statusClass = [
                                     'pending' => 'pending',
                                     'confirmed' => 'confirmed',
-                                    'used' => 'used',
                                     'completed' => 'completed',
                                     'cancelled' => 'cancelled',
                                 ][$recentReservation['status']] ?? 'pending';
@@ -283,6 +278,10 @@ $recentReservations = $pdo->query(
                             <span>No reservations yet</span>
                         </div>
                     <?php endif; ?>
+                </div>
+                <div class="card-footer bg-transparent border-top-0 d-flex flex-wrap gap-2 py-3">
+                    <a href="class_schedules.php" class="btn btn-outline-primary"><i class="bi bi-upload me-2"></i>Import schedule</a>
+                    <a href="add_facility.php" class="btn btn-primary"><i class="bi bi-plus-lg me-2"></i>Add facility</a>
                 </div>
             </section>
         </div>
