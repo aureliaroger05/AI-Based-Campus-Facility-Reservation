@@ -320,10 +320,12 @@ $reportRowsJson = json_encode($reportRows, $reportJsonFlags);
                                     pointBackgroundColor: '#1769aa',
                                     pointBorderColor: '#1769aa',
                                     pointBorderWidth: 3,
-                                    pointRadius: 3,
+                                    pointRadius: 0,
                                     pointHoverRadius: 6,
+                                    borderWidth: 2.5,
                                     fill: true,
-                                    tension: 0.35
+                                    tension: 0.45,
+                                    cubicInterpolationMode: 'monotone'
                                 }]
                             },
                             options: {
@@ -340,7 +342,7 @@ $reportRowsJson = json_encode($reportRows, $reportJsonFlags);
                                     x: {
                                         border: { display: false },
                                         grid: { display: false },
-                                        ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 7, color: chartTickColor }
+                                        ticks: { maxRotation: 0, autoSkip: true, maxTicksLimit: 7, callback: function(value) { const label = this.getLabelForValue(value); const d = new Date(label + 'T00:00:00'); return isNaN(d) ? label : d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }); }, color: chartTickColor }
                                     }
                                 },
                                 plugins: {
