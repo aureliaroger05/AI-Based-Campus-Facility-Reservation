@@ -1,5 +1,5 @@
 <?php
-$page_title = 'Login';
+$page_title = 'Log in';
 $body_class = 'login-page';
 
 if (session_status() === PHP_SESSION_NONE) {
@@ -37,7 +37,7 @@ require 'header.php';
             <section class="login-welcome-panel">
                 <span class="login-welcome-eyebrow"><i class="bi bi-stars me-2" aria-hidden="true"></i>Your campus, connected</span>
                 <h1>Good to have you here.</h1>
-                <p>Sign in to reserve facilities, keep track of your bookings, and make your next campus event happen.</p>
+                <p>Log in to reserve facilities, keep track of your bookings, and make your next campus event happen.</p>
                 <div class="login-feature-list">
                     <span><i class="bi bi-calendar-check" aria-hidden="true"></i> Simple facility booking</span>
                     <span><i class="bi bi-qr-code" aria-hidden="true"></i> Quick QR verification</span>
@@ -56,7 +56,7 @@ require 'header.php';
                     <span class="login-card-icon"><i class="bi bi-person-lock" aria-hidden="true"></i></span>
                     <div>
                         <span class="login-card-kicker">Welcome back</span>
-                        <h2 class="mb-0">Sign in</h2>
+                        <h2 class="mb-0">Log in</h2>
                     </div>
                 </div>
                 <div class="card-body">
@@ -64,7 +64,7 @@ require 'header.php';
                             <div class="alert alert-danger mb-3" role="alert"><?php echo htmlspecialchars($message); ?></div>
                         <?php endif; ?>
 
-                        <p class="login-card-description"><?php echo !empty($_SESSION['admin_scan_return']) ? 'Sign in with an administrator account to complete this QR check-in.' : 'Use your account to continue to campus reservations.'; ?></p>
+                        <p class="login-card-description"><?php echo !empty($_SESSION['admin_scan_return']) ? 'Log in with an administrator account to complete this QR check-in.' : 'Use your account to continue to campus reservations.'; ?></p>
                         <form method="POST" novalidate>
                             <div class="mb-3">
                                 <label class="form-label fw-semibold" for="loginUsername">Username</label>
@@ -109,12 +109,12 @@ require 'header.php';
                             </script>
 
                             <button type="submit" name="login" class="btn btn-primary w-100 mt-3 py-2 fw-bold login-submit">
-                                Sign in <i class="bi bi-arrow-right ms-2" aria-hidden="true"></i>
+                                Log in <i class="bi bi-arrow-right ms-2" aria-hidden="true"></i>
                             </button>
 
                             <div class="login-security-note">
                                 <i class="bi bi-shield-lock" aria-hidden="true"></i>
-                                <small>Sign in with the credentials provided for your account.</small>
+                                <small>Log in with the credentials provided for your account.</small>
                             </div>
                         </form>
                 </div>

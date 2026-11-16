@@ -43,18 +43,6 @@ body::before {
     pointer-events: none;
 }
 
-.login-page .aclc-logo,
-.welcome-page .aclc-logo {
-    top: max(0.75rem, env(safe-area-inset-top, 0px));
-    left: max(0.75rem, env(safe-area-inset-left, 0px));
-    width: clamp(3rem, 8vw, 5rem);
-    height: clamp(3rem, 8vw, 5rem);
-}
-
-.welcome-page .aclc-logo {
-    position: absolute !important;
-}
-
 .navbar.bg-primary {
     background: linear-gradient(110deg, #123b66, #1769aa) !important;
     box-shadow: 0 5px 18px rgba(18, 59, 102, 0.2);
@@ -1693,13 +1681,6 @@ canvas {
         height: 3rem;
     }
 
-    .login-page .aclc-logo {
-        top: 0.75rem;
-        left: 0.75rem;
-        width: 4rem;
-        height: 4rem;
-    }
-
     .navbar-brand {
         margin-left: 3.3rem;
         font-size: 1.05rem;
@@ -2836,14 +2817,6 @@ a {
         height: clamp(2.35rem, 10vw, 2.8rem);
     }
 
-    .login-page .aclc-logo,
-    .welcome-page .aclc-logo {
-        top: max(0.65rem, env(safe-area-inset-top, 0px));
-        left: max(0.65rem, env(safe-area-inset-left, 0px));
-        width: clamp(3rem, 13vw, 3.75rem);
-        height: clamp(3rem, 13vw, 3.75rem);
-    }
-
     .navbar-brand {
         margin-left: clamp(2.7rem, 11vw, 3.1rem);
         font-size: clamp(0.9rem, 4vw, 1.05rem);
@@ -3885,26 +3858,175 @@ body.admin-dashboard-page:not(.calendar-page) .admin-dashboard-main {
     }
 }
 
-.reservation-facility-table tbody tr:not([hidden]) {
+.reservation-facility-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0.75rem;
+}
+
+.reservation-facility-card {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 0.65rem;
+    padding: 0.85rem;
+    border: 1px solid #dce5f1;
+    border-radius: 0.9rem;
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(30, 64, 110, 0.05);
+    cursor: pointer;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+
+.reservation-facility-card:not(.is-unavailable):hover,
+.reservation-facility-card.is-selected {
+    border-color: #5794e8;
+    background: #f5f9ff;
+    box-shadow: 0 6px 16px rgba(30, 93, 171, 0.12);
+}
+
+.reservation-facility-card.is-unavailable {
+    background: #f7f8fa;
+    cursor: not-allowed;
+}
+
+.reservation-facility-card-heading {
+    display: flex;
+    min-width: 0;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.reservation-facility-card-heading h4 {
+    margin: 0;
+    color: #19375d;
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+}
+
+.reservation-facility-card-heading .badge {
+    flex: 0 0 auto;
+    font-size: 0.65rem;
+    font-weight: 600;
+}
+
+.reservation-facility-busy-label {
+    display: block;
+    margin-bottom: 0.35rem;
+    color: #64748b;
+    font-size: 0.67rem;
+    font-weight: 700;
+    letter-spacing: 0.045em;
+    text-transform: uppercase;
+}
+
+.reservation-facility-time-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+}
+
+.reservation-facility-time-chip,
+.reservation-facility-no-busy-times {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 999px;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.reservation-facility-time-chip {
+    background: #fff0ed;
+    color: #a14332;
+}
+
+.reservation-facility-no-busy-times {
+    background: #eaf7ef;
+    color: #26734d;
+}
+
+.reservation-facility-choice {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: auto;
+    color: #285d9f;
+    font-size: 0.78rem;
+    font-weight: 600;
     cursor: pointer;
 }
 
-.reservation-facility-table .table > :not(caption) > * > * {
-    padding: 0.2rem 0.45rem;
-    font-size: 0.78rem;
-    line-height: 1.2;
-}
-
-.reservation-facility-table [data-facility-availability] {
-    white-space: nowrap;
-}
-
-.reservation-facility-table tbody tr.is-selected > * {
-    background-color: #eaf3ff;
-}
-
-.reservation-facility-table .form-check-input {
+.reservation-facility-choice .form-check-input {
     width: 0.95rem;
     height: 0.95rem;
-    float: none;
+    margin: 0;
+}
+
+.reservation-facility-card.is-unavailable .reservation-facility-choice {
+    color: #8792a2;
+    cursor: not-allowed;
+}
+
+@media (max-width: 575.98px) {
+    .calendar-page .modal-header {
+        padding: 0.75rem 0.9rem;
+    }
+
+    .calendar-page .modal-body {
+        padding: 0.65rem;
+    }
+
+    .reservation-facility-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.4rem;
+    }
+
+    .reservation-facility-card {
+        gap: 0.3rem;
+        padding: 0.45rem;
+    }
+
+    .reservation-facility-card-heading {
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .reservation-facility-card-heading h4 {
+        font-size: 0.74rem;
+    }
+
+    .reservation-facility-card-heading .badge {
+        padding: 0.3em 0.4em;
+        font-size: 0.55rem;
+        white-space: nowrap;
+    }
+
+    .reservation-facility-busy-label {
+        margin: 0;
+        font-size: 0.52rem;
+        white-space: nowrap;
+    }
+
+    .reservation-facility-busy {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .reservation-facility-time-chip,
+    .reservation-facility-no-busy-times {
+        padding: 0.12rem 0.35rem;
+        font-size: 0.58rem;
+        white-space: nowrap;
+    }
+
+    .reservation-facility-choice {
+        gap: 0.3rem;
+        font-size: 0.68rem;
+    }
 }

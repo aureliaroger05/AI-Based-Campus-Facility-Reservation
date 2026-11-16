@@ -12,7 +12,7 @@ require 'header.php';
                 <h1>Welcome to the Campus Facility Reservation System</h1>
                 <p>Reserve campus facilities, check availability, and manage your bookings in one convenient place.</p>
                 <a href="login.php" class="btn btn-light btn-lg welcome-sign-in">
-                    Sign in to continue <i class="bi bi-arrow-right ms-2" aria-hidden="true"></i>
+                    Log in to continue <i class="bi bi-arrow-right ms-2" aria-hidden="true"></i>
                 </a>
                 <div class="welcome-highlights" aria-label="System features">
                     <span><i class="bi bi-calendar-check" aria-hidden="true"></i> Easy reservations</span>

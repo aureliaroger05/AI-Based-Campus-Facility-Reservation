@@ -18,5 +18,7 @@ if (!defined('HEADER_INCLUDED')) {
     <link href="<?php echo (strpos($_SERVER['PHP_SELF'], '/admin/') !== false) ? '../assets/css/style.css' : 'assets/css/style.css'; ?>?v=<?php echo (int)filemtime(__DIR__ . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'style.css'); ?>" rel="stylesheet">
 </head>
 <body<?php echo !empty($body_class) ? ' class="' . htmlspecialchars($body_class, ENT_QUOTES, 'UTF-8') . '"' : ''; ?>>
+<?php if (!in_array($body_class ?? '', ['login-page', 'welcome-page'], true)): ?>
 <img src="<?php echo (strpos($_SERVER['PHP_SELF'], '/admin/') !== false) ? '../images/aclc logo.png' : 'images/aclc logo.png'; ?>" alt="ACLC Logo" class="aclc-logo">
+<?php endif; ?>
 <?php } ?>

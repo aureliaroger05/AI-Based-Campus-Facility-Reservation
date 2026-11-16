@@ -883,7 +883,7 @@ $today = date('Y-m-d');
                     <div class="modal-content">
                         <div class="modal-header">
                             <h3 class="modal-title h5" id="facility-modal-title">
-                                Available facilities for <span id="selected-date-label"></span>
+                                Facility availability for <span id="selected-date-label"></span>
                             </h3>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
@@ -895,7 +895,7 @@ $today = date('Y-m-d');
                                 <input type="hidden" name="reserve_date">
                                 <div id="reservation-fields" hidden>
                                     <div class="mb-3">
-                                        <label class="form-label" id="available-facilities-label">Available facilities</label>
+                                        <label class="form-label" id="available-facilities-label">Choose a facility</label>
                                         <select id="facility-select" hidden aria-hidden="true" tabindex="-1">
                                             <option value="" selected disabled>Choose a facility</option>
                                 <?php foreach ($facilities as $facility):
@@ -916,58 +916,46 @@ $today = date('Y-m-d');
                                             ><?php echo htmlspecialchars($facility['name'] ?? ''); ?></option>
                                 <?php endforeach; ?>
                                         </select>
-                                        <div class="table-responsive reservation-facility-table">
-                                            <table class="table table-sm table-hover align-middle mb-0" aria-labelledby="available-facilities-label">
-                                                <thead>
-                                                    <tr>
-                                                        <th scope="col">Facility</th>
-                                                        <th scope="col">Availability</th>
-                                                        <th scope="col" class="text-end">Select</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="available-facility-rows">
+                                        <div class="reservation-facility-grid" id="available-facility-rows" role="group" aria-labelledby="available-facilities-label">
                                             <?php foreach ($facilities as $facility):
                                                 $facilityId = (int)($facility['id'] ?? 0);
                                                 $facilityName = (string)($facility['name'] ?? '');
                                                 ?>
-                                                    <tr data-facility-row="<?php echo $facilityId; ?>" hidden>
-                                                        <th scope="row"><?php echo htmlspecialchars($facilityName); ?></th>
-                                                        <td><span class="badge text-bg-success" data-facility-availability>Available</span></td>
-                                                        <td class="text-end">
-                                                            <input
-                                                                class="form-check-input m-0"
-                                                                type="radio"
-                                                                name="facility_id"
-                                                                value="<?php echo $facilityId; ?>"
-                                                                aria-label="Select <?php echo htmlspecialchars($facilityName, ENT_QUOTES, 'UTF-8'); ?>"
-                                                                required
-                                                                disabled
-                                                            >
-                                                        </td>
-                                                    </tr>
+                                            <article class="reservation-facility-card" data-facility-row="<?php echo $facilityId; ?>" hidden>
+                                                <div class="reservation-facility-card-heading">
+                                                    <h4><?php echo htmlspecialchars($facilityName); ?></h4>
+                                                    <span class="badge text-bg-success" data-facility-availability>Available</span>
+                                                </div>
+                                                <div class="reservation-facility-busy">
+                                                    <span class="reservation-facility-busy-label">Busy times</span>
+                                                    <div class="reservation-facility-time-chips" data-facility-reserved-times></div>
+                                                </div>
+                                                <label class="reservation-facility-choice">
+                                                    <input
+                                                        class="form-check-input m-0"
+                                                        type="radio"
+                                                        name="facility_id"
+                                                        value="<?php echo $facilityId; ?>"
+                                                        aria-label="Select <?php echo htmlspecialchars($facilityName, ENT_QUOTES, 'UTF-8'); ?>"
+                                                        required
+                                                        disabled
+                                                    >
+                                                    <span>Select this facility</span>
+                                                </label>
+                                            </article>
                                             <?php endforeach; ?>
-                                                </tbody>
-                                            </table>
                                         </div>
                                     </div>
                                     <div id="selected-facility-times" class="alert alert-light border mb-3" hidden aria-live="polite">
-                                        <div class="row g-3">
-                                            <div class="col-md-6">
-                                                <h4 class="h6 text-danger">Unavailable times (classes/bookings)</h4>
-                                                <ul id="reserved-time-list" class="mb-0 small"></ul>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <h4 class="h6 text-success">Available times (7:30 AM–9:00 PM)</h4>
-                                                <ul id="available-time-list" class="mb-0 small"></ul>
-                                            </div>
-                                        </div>
+                                        <h4 class="h6 text-success">Available times (7:30 AM–9:00 PM)</h4>
+                                        <ul id="available-time-list" class="mb-0 small"></ul>
                                     </div>
                                     <div class="row g-2 align-items-end">
-                                        <div class="col-sm-6 col-lg-3">
+                                        <div class="col-6 col-lg-3">
                                             <label class="form-label" for="reservation-start-time">Start Time</label>
                                             <input type="time" id="reservation-start-time" name="start_time" class="form-control" min="07:30" max="21:00" required>
                                         </div>
-                                        <div class="col-sm-6 col-lg-3">
+                                        <div class="col-6 col-lg-3">
                                             <label class="form-label" for="reservation-end-time">End Time</label>
                                             <input type="time" id="reservation-end-time" name="end_time" class="form-control" min="07:30" max="21:00" required>
                                         </div>
@@ -975,7 +963,7 @@ $today = date('Y-m-d');
                                             <label class="form-label" for="reservation-reason">Purpose of reservation</label>
                                             <input type="text" id="reservation-reason" name="reason" class="form-control" placeholder="e.g., Student organization meeting" required>
                                         </div>
-                                        <div class="col-lg-auto">
+                                        <div class="col-12 col-lg-auto">
                                             <button type="submit" name="reserve_fac" class="btn btn-success w-100 px-3">
                                                 <i class="bi bi-calendar-check me-1"></i> Reserve
                                             </button>
@@ -1069,6 +1057,24 @@ function formatTimeRange(range) {
         });
     }
 
+    function renderFacilityReservedTimes(container, ranges) {
+        container.replaceChildren();
+        if (!ranges || ranges.length === 0) {
+            const emptyMessage = document.createElement('span');
+            emptyMessage.className = 'reservation-facility-no-busy-times';
+            emptyMessage.textContent = 'No booked times';
+            container.appendChild(emptyMessage);
+            return;
+        }
+
+        ranges.forEach(function (range) {
+            const timeChip = document.createElement('span');
+            timeChip.className = 'reservation-facility-time-chip';
+            timeChip.textContent = formatTimeRange(range);
+            container.appendChild(timeChip);
+        });
+    }
+
     const facilitySelect = document.getElementById('facility-select');
     const availableFacilityRows = document.getElementById('available-facility-rows');
     const reservationForm = document.querySelector('.reservation-form');
@@ -1127,18 +1133,14 @@ function formatTimeRange(range) {
             const selectedDate = document.querySelector('.reservation-form [name="reserve_date"]').value;
             const availabilityByDate = JSON.parse(selectedOption.getAttribute('data-booking-times') || '{}');
             const dateAvailability = availabilityByDate[selectedDate] || {};
+            const reservedTimes = dateAvailability.reserved_times || [];
 
-            renderTimeRanges(
-                'reserved-time-list',
-                dateAvailability.reserved_times || [],
-                'No classes or bookings.'
-            );
             renderTimeRanges(
                 'available-time-list',
                 dateAvailability.available_times || [[450, 1260]],
                 'No available times remain.'
             );
-            document.getElementById('selected-facility-times').hidden = false;
+            document.getElementById('selected-facility-times').hidden = reservedTimes.length === 0;
             updateReservationTimeOptions();
         });
     }
@@ -1264,15 +1266,23 @@ function formatTimeRange(range) {
             option.disabled = !isAvailable;
             const row = availableFacilityRows.querySelector('[data-facility-row="' + option.value + '"]');
             if (row) {
-                row.hidden = !isAvailable;
+                row.hidden = false;
                 const radio = row.querySelector('input[name="facility_id"]');
                 radio.disabled = !isAvailable;
                 const dateAvailability = JSON.parse(option.getAttribute('data-booking-times') || '{}')[selectedDate] || {};
                 const isPartiallyBooked = (dateAvailability.reserved_times || []).length > 0;
                 const availabilityLabel = row.querySelector('[data-facility-availability]');
-                availabilityLabel.textContent = isPartiallyBooked ? 'Limited times' : 'Available';
-                availabilityLabel.classList.toggle('text-bg-warning', isPartiallyBooked);
-                availabilityLabel.classList.toggle('text-bg-success', !isPartiallyBooked);
+                availabilityLabel.textContent = !isAvailable
+                    ? 'Fully booked'
+                    : (isPartiallyBooked ? 'Limited times' : 'Available');
+                availabilityLabel.classList.toggle('text-bg-warning', isAvailable && isPartiallyBooked);
+                availabilityLabel.classList.toggle('text-bg-success', !isPartiallyBooked && isAvailable);
+                availabilityLabel.classList.toggle('text-bg-danger', !isAvailable);
+                row.classList.toggle('is-unavailable', !isAvailable);
+                renderFacilityReservedTimes(
+                    row.querySelector('[data-facility-reserved-times]'),
+                    dateAvailability.reserved_times || []
+                );
             }
             if (isAvailable) {
                 availableFacilityCount++;
