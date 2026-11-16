@@ -223,9 +223,11 @@ $body_class = 'reservation-view-page';
         <div class="collapse navbar-collapse" id="navbarNav">
             <div class="navbar-nav ms-auto">
                 <?php if ($isAdminViewer): ?>
+                    <a class="nav-link" href="index.php"><i class="bi bi-house"></i> Home</a>
                     <a class="nav-link" href="admin/reservations.php"><i class="bi bi-clipboard-check"></i> Reservations</a>
                     <a class="nav-link" href="admin/index.php"><i class="bi bi-speedometer2"></i> Dashboard</a>
                 <?php else: ?>
+                    <a class="nav-link" href="index.php"><i class="bi bi-house"></i> Home</a>
                     <a class="nav-link" href="profile.php"><i class="bi bi-person"></i> Profile</a>
                 <?php endif; ?>
                 <a class="nav-link" href="logout.php" data-confirm="Are you sure you want to log out?"><i class="bi bi-box-arrow-right"></i> Logout (<?php echo htmlspecialchars($_SESSION['username']); ?>)</a>

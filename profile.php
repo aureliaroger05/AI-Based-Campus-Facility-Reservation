@@ -154,7 +154,7 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <div class="navbar-nav ms-auto">
-                    <a class="nav-link" href="index.php"><i class="bi bi-house"></i> Home</a>
+                    <a class="nav-link<?php echo basename($_SERVER['PHP_SELF']) === 'profile.php' ? ' active' : ''; ?>" href="index.php"><i class="bi bi-house"></i> Home</a>
                     <a class="nav-link" href="profile.php"><i class="bi bi-person"></i> Profile</a>
                     
 

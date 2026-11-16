@@ -527,37 +527,6 @@ $minimumReservationDate = $manilaNow->setTime(0, 0)->modify('+3 days')->format('
             #f3f6fb;
     }
 
-    body.calendar-page > .navbar.bg-primary {
-        border-bottom: 1px solid #dce5ef;
-        background: #fff !important;
-        box-shadow: 0 5px 18px rgba(18, 59, 102, 0.08);
-    }
-
-    body.calendar-page > .navbar .navbar-brand,
-    body.calendar-page > .navbar .nav-link {
-        color: #29364d !important;
-    }
-
-    body.calendar-page > .navbar .nav-link {
-        border-color: transparent;
-        border-radius: 0.65rem;
-    }
-
-    body.calendar-page > .navbar .nav-link:hover,
-    body.calendar-page > .navbar .nav-link:focus-visible {
-        border-color: #c9dced;
-        background: #eaf4fc;
-        color: #1769aa !important;
-    }
-
-    body.calendar-page > .navbar .navbar-toggler {
-        border-color: #e2e5ed;
-    }
-
-    body.calendar-page > .navbar .navbar-toggler-icon {
-        filter: invert(0.7);
-    }
-
     body.calendar-page .reservation-calendar-card {
         border-color: #e0e9f2;
         border-radius: 1.1rem;
@@ -749,7 +718,7 @@ $minimumReservationDate = $manilaNow->setTime(0, 0)->modify('+3 days')->format('
     }
 </style>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+<nav class="navbar navbar-expand-md navbar-dark bg-primary sticky-top">
     <div class="container">
         <a class="navbar-brand fw-bold" href="index.php"><i class="bi bi-building me-2"></i>AI Reservation</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -758,6 +727,7 @@ $minimumReservationDate = $manilaNow->setTime(0, 0)->modify('+3 days')->format('
         <div class="collapse navbar-collapse" id="navbarNav">
             <?php if (isLoggedIn()): ?>
                 <div class="navbar-nav ms-auto">
+                    <a class="nav-link" href="index.php"><i class="bi bi-house"></i> Home</a>
                     <a class="nav-link" href="profile.php"><i class="bi bi-person"></i> Profile</a>
                     <?php if (isAdmin()): ?>
                         <a class="nav-link" href="admin/"><i class="bi bi-gear"></i> Admin</a>
