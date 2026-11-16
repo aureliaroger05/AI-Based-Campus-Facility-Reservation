@@ -35,15 +35,17 @@ $pdo = getDB();
 <?php
 // Handle confirm/cancel actions
 if (isset($_POST['confirm'])) {
-    $stmt = $pdo->prepare("UPDATE reservations SET status = 'confirmed' WHERE id = ?");
+    $stmt = $pdo->prepare("UPDATE reservations SET status = 'confirmed' WHERE id = ? AND status = 'pending'");
     $stmt->execute([$_POST['res_id']]);
     echo '<div class="alert alert-success">Reservation confirmed.</div>';
 }
 
 if (isset($_POST['cancel'])) {
-    $stmt = $pdo->prepare("UPDATE reservations SET status = 'cancelled' WHERE id = ?");
+    $stmt = $pdo->prepare("UPDATE reservations SET status = 'cancelled' WHERE id = ? AND status IN ('pending', 'confirmed')");
     $stmt->execute([$_POST['res_id']]);
-    echo '<div class="alert alert-info">Reservation cancelled.</div>';
+    echo $stmt->rowCount() > 0
+        ? '<div class="alert alert-info">Reservation cancelled.</div>'
+        : '<div class="alert alert-warning">Only pending or confirmed reservations can be cancelled.</div>';
 }
 
 $stmt = $pdo->query(

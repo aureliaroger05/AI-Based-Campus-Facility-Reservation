@@ -247,7 +247,7 @@ $body_class = 'reservation-view-page';
         <section class="card reservation-view-card">
             <div class="card-header profile-panel-heading">
                 <span><i class="bi bi-calendar2-check me-2"></i>Reservation details</span>
-                <span class="badge text-bg-<?php echo in_array($res['status'], ['confirmed', 'used'], true) ? 'success' : ($res['status'] === 'cancelled' ? 'danger' : 'secondary'); ?>">
+                <span class="badge text-bg-<?php echo in_array($res['status'], ['confirmed', 'used'], true) ? 'success' : ($res['status'] === 'cancelled' ? 'danger' : ($res['status'] === 'completed' ? 'primary' : ($res['status'] === 'pending' ? 'warning text-dark' : 'secondary'))); ?>">
                     <?php echo htmlspecialchars(ucfirst($res['status'])); ?>
                 </span>
             </div>
