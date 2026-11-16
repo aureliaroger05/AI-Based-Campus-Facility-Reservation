@@ -895,8 +895,8 @@ $today = date('Y-m-d');
                                 <input type="hidden" name="reserve_date">
                                 <div id="reservation-fields" hidden>
                                     <div class="mb-3">
-                                        <label class="form-label" for="facility-select">Facility</label>
-                                        <select class="form-select" id="facility-select" name="facility_id" required>
+                                        <label class="form-label" id="available-facilities-label">Available facilities</label>
+                                        <select id="facility-select" hidden aria-hidden="true" tabindex="-1">
                                             <option value="" selected disabled>Choose a facility</option>
                                 <?php foreach ($facilities as $facility):
                                     $facilityId = (int)($facility['id'] ?? 0);
@@ -916,6 +916,39 @@ $today = date('Y-m-d');
                                             ><?php echo htmlspecialchars($facility['name'] ?? ''); ?></option>
                                 <?php endforeach; ?>
                                         </select>
+                                        <div class="table-responsive reservation-facility-table">
+                                            <table class="table table-sm table-hover align-middle mb-0" aria-labelledby="available-facilities-label">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Facility</th>
+                                                        <th scope="col">Availability</th>
+                                                        <th scope="col" class="text-end">Select</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="available-facility-rows">
+                                            <?php foreach ($facilities as $facility):
+                                                $facilityId = (int)($facility['id'] ?? 0);
+                                                $facilityName = (string)($facility['name'] ?? '');
+                                                ?>
+                                                    <tr data-facility-row="<?php echo $facilityId; ?>" hidden>
+                                                        <th scope="row"><?php echo htmlspecialchars($facilityName); ?></th>
+                                                        <td><span class="badge text-bg-success" data-facility-availability>Available</span></td>
+                                                        <td class="text-end">
+                                                            <input
+                                                                class="form-check-input m-0"
+                                                                type="radio"
+                                                                name="facility_id"
+                                                                value="<?php echo $facilityId; ?>"
+                                                                aria-label="Select <?php echo htmlspecialchars($facilityName, ENT_QUOTES, 'UTF-8'); ?>"
+                                                                required
+                                                                disabled
+                                                            >
+                                                        </td>
+                                                    </tr>
+                                            <?php endforeach; ?>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                     <div id="selected-facility-times" class="alert alert-light border mb-3" hidden aria-live="polite">
                                         <div class="row g-3">
@@ -939,8 +972,8 @@ $today = date('Y-m-d');
                                             <input type="time" id="reservation-end-time" name="end_time" class="form-control" min="07:30" max="21:00" required>
                                         </div>
                                         <div class="col-lg">
-                                            <label class="form-label" for="reservation-reason">Reason</label>
-                                            <input type="text" id="reservation-reason" name="reason" class="form-control" placeholder="e.g., Meeting / Practice" required>
+                                            <label class="form-label" for="reservation-reason">Purpose of reservation</label>
+                                            <input type="text" id="reservation-reason" name="reason" class="form-control" placeholder="e.g., Student organization meeting" required>
                                         </div>
                                         <div class="col-lg-auto">
                                             <button type="submit" name="reserve_fac" class="btn btn-success w-100 px-3">
@@ -1037,6 +1070,7 @@ function formatTimeRange(range) {
     }
 
     const facilitySelect = document.getElementById('facility-select');
+    const availableFacilityRows = document.getElementById('available-facility-rows');
     const reservationForm = document.querySelector('.reservation-form');
     const startTimeInput = document.getElementById('reservation-start-time');
     const endTimeInput = document.getElementById('reservation-end-time');
@@ -1087,6 +1121,9 @@ function formatTimeRange(range) {
     if (facilitySelect) {
         facilitySelect.addEventListener('change', function () {
             const selectedOption = facilitySelect.options[facilitySelect.selectedIndex];
+            if (!selectedOption || !selectedOption.value) {
+                return;
+            }
             const selectedDate = document.querySelector('.reservation-form [name="reserve_date"]').value;
             const availabilityByDate = JSON.parse(selectedOption.getAttribute('data-booking-times') || '{}');
             const dateAvailability = availabilityByDate[selectedDate] || {};
@@ -1103,6 +1140,35 @@ function formatTimeRange(range) {
             );
             document.getElementById('selected-facility-times').hidden = false;
             updateReservationTimeOptions();
+        });
+    }
+
+    if (availableFacilityRows && facilitySelect) {
+        availableFacilityRows.addEventListener('change', function (event) {
+            const radio = event.target.closest('input[name="facility_id"]');
+            if (!radio) {
+                return;
+            }
+
+            facilitySelect.value = radio.value;
+            facilitySelect.dispatchEvent(new Event('change', { bubbles: true }));
+            availableFacilityRows.querySelectorAll('[data-facility-row]').forEach(function (row) {
+                row.classList.toggle('is-selected', row === radio.closest('[data-facility-row]'));
+            });
+        });
+
+        availableFacilityRows.addEventListener('click', function (event) {
+            const row = event.target.closest('[data-facility-row]');
+            if (!row || event.target.closest('input')) {
+                return;
+            }
+
+            const radio = row.querySelector('input[name="facility_id"]');
+            if (!radio || radio.disabled) {
+                return;
+            }
+            radio.checked = true;
+            radio.dispatchEvent(new Event('change', { bubbles: true }));
         });
     }
 
@@ -1176,7 +1242,13 @@ function formatTimeRange(range) {
         const reservationForm = document.querySelector('.reservation-form');
         reservationForm.elements.reserve_date.value = selectedDate;
         const facilitySelect = document.getElementById('facility-select');
+        const availableFacilityRows = document.getElementById('available-facility-rows');
         facilitySelect.value = '';
+        availableFacilityRows.querySelectorAll('[data-facility-row]').forEach(function (row) {
+            const radio = row.querySelector('input[name="facility_id"]');
+            radio.checked = false;
+            row.classList.remove('is-selected');
+        });
         document.getElementById('selected-facility-times').hidden = true;
         document.getElementById('reservation-start-time').value = '';
         document.getElementById('reservation-end-time').value = '';
@@ -1190,6 +1262,18 @@ function formatTimeRange(range) {
             const isAvailable = !reservedDates.includes(selectedDate);
             option.hidden = !isAvailable;
             option.disabled = !isAvailable;
+            const row = availableFacilityRows.querySelector('[data-facility-row="' + option.value + '"]');
+            if (row) {
+                row.hidden = !isAvailable;
+                const radio = row.querySelector('input[name="facility_id"]');
+                radio.disabled = !isAvailable;
+                const dateAvailability = JSON.parse(option.getAttribute('data-booking-times') || '{}')[selectedDate] || {};
+                const isPartiallyBooked = (dateAvailability.reserved_times || []).length > 0;
+                const availabilityLabel = row.querySelector('[data-facility-availability]');
+                availabilityLabel.textContent = isPartiallyBooked ? 'Limited times' : 'Available';
+                availabilityLabel.classList.toggle('text-bg-warning', isPartiallyBooked);
+                availabilityLabel.classList.toggle('text-bg-success', !isPartiallyBooked);
+            }
             if (isAvailable) {
                 availableFacilityCount++;
             }

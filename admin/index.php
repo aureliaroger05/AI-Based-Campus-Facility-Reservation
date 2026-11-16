@@ -88,7 +88,7 @@ $recentReservations = $pdo->query(
     "FROM reservations r " .
     "LEFT JOIN users u ON r.user_id = u.id " .
     "LEFT JOIN facilities f ON r.facility_id = f.id " .
-    "ORDER BY r.created_at DESC LIMIT 6"
+    "ORDER BY r.created_at DESC LIMIT 4"
 )->fetchAll();
 ?>
 
@@ -136,8 +136,8 @@ $recentReservations = $pdo->query(
             </div>
             <label class="admin-dashboard-search">
                 <i class="bi bi-search" aria-hidden="true"></i>
-                <span class="visually-hidden">Filter users, facilities, and recent reservations</span>
-                <input type="search" id="adminDashboardSearch" placeholder="Filter users, facilities, activity..." autocomplete="off">
+                <span class="visually-hidden">Filter recent reservations</span>
+                <input type="search" id="adminDashboardSearch" placeholder="Filter recent reservations..." autocomplete="off">
                 <kbd>Ctrl K</kbd>
             </label>
             <div class="admin-topbar-user">
@@ -163,7 +163,7 @@ $recentReservations = $pdo->query(
         </div>
 
     <div class="row g-3 admin-stat-row">
-        <div class="col-sm-6 col-xl-3">
+        <div class="col-6 col-xl-3">
             <div class="card admin-stat-card admin-stat-users">
                 <div class="card-body">
                     <span class="admin-stat-icon"><i class="bi bi-people-fill"></i></span>
@@ -172,7 +172,7 @@ $recentReservations = $pdo->query(
                 </div>
             </div>
         </div>
-        <div class="col-sm-6 col-xl-3">
+        <div class="col-6 col-xl-3">
             <div class="card admin-stat-card admin-stat-facilities">
                 <div class="card-body">
                     <span class="admin-stat-icon"><i class="bi bi-building"></i></span>
@@ -181,7 +181,7 @@ $recentReservations = $pdo->query(
                 </div>
             </div>
         </div>
-        <div class="col-sm-6 col-xl-3">
+        <div class="col-6 col-xl-3">
             <div class="card admin-stat-card admin-stat-reservations">
                 <div class="card-body">
                     <span class="admin-stat-icon"><i class="bi bi-calendar2-check"></i></span>
@@ -191,7 +191,7 @@ $recentReservations = $pdo->query(
                 </div>
             </div>
         </div>
-        <div class="col-sm-6 col-xl-3">
+        <div class="col-6 col-xl-3">
             <div class="card admin-stat-card admin-stat-pending">
                 <div class="card-body">
                     <span class="admin-stat-icon"><i class="bi bi-hourglass-split"></i></span>
@@ -480,6 +480,8 @@ $recentReservations = $pdo->query(
                 let visibleMatches = 0;
 
                 document.querySelectorAll('[data-admin-search-table] tbody tr').forEach(function (row) {
+                    const hiddenManagementRow = row.closest('.admin-management-row');
+                    if (hiddenManagementRow && getComputedStyle(hiddenManagementRow).display === 'none') return;
                     const matches = !query || row.textContent.toLocaleLowerCase().includes(query);
                     row.hidden = !matches;
                     if (matches && query) visibleMatches++;

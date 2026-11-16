@@ -102,7 +102,7 @@ $reservations = $currentReservations;
                 <th>Day</th>
                 <th>Start Time</th>
                 <th>End Time</th>
-                <th>Reason</th>
+                <th>Purpose</th>
                 <th>Status</th>
                 <th>QR</th>
                 <th>Actions</th>
@@ -203,7 +203,7 @@ $reservations = $currentReservations;
                 <th>Day</th>
                 <th>Start Time</th>
                 <th>End Time</th>
-                <th>Reason</th>
+                <th>Purpose</th>
                 <th>Status</th>
                 <th>QR</th>
             </tr>

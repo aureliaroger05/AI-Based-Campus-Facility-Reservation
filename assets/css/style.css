@@ -3338,22 +3338,8 @@ body:not(.calendar-page) footer .container {
     display: none;
 }
 
-body.admin-dashboard-page {
-    display: block;
-    width: 100%;
-    height: 100vh;
-    height: 100dvh;
-    min-height: 0;
-    overflow: hidden;
-}
-
 .admin-dashboard-shell {
-    display: flex;
-    width: 100%;
-    height: 100vh;
-    height: 100dvh;
-    min-height: 0;
-    overflow: hidden;
+    min-height: 100vh;
 }
 
 .admin-sidebar {
@@ -3529,12 +3515,7 @@ body.admin-dashboard-page {
 }
 
 .admin-dashboard-workspace {
-    display: flex;
-    height: 100vh;
-    height: 100dvh;
-    min-height: 0;
-    flex-direction: column;
-    overflow: hidden;
+    min-height: 100vh;
     margin-left: 258px;
 }
 
@@ -3685,25 +3666,23 @@ body.admin-dashboard-page {
 }
 
 .admin-dashboard-main {
-    min-height: 0;
-    flex: 1 1 auto;
-    overflow-y: auto;
-    overscroll-behavior: contain;
+    min-height: calc(100vh - 4.25rem);
     padding: 1.7rem 0 2.5rem !important;
-}
-
-.admin-dashboard-workspace > main {
-    min-height: 0;
-    flex: 1 1 auto;
-    overflow-x: hidden;
-    overflow-y: auto;
-    overscroll-behavior: contain;
 }
 
 .admin-dashboard-content {
     max-width: 1600px;
     padding-right: clamp(1rem, 3vw, 2.5rem);
     padding-left: clamp(1rem, 3vw, 2.5rem);
+}
+
+body.admin-dashboard-page:not(.calendar-page) .admin-dashboard-main {
+    padding-top: 1.1rem !important;
+    padding-bottom: 1.1rem !important;
+}
+
+.admin-dashboard-main .admin-management-row {
+    display: none;
 }
 
 .admin-dashboard-page .admin-dashboard-content > .d-flex {
@@ -3855,18 +3834,18 @@ body.admin-dashboard-page {
 
 .admin-dashboard-page.calendar-page {
     display: block;
-    width: 100%;
-    height: 100vh;
-    height: 100dvh;
-    min-height: 0;
-    overflow: hidden;
+    width: auto;
+    height: auto;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .admin-dashboard-page.calendar-page main#reservation-main {
-    flex: 1 1 auto;
+    flex: 0 0 auto;
     min-height: 0 !important;
-    overflow-x: hidden;
-    overflow-y: auto;
+    overflow: visible;
 }
 
 .admin-dashboard-page.calendar-page main#reservation-main > .container {
@@ -3882,4 +3861,50 @@ body.admin-dashboard-page {
 
 .admin-dashboard-page.calendar-page .calendar-days {
     min-height: 240px;
+}
+
+@media (max-width: 1199.98px) {
+    .admin-dashboard-main .admin-insights-row {
+        display: none;
+    }
+}
+
+@media (max-height: 600px) {
+    body.admin-dashboard-page:not(.calendar-page) .admin-dashboard-main {
+        padding-top: 0.5rem !important;
+        padding-bottom: 0.5rem !important;
+    }
+
+    .admin-dashboard-main .admin-dashboard-actions,
+    .admin-dashboard-main .admin-dashboard-heading p {
+        display: none;
+    }
+
+    .admin-dashboard-main .admin-stat-card {
+        min-height: 5.75rem;
+    }
+}
+
+.reservation-facility-table tbody tr:not([hidden]) {
+    cursor: pointer;
+}
+
+.reservation-facility-table .table > :not(caption) > * > * {
+    padding: 0.2rem 0.45rem;
+    font-size: 0.78rem;
+    line-height: 1.2;
+}
+
+.reservation-facility-table [data-facility-availability] {
+    white-space: nowrap;
+}
+
+.reservation-facility-table tbody tr.is-selected > * {
+    background-color: #eaf3ff;
+}
+
+.reservation-facility-table .form-check-input {
+    width: 0.95rem;
+    height: 0.95rem;
+    float: none;
 }

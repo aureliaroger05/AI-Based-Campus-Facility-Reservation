@@ -263,7 +263,7 @@ $body_class = 'reservation-view-page';
                     <div><dt>Facility</dt><dd><?php echo htmlspecialchars($res['name']); ?></dd></div>
                     <div><dt>Date</dt><dd><?php echo htmlspecialchars($res['reserve_date'] ?? ''); ?></dd></div>
                     <div><dt>Time</dt><dd><?php echo htmlspecialchars($reservationStart); ?> - <?php echo htmlspecialchars($reservationEnd); ?></dd></div>
-                    <div><dt>Reason</dt><dd><?php echo htmlspecialchars($res['reason'] ?? '—'); ?></dd></div>
+                    <div><dt>Purpose of reservation</dt><dd><?php echo htmlspecialchars($res['reason'] ?? '—'); ?></dd></div>
                 </dl>
 
                 <div class="reservation-qr-panel">
