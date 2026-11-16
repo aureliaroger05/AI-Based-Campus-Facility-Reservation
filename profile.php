@@ -153,16 +153,13 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <div class="navbar-nav ms-auto">
+                <?php require __DIR__ . '/notifications_bar.php'; ?>
+                <div class="navbar-nav">
                     <a class="nav-link<?php echo basename($_SERVER['PHP_SELF']) === 'profile.php' ? ' active' : ''; ?>" href="index.php"><i class="bi bi-house"></i> Home</a>
                     <a class="nav-link" href="profile.php"><i class="bi bi-person"></i> Profile</a>
-                    
-
                     <?php if (isAdmin()): ?><a class="nav-link" href="admin/"><i class="bi bi-gear"></i> Admin</a><?php endif; ?>
                     <a class="nav-link" href="logout.php" data-confirm="Are you sure you want to log out?"><i class="bi bi-box-arrow-right"></i> Logout (<?php echo htmlspecialchars($_SESSION['username']); ?>)</a>
-
                 </div>
-                <?php require __DIR__ . '/notifications_bar.php'; ?>
             </div>
         </div>
     </nav>

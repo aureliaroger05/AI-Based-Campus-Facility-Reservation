@@ -221,7 +221,8 @@ $body_class = 'reservation-view-page';
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <div class="navbar-nav ms-auto">
+            <?php require __DIR__ . '/notifications_bar.php'; ?>
+            <div class="navbar-nav">
                 <?php if ($isAdminViewer): ?>
                     <a class="nav-link" href="index.php"><i class="bi bi-house"></i> Home</a>
                     <a class="nav-link" href="admin/reservations.php"><i class="bi bi-clipboard-check"></i> Reservations</a>
@@ -232,7 +233,6 @@ $body_class = 'reservation-view-page';
                 <?php endif; ?>
                 <a class="nav-link" href="logout.php" data-confirm="Are you sure you want to log out?"><i class="bi bi-box-arrow-right"></i> Logout (<?php echo htmlspecialchars($_SESSION['username']); ?>)</a>
             </div>
-            <?php require __DIR__ . '/notifications_bar.php'; ?>
         </div>
     </div>
 </nav>

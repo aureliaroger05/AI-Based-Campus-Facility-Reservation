@@ -721,7 +721,8 @@ $minimumReservationDate = $manilaNow->setTime(0, 0)->modify('+3 days')->format('
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <div class="navbar-nav ms-auto">
+            <?php require __DIR__ . '/notifications_bar.php'; ?>
+            <div class="navbar-nav">
                 <?php if (isLoggedIn()): ?>
                     <a class="nav-link" href="index.php"><i class="bi bi-house"></i> Home</a>
                     <a class="nav-link" href="profile.php"><i class="bi bi-person"></i> Profile</a>
@@ -730,10 +731,9 @@ $minimumReservationDate = $manilaNow->setTime(0, 0)->modify('+3 days')->format('
                     <?php endif; ?>
                     <a class="nav-link" href="logout.php" data-confirm="Are you sure you want to log out?"><i class="bi bi-box-arrow-right"></i> Logout (<?php echo htmlspecialchars($_SESSION['username'] ?? ''); ?>)</a>
                 <?php else: ?>
-                    <a class="nav-link ms-auto btn btn-outline-light" href="login.php"><i class="bi bi-box-arrow-in-right me-1"></i>Sign in</a>
+                    <a class="nav-link btn btn-outline-light" href="login.php"><i class="bi bi-box-arrow-in-right me-1"></i>Sign in</a>
                 <?php endif; ?>
             </div>
-            <?php require __DIR__ . '/notifications_bar.php'; ?>
         </div>
     </div>
 </nav>
