@@ -61,6 +61,44 @@ if (defined('HEADER_INCLUDED')):
         </div>
     </section>
     <script src="<?php echo $chatAssetPrefix; ?>assets/js/ai-chat.js?v=<?php echo (int)filemtime(__DIR__ . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'ai-chat.js'); ?>"></script>
+    <script>
+        // Highlight the nav link / sidebar option matching the current page.
+        (function () {
+            var page = (window.location.pathname.split('/').pop() || 'index.php').toLowerCase();
+            var isAdminDir = window.location.pathname.toLowerCase().indexOf('/admin/') !== -1;
+
+            document.querySelectorAll('.navbar-nav .nav-link[href]').forEach(function (link) {
+                link.classList.remove('active');
+                link.removeAttribute('aria-current');
+            });
+
+            var bestMatch = null;
+            var bestScore = -1;
+            document.querySelectorAll('.navbar-nav .nav-link[href]').forEach(function (link) {
+                var href;
+                try { href = new URL(link.getAttribute('href'), window.location.href); } catch (e) { return; }
+                if (href.origin !== window.location.origin) return;
+                var target = (href.pathname.split('/').pop() || 'index.php').toLowerCase();
+                var sameDir = (href.pathname.toLowerCase().indexOf('/admin/') !== -1) === isAdminDir;
+                if (target === page && sameDir && bestScore < 2) { bestMatch = link; bestScore = 2; }
+                else if (target === page && bestScore < 1) { bestMatch = link; bestScore = 1; }
+            });
+            if (bestMatch) {
+                bestMatch.classList.add('active');
+                bestMatch.setAttribute('aria-current', 'page');
+            }
+
+            document.querySelectorAll('.admin-sidebar-link').forEach(function (link) {
+                var href = link.getAttribute('href') || '';
+                var target = (href.split('?')[0].split('/').pop() || 'index.php').toLowerCase();
+                var isActive = link.classList.contains('is-active');
+                if (!isActive && target === page) {
+                    link.classList.add('is-active');
+                    link.setAttribute('aria-current', 'page');
+                }
+            });
+        })();
+    </script>
     <div class="mt-auto pt-5 pb-5"></div>
     <footer>
         <div class="container text-center py-4">
