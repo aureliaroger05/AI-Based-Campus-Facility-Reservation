@@ -1578,6 +1578,172 @@ canvas {
     color: var(--site-muted);
 }
 
+.forecast-monthly-section {
+    margin-bottom: 2rem;
+}
+
+.forecast-monthly-heading,
+.forecast-report-heading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.forecast-monthly-heading h2,
+.forecast-report-heading h3 {
+    margin: 0;
+    color: var(--site-ink);
+    font-size: 1.3rem;
+    font-weight: 750;
+}
+
+.forecast-monthly-heading p,
+.forecast-report-heading p {
+    margin: 0.3rem 0 0;
+    color: var(--site-muted);
+    font-size: 0.85rem;
+}
+
+.forecast-month-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr));
+    gap: 1rem;
+}
+
+.forecast-month-card {
+    min-width: 0;
+    padding: 1.05rem 1.15rem;
+    border: 1px solid var(--site-line);
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: 0 7px 20px rgba(23, 43, 77, 0.05);
+}
+
+.forecast-month-card-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.forecast-month-card-heading h3 {
+    margin: 0;
+    color: var(--site-ink);
+    font-size: 1.05rem;
+    font-weight: 750;
+}
+
+.forecast-month-total {
+    color: var(--site-blue);
+    font-size: 1.3rem;
+    font-weight: 800;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+.forecast-month-total small {
+    color: var(--site-muted);
+    font-size: 0.68rem;
+    font-weight: 600;
+}
+
+.forecast-month-meta {
+    margin: 0.45rem 0 0.75rem;
+    color: var(--site-muted);
+    font-size: 0.76rem;
+}
+
+.forecast-month-facilities {
+    display: grid;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.forecast-month-facilities li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid #edf1f6;
+}
+
+.forecast-month-facilities li > span {
+    display: grid;
+    min-width: 0;
+    gap: 0.1rem;
+}
+
+.forecast-month-facilities strong {
+    overflow: hidden;
+    color: #294766;
+    font-size: 0.82rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.forecast-month-facilities small {
+    color: var(--site-muted);
+    font-size: 0.7rem;
+}
+
+.forecast-month-facilities b {
+    flex: 0 0 auto;
+    color: var(--site-ink);
+    font-size: 0.9rem;
+}
+
+.forecast-detailed-report {
+    margin-top: 1rem;
+    padding: clamp(1rem, 2.5vw, 1.5rem);
+    border: 1px solid #cfe0ef;
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: 0 10px 28px rgba(23, 43, 77, 0.08);
+}
+
+.forecast-report-heading {
+    align-items: center;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e8eef5;
+}
+
+.forecast-report-heading .btn {
+    flex: 0 0 auto;
+}
+
+.forecast-report-month {
+    margin-top: 1rem;
+}
+
+.forecast-report-month-heading {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.forecast-report-month-heading h4 {
+    margin: 0;
+    color: var(--site-ink);
+    font-size: 1rem;
+    font-weight: 750;
+}
+
+.forecast-report-month-heading span {
+    color: var(--site-muted);
+    font-size: 0.75rem;
+}
+
+.forecast-report-table {
+    min-width: 460px;
+}
+
 .forecast-chart-wrap canvas {
     width: 100% !important;
     height: 100% !important;
@@ -1618,6 +1784,29 @@ canvas {
     gap: 0.4rem;
 }
 
+.reservation-month-divider td {
+    padding: 0.65rem 0.9rem !important;
+    border-top: 1px solid #dce5ef;
+    background: #edf4fa !important;
+    color: #294766;
+}
+
+.reservation-month-divider-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.reservation-month-divider-content strong {
+    font-size: 0.86rem;
+}
+
+.reservation-month-divider-content .badge {
+    border-radius: 999px;
+    font-size: 0.7rem;
+}
+
 @media (max-width: 991.98px) {
     .navbar-collapse {
         padding: 0.5rem 0 0.75rem;
@@ -1647,6 +1836,18 @@ canvas {
 
     .forecast-summary-card {
         padding: 0.85rem 1rem;
+    }
+
+    .forecast-monthly-heading,
+    .forecast-report-heading,
+    .forecast-report-month-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .forecast-monthly-heading .btn,
+    .forecast-report-heading .btn {
+        width: 100%;
     }
 
     .forecast-section-heading {
@@ -4029,4 +4230,939 @@ body.admin-dashboard-page:not(.calendar-page) .admin-dashboard-main {
         gap: 0.3rem;
         font-size: 0.68rem;
     }
+}
+
+.admin-topbar-tools {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.admin-topbar-icon-button {
+    position: relative;
+    display: grid;
+    width: 2.4rem;
+    height: 2.4rem;
+    flex: 0 0 2.4rem;
+    place-items: center;
+    border: 1px solid #e7e9f0;
+    border-radius: 0.72rem;
+    background: #fff;
+    color: #647087;
+    font-size: 1rem;
+    transition: color 0.16s ease, border-color 0.16s ease, background-color 0.16s ease;
+}
+
+.admin-topbar-icon-button:hover,
+.admin-topbar-icon-button:focus-visible {
+    border-color: #c9c7f5;
+    background: #f7f6ff;
+    color: #5a58c8;
+}
+
+.admin-notifications {
+    position: relative;
+}
+
+.admin-notification-badge {
+    position: absolute;
+    top: -0.3rem;
+    right: -0.3rem;
+    display: grid;
+    min-width: 1.05rem;
+    height: 1.05rem;
+    place-items: center;
+    padding: 0 0.2rem;
+    border: 2px solid #fff;
+    border-radius: 999px;
+    background: #e85f68;
+    color: #fff;
+    font-size: 0.56rem;
+    font-weight: 750;
+    line-height: 1;
+}
+
+.admin-notification-badge[hidden] {
+    display: none;
+}
+
+.admin-notification-panel {
+    position: absolute;
+    z-index: 1050;
+    top: calc(100% + 0.65rem);
+    right: 0;
+    width: min(21rem, calc(100vw - 2rem));
+    padding: 0.9rem;
+    border: 1px solid #e7e9f0;
+    border-radius: 0.9rem;
+    background: #fff;
+    box-shadow: 0 16px 42px rgba(32, 42, 63, 0.16);
+}
+
+.admin-notification-panel[hidden] {
+    display: none;
+}
+
+.admin-notification-panel-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.15rem 0.15rem 0.75rem;
+    border-bottom: 1px solid #edf0f5;
+}
+
+.admin-notification-panel-heading strong {
+    color: #354057;
+    font-size: 0.9rem;
+}
+
+.admin-notification-panel-heading span {
+    color: #8490a2;
+    font-size: 0.68rem;
+    font-weight: 600;
+}
+
+.admin-notification-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7rem;
+    padding: 0.85rem 0.15rem;
+}
+
+.admin-notification-item-icon {
+    display: grid;
+    width: 2rem;
+    height: 2rem;
+    flex: 0 0 2rem;
+    place-items: center;
+    border-radius: 0.65rem;
+    background: #f0efff;
+    color: #6865e8;
+}
+
+.admin-notification-item strong {
+    color: #354057;
+    font-size: 0.78rem;
+}
+
+.admin-notification-item p {
+    margin: 0.15rem 0 0;
+    color: #79859a;
+    font-size: 0.72rem;
+    line-height: 1.5;
+}
+
+.admin-notification-panel > a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.65rem 0.2rem 0.1rem;
+    border-top: 1px solid #edf0f5;
+    color: #5a58c8;
+    font-size: 0.74rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.admin-notification-panel > a:hover {
+    color: #403da8;
+}
+
+html[data-admin-theme="dark"] body.admin-dashboard-page {
+    --bs-body-bg: #111827;
+    --bs-body-color: #e5eaf2;
+    --bs-border-color: #303b4e;
+    color-scheme: dark;
+    background: #111827;
+    color: #e5eaf2;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-shell,
+html[data-admin-theme="dark"] .admin-dashboard-workspace,
+html[data-admin-theme="dark"] .admin-dashboard-main {
+    background-color: #111827;
+}
+
+html[data-admin-theme="dark"] .admin-sidebar,
+html[data-admin-theme="dark"] .admin-topbar,
+html[data-admin-theme="dark"] .admin-notification-panel {
+    border-color: #303b4e;
+    background: #182233;
+}
+
+html[data-admin-theme="dark"] .admin-sidebar-brand,
+html[data-admin-theme="dark"] .admin-sidebar-user strong,
+html[data-admin-theme="dark"] .admin-topbar-user strong,
+html[data-admin-theme="dark"] .admin-topbar-breadcrumb strong,
+html[data-admin-theme="dark"] .admin-notification-panel-heading strong,
+html[data-admin-theme="dark"] .admin-notification-item strong {
+    color: #e5eaf2;
+}
+
+html[data-admin-theme="dark"] .admin-sidebar-brand small,
+html[data-admin-theme="dark"] .admin-sidebar-user small,
+html[data-admin-theme="dark"] .admin-topbar-user small,
+html[data-admin-theme="dark"] .admin-nav-caption,
+html[data-admin-theme="dark"] .admin-notification-panel-heading span,
+html[data-admin-theme="dark"] .admin-notification-item p {
+    color: #9aa8bb;
+}
+
+html[data-admin-theme="dark"] .admin-sidebar-footer,
+html[data-admin-theme="dark"] .admin-topbar {
+    border-color: #303b4e;
+}
+
+html[data-admin-theme="dark"] .admin-sidebar-link {
+    color: #aab6c8;
+}
+
+html[data-admin-theme="dark"] .admin-sidebar-link:hover {
+    background: #202c40;
+    color: #c5c3ff;
+}
+
+html[data-admin-theme="dark"] .admin-sidebar-link.is-active {
+    background: #2a2a4b;
+    color: #c5c3ff;
+}
+
+html[data-admin-theme="dark"] .admin-topbar-icon-button,
+html[data-admin-theme="dark"] .admin-sidebar-toggle {
+    border-color: #39465b;
+    background: #202c40;
+    color: #c4cede;
+}
+
+html[data-admin-theme="dark"] .admin-topbar-icon-button:hover,
+html[data-admin-theme="dark"] .admin-topbar-icon-button:focus-visible {
+    border-color: #7774d9;
+    background: #2a2a4b;
+    color: #d3d1ff;
+}
+
+html[data-admin-theme="dark"] .admin-notification-badge {
+    border-color: #182233;
+}
+
+html[data-admin-theme="dark"] .admin-notification-panel-heading,
+html[data-admin-theme="dark"] .admin-notification-panel > a {
+    border-color: #303b4e;
+}
+
+html[data-admin-theme="dark"] .admin-notification-item-icon {
+    background: #2a2a4b;
+    color: #c5c3ff;
+}
+
+html[data-admin-theme="dark"] .admin-notification-panel > a {
+    color: #c5c3ff;
+}
+
+html[data-admin-theme="dark"] .admin-notification-panel > a:hover {
+    color: #e0dfff;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-search,
+html[data-admin-theme="dark"] .admin-dashboard-search:focus-within {
+    border-color: #39465b;
+    background: #202c40;
+    color: #aab6c8;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-search input {
+    color: #e5eaf2;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-search kbd {
+    border-color: #39465b;
+    background: #182233;
+    color: #aab6c8;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-main h1,
+html[data-admin-theme="dark"] .admin-dashboard-main h2,
+html[data-admin-theme="dark"] .admin-dashboard-main h3,
+html[data-admin-theme="dark"] .admin-dashboard-main h4,
+html[data-admin-theme="dark"] .admin-dashboard-main h5,
+html[data-admin-theme="dark"] .admin-dashboard-main .admin-dashboard-heading p {
+    color: #e5eaf2;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-main .card,
+html[data-admin-theme="dark"] .admin-dashboard-main .modal-content {
+    border-color: #303b4e;
+    background: #182233;
+    color: #e5eaf2;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-main .card-header,
+html[data-admin-theme="dark"] .admin-dashboard-main .card-footer,
+html[data-admin-theme="dark"] .admin-dashboard-main .modal-header,
+html[data-admin-theme="dark"] .admin-dashboard-main .modal-footer {
+    border-color: #303b4e;
+    background-color: #202c40;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-main .text-muted,
+html[data-admin-theme="dark"] .admin-dashboard-main .form-text,
+html[data-admin-theme="dark"] .admin-search-empty {
+    color: #9aa8bb !important;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-main .table {
+    --bs-table-bg: #182233;
+    --bs-table-color: #e5eaf2;
+    --bs-table-border-color: #303b4e;
+    --bs-table-striped-bg: #202c40;
+    --bs-table-striped-color: #e5eaf2;
+    --bs-table-hover-bg: #26334a;
+    --bs-table-hover-color: #fff;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-main .form-control,
+html[data-admin-theme="dark"] .admin-dashboard-main .form-select,
+html[data-admin-theme="dark"] .admin-dashboard-main .input-group-text {
+    border-color: #39465b;
+    background-color: #202c40;
+    color: #e5eaf2;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-main .form-control::placeholder {
+    color: #9aa8bb;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-main .form-control:focus,
+html[data-admin-theme="dark"] .admin-dashboard-main .form-select:focus {
+    border-color: #7774d9;
+    background-color: #202c40;
+    color: #e5eaf2;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-main .list-group-item,
+html[data-admin-theme="dark"] .admin-dashboard-main .dropdown-menu {
+    border-color: #303b4e;
+    background-color: #182233;
+    color: #e5eaf2;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-main .dropdown-item {
+    color: #e5eaf2;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-main .dropdown-item:hover {
+    background-color: #26334a;
+    color: #fff;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-main .alert-light,
+html[data-admin-theme="dark"] .admin-dashboard-main .bg-light {
+    border-color: #39465b;
+    background-color: #202c40 !important;
+    color: #e5eaf2 !important;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-shell main h1,
+html[data-admin-theme="dark"] .admin-dashboard-shell main h2,
+html[data-admin-theme="dark"] .admin-dashboard-shell main h3,
+html[data-admin-theme="dark"] .admin-dashboard-shell main h4,
+html[data-admin-theme="dark"] .admin-dashboard-shell main h5,
+html[data-admin-theme="dark"] .admin-dashboard-shell main .admin-page-heading p {
+    color: #e5eaf2;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-shell main .card,
+html[data-admin-theme="dark"] .admin-dashboard-shell main .modal-content,
+html[data-admin-theme="dark"] .admin-dashboard-shell main .forecast-summary-card,
+html[data-admin-theme="dark"] .admin-dashboard-shell main .forecast-month-card,
+html[data-admin-theme="dark"] .admin-dashboard-shell main .forecast-detailed-report {
+    border-color: #303b4e;
+    background: #182233;
+    color: #e5eaf2;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-shell main .card-header,
+html[data-admin-theme="dark"] .admin-dashboard-shell main .card-footer,
+html[data-admin-theme="dark"] .admin-dashboard-shell main .modal-header,
+html[data-admin-theme="dark"] .admin-dashboard-shell main .modal-footer {
+    border-color: #303b4e;
+    background: #202c40;
+    color: #e5eaf2;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-shell main .text-muted,
+html[data-admin-theme="dark"] .admin-dashboard-shell main .form-text,
+html[data-admin-theme="dark"] .admin-dashboard-shell main .forecast-summary-label,
+html[data-admin-theme="dark"] .admin-dashboard-shell main .forecast-month-meta,
+html[data-admin-theme="dark"] .admin-dashboard-shell main .forecast-month-total small,
+html[data-admin-theme="dark"] .admin-dashboard-shell main .forecast-month-facilities small,
+html[data-admin-theme="dark"] .admin-dashboard-shell main .forecast-report-heading p,
+html[data-admin-theme="dark"] .admin-dashboard-shell main .forecast-report-month-heading span,
+html[data-admin-theme="dark"] .admin-dashboard-shell main .admin-search-empty {
+    color: #9aa8bb !important;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-shell main .forecast-summary-card strong,
+html[data-admin-theme="dark"] .admin-dashboard-shell main .forecast-month-card-heading h3,
+html[data-admin-theme="dark"] .admin-dashboard-shell main .forecast-month-facilities strong,
+html[data-admin-theme="dark"] .admin-dashboard-shell main .forecast-month-facilities b,
+html[data-admin-theme="dark"] .admin-dashboard-shell main .forecast-monthly-heading h2,
+html[data-admin-theme="dark"] .admin-dashboard-shell main .forecast-report-heading h3,
+html[data-admin-theme="dark"] .admin-dashboard-shell main .forecast-report-month-heading h4 {
+    color: #e5eaf2;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-shell main .forecast-month-facilities li,
+html[data-admin-theme="dark"] .admin-dashboard-shell main .forecast-report-heading {
+    border-color: #303b4e;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-shell main .table {
+    --bs-table-bg: #182233;
+    --bs-table-color: #e5eaf2;
+    --bs-table-border-color: #303b4e;
+    --bs-table-striped-bg: #202c40;
+    --bs-table-striped-color: #e5eaf2;
+    --bs-table-hover-bg: #2b3a51;
+    --bs-table-hover-color: #fff;
+    border-color: #303b4e;
+    color: #e5eaf2;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-shell main table thead th {
+    border-color: #303b4e;
+    background-color: #25334a !important;
+    color: #dce6f3;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-shell main table > :not(caption) > * > * {
+    border-color: #303b4e;
+    color: #e5eaf2;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-shell main .table tbody tr:hover {
+    --bs-table-bg: #2b3a51;
+    --bs-table-bg-state: #2b3a51;
+    --bs-table-bg-type: #2b3a51;
+    --bs-table-color-state: #fff;
+    --bs-table-color-type: #fff;
+}
+
+html[data-admin-theme="dark"] body[class*="admin-"] main .reservation-month-divider td {
+    border-color: #39465b !important;
+    background: #25334a !important;
+    color: #e5eaf2 !important;
+}
+
+html[data-admin-theme="dark"] body[class*="admin-"] main .reservation-month-divider .badge.text-bg-light {
+    background: #35445d !important;
+    color: #e5eaf2 !important;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-shell main .table-responsive {
+    scrollbar-color: #52627b #182233;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-shell main .form-control,
+html[data-admin-theme="dark"] .admin-dashboard-shell main .form-select,
+html[data-admin-theme="dark"] .admin-dashboard-shell main .input-group-text {
+    border-color: #39465b;
+    background-color: #202c40;
+    color: #e5eaf2;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-shell main .form-control::placeholder {
+    color: #9aa8bb;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-shell main .form-control:focus,
+html[data-admin-theme="dark"] .admin-dashboard-shell main .form-select:focus {
+    border-color: #7774d9;
+    background-color: #202c40;
+    color: #e5eaf2;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-shell main .alert-light,
+html[data-admin-theme="dark"] .admin-dashboard-shell main .bg-light {
+    border-color: #39465b;
+    background-color: #202c40 !important;
+    color: #e5eaf2 !important;
+}
+
+html[data-admin-theme="dark"] .admin-topbar-breadcrumb {
+    color: #b7c3d4;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-search input::placeholder {
+    color: #aab8ca;
+}
+
+html[data-admin-theme="dark"] .admin-live-status[data-state="online"] {
+    color: #72d9a8;
+}
+
+html[data-admin-theme="dark"] body.admin-dashboard-page.calendar-page .calendar-intro {
+    background: linear-gradient(110deg, #202c40, #27364d) !important;
+    color: #e5eaf2 !important;
+}
+
+html[data-admin-theme="dark"] body.admin-dashboard-page.calendar-page .calendar-intro small {
+    color: #b7c3d4 !important;
+}
+
+html[data-admin-theme="dark"] body.admin-dashboard-page.calendar-page .calendar-intro > span i {
+    color: #b5b2ff;
+}
+
+html[data-admin-theme="dark"] body.admin-dashboard-page.calendar-page .facility-calendar {
+    border-color: #303b4e;
+    background: #111827;
+    box-shadow: 0 7px 22px rgba(0, 0, 0, 0.22);
+}
+
+html[data-admin-theme="dark"] body.admin-dashboard-page.calendar-page .calendar-heading {
+    border-bottom-color: #303b4e;
+    background: #202c40;
+}
+
+html[data-admin-theme="dark"] body.admin-dashboard-page.calendar-page .calendar-heading h5,
+html[data-admin-theme="dark"] body.admin-dashboard-page.calendar-page .calendar-heading h5 > span:first-child {
+    color: #e5eaf2 !important;
+}
+
+html[data-admin-theme="dark"] body.admin-dashboard-page.calendar-page .calendar-heading .calendar-year {
+    background: #35445d;
+    color: #c6c3ff;
+}
+
+html[data-admin-theme="dark"] body.admin-dashboard-page.calendar-page .calendar-heading .btn,
+html[data-admin-theme="dark"] body.admin-dashboard-page.calendar-page .calendar-heading .btn:hover,
+html[data-admin-theme="dark"] body.admin-dashboard-page.calendar-page .calendar-heading .btn:focus-visible {
+    border-color: #52617a;
+    background: #25334a;
+    color: #e5eaf2;
+}
+
+html[data-admin-theme="dark"] body.admin-dashboard-page.calendar-page .calendar-weekdays {
+    background: #202c40;
+}
+
+html[data-admin-theme="dark"] body.admin-dashboard-page.calendar-page .calendar-weekdays span {
+    color: #b7c3d4;
+}
+
+html[data-admin-theme="dark"] body.admin-dashboard-page.calendar-page .calendar-days {
+    background: #111827;
+}
+
+html[data-admin-theme="dark"] body.admin-dashboard-page.calendar-page .calendar-day.available {
+    background: linear-gradient(145deg, #1d4435, #24543f);
+    color: #b7f4d0;
+}
+
+html[data-admin-theme="dark"] body.admin-dashboard-page.calendar-page .calendar-day.available:disabled {
+    background: #273346;
+    color: #aab8ca;
+}
+
+html[data-admin-theme="dark"] body.admin-dashboard-page.calendar-page .calendar-day.partial {
+    background: linear-gradient(135deg, #843743 0%, #843743 48%, #29364a 52%, #29364a 100%);
+    color: #f3e7d0;
+}
+
+html[data-admin-theme="dark"] body.admin-dashboard-page.calendar-page .calendar-day.reserved {
+    background: linear-gradient(145deg, #a63e4b, #762b39);
+    color: #fff;
+}
+
+html[data-admin-theme="dark"] body.admin-dashboard-page.calendar-page .calendar-day.closed {
+    background: repeating-linear-gradient(135deg, #263346, #263346 8px, #202c40 8px, #202c40 16px);
+    color: #c0cad8;
+}
+
+html[data-admin-theme="dark"] body.admin-dashboard-page.calendar-page .calendar-day.today .day-number {
+    background: #1769aa;
+    color: #fff;
+}
+
+html[data-admin-theme="dark"] body.admin-dashboard-page.calendar-page .calendar-day.selected {
+    outline-color: #a7a4ff;
+}
+
+html[data-admin-theme="dark"] body.admin-dashboard-page.calendar-page .calendar-legend {
+    color: #c0cad8 !important;
+}
+
+html[data-admin-theme="dark"] body.admin-dashboard-page.calendar-page .calendar-legend > span > span {
+    background: #263346 !important;
+}
+
+html[data-admin-theme="dark"] body.admin-dashboard-page.calendar-page .calendar-legend > span:nth-child(1) > span {
+    background: #24543f !important;
+}
+
+html[data-admin-theme="dark"] body.admin-dashboard-page.calendar-page .calendar-legend > span:nth-child(2) > span {
+    background: linear-gradient(135deg, #843743 50%, #29364a 50%) !important;
+}
+
+html[data-admin-theme="dark"] body.admin-dashboard-page.calendar-page .calendar-legend > span:nth-child(3) > span {
+    background: #a63e4b !important;
+}
+
+html[data-admin-theme="dark"] body.admin-dashboard-page.calendar-page .calendar-legend > span:nth-child(4) > span {
+    background: #364356 !important;
+}
+
+html[data-admin-theme="dark"] body.admin-dashboard-page.calendar-page .modal-body .form-label {
+    color: #d6deea;
+}
+
+html[data-admin-theme="dark"] body.admin-dashboard-page.calendar-page .modal-header .btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+html[data-admin-theme="dark"] body.admin-dashboard-page.calendar-page .modal-body .alert-warning {
+    border-color: #725b2d;
+    background: #40331f;
+    color: #ffd18a;
+}
+
+html[data-admin-theme="dark"] body.admin-dashboard-page.calendar-page #selected-facility-times h4 {
+    color: #82dfc0 !important;
+}
+
+html[data-admin-theme="dark"] body.admin-dashboard-page.calendar-page .reservation-facility-card {
+    border-color: #39465b;
+    background: #202c40;
+    color: #e5eaf2;
+}
+
+html[data-admin-theme="dark"] body.admin-dashboard-page.calendar-page .reservation-facility-card:not(.is-unavailable):hover,
+html[data-admin-theme="dark"] body.admin-dashboard-page.calendar-page .reservation-facility-card.is-selected {
+    border-color: #7774d9;
+    background: #29374d;
+}
+
+html[data-admin-theme="dark"] body.admin-dashboard-page.calendar-page .reservation-facility-card.is-unavailable {
+    background: #1b2535;
+}
+
+html[data-admin-theme="dark"] body.admin-dashboard-page.calendar-page .reservation-facility-card-heading h4 {
+    color: #e5eaf2;
+}
+
+html[data-admin-theme="dark"] body.admin-dashboard-page.calendar-page .reservation-facility-busy-label {
+    color: #b7c3d4;
+}
+
+html[data-admin-theme="dark"] body.admin-dashboard-page.calendar-page .reservation-facility-time-chip {
+    background: #472f31;
+    color: #ffc2b2;
+}
+
+html[data-admin-theme="dark"] body.admin-dashboard-page.calendar-page .reservation-facility-no-busy-times {
+    background: #1d3a35;
+    color: #9ce4bd;
+}
+
+html[data-admin-theme="dark"] body.admin-dashboard-page.calendar-page .reservation-facility-choice {
+    color: #a8ccff;
+}
+
+html[data-admin-theme="dark"] body.admin-dashboard-page.calendar-page .reservation-facility-card.is-unavailable .reservation-facility-choice {
+    color: #9aa8bb;
+}
+
+html[data-admin-theme="dark"] body.admin-dashboard-page.calendar-page .reservation-facility-choice .form-check-input {
+    border-color: #71809a;
+    background-color: #202c40;
+}
+
+html[data-admin-theme="dark"] body.admin-dashboard-page.calendar-page .reservation-facility-choice .form-check-input:checked {
+    border-color: #7774d9;
+    background-color: #7774d9;
+}
+
+html[data-admin-theme="dark"] .admin-live-status[data-state="connecting"] {
+    color: #b7c3d4;
+}
+
+html[data-admin-theme="dark"] .admin-live-status[data-state="offline"] {
+    color: #ffaaa5;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-main .admin-stat-label {
+    color: #c1ccda !important;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-main .admin-stat-card h2 {
+    color: #f4f7fc !important;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-main .admin-stat-users .admin-stat-icon {
+    background: #25334a;
+    color: #9dc2ff;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-main .admin-stat-facilities .admin-stat-icon {
+    background: #1d3a35;
+    color: #82dfc0;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-main .admin-stat-reservations .admin-stat-icon {
+    background: #30284a;
+    color: #c3adff;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-main .admin-stat-pending .admin-stat-icon {
+    background: #40331f;
+    color: #ffd18a;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-main .admin-stat-reservations .btn,
+html[data-admin-theme="dark"] .admin-dashboard-main .admin-stat-pending .btn {
+    border-color: #8d8ae0;
+    color: #d0ceff;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-main .admin-stat-reservations .btn:hover,
+html[data-admin-theme="dark"] .admin-dashboard-main .admin-stat-pending .btn:hover {
+    border-color: #8d8ae0;
+    background: #46437d;
+    color: #fff;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-main .admin-insights-heading {
+    border-bottom-color: #303b4e !important;
+    background: #202c40 !important;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-main .admin-insights-heading h3 {
+    color: #edf2f8;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-main .admin-insights-heading p {
+    color: #b7c3d4;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-main .admin-insights-icon,
+html[data-admin-theme="dark"] .admin-dashboard-main .admin-recent-icon {
+    background: #2a2a4b;
+    color: #c5c3ff;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-main .admin-insights-link {
+    color: #c5c3ff;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-main .admin-insights-link:hover {
+    color: #e0dfff;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-main .admin-recent-item {
+    border-color: #303b4e;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-main .admin-recent-details strong {
+    color: #edf2f8;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-main .admin-recent-details span {
+    color: #b7c3d4;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-main .admin-status-pending {
+    background: #40331f;
+    color: #ffd18a;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-main .admin-status-confirmed,
+html[data-admin-theme="dark"] .admin-dashboard-main .admin-status-completed {
+    background: #1d3a35;
+    color: #82dfc0;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-main .admin-status-used {
+    background: #253a55;
+    color: #a8ccff;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-main .admin-status-cancelled {
+    background: #472d34;
+    color: #ffb3bb;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-main .admin-recent-empty,
+html[data-admin-theme="dark"] .admin-dashboard-main .admin-recent-empty i {
+    color: #b7c3d4;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-shell main .forecast-section-kicker {
+    color: #9dcaff;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-shell main .forecast-month-total {
+    color: #91bfff;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-shell main .forecast-monthly-heading p {
+    color: #b7c3d4;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-shell main .forecast-live-indicator {
+    border-color: #285d4a;
+    background: #1d3a35;
+    color: #8be2bd;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-shell main .forecast-card-heading {
+    border-bottom-color: #303b4e;
+    background: #202c40;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-shell main .forecast-card-heading h3,
+html[data-admin-theme="dark"] .admin-dashboard-shell main .forecast-chart-label {
+    color: #e5eaf2;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-shell main .forecast-card-kicker,
+html[data-admin-theme="dark"] .admin-dashboard-shell main .forecast-chart-label span:last-child {
+    color: #b7c3d4;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-shell main .forecast-range-badge {
+    border-color: #394a62;
+    background: #25334a;
+    color: #c5d8f2;
+}
+
+html[data-admin-theme="dark"] .admin-dashboard-shell main .forecast-facility-icon {
+    border-color: #394a62;
+    background: #25334a;
+    color: #9dcaff;
+}
+
+html[data-admin-theme="dark"] body[class*="admin-"] main.admin-reservations-main .admin-page-heading .badge.text-bg-primary {
+    border-color: #557397;
+    background: #31557c !important;
+    color: #f0f5ff !important;
+}
+
+html[data-admin-theme="dark"] body[class*="admin-"] main.admin-reservations-main .admin-page-heading .badge.text-bg-secondary {
+    border-color: #52617a;
+    background: #35445d !important;
+    color: #e5eaf2 !important;
+}
+
+html[data-admin-theme="dark"] body[class*="admin-"] {
+    --bs-body-bg: #111827;
+    --bs-body-color: #e5eaf2;
+    --bs-border-color: #303b4e;
+    color-scheme: dark;
+    background: #111827;
+    color: #e5eaf2;
+}
+
+html[data-admin-theme="dark"] body[class*="admin-"] main .card,
+html[data-admin-theme="dark"] body[class*="admin-"] main .modal-content {
+    border-color: #303b4e;
+    background: #182233;
+    color: #e5eaf2;
+}
+
+html[data-admin-theme="dark"] body[class*="admin-"] main .card-header,
+html[data-admin-theme="dark"] body[class*="admin-"] main .card-footer,
+html[data-admin-theme="dark"] body[class*="admin-"] main .modal-header,
+html[data-admin-theme="dark"] body[class*="admin-"] main .modal-footer {
+    border-color: #303b4e;
+    background: #202c40;
+    color: #e5eaf2;
+}
+
+html[data-admin-theme="dark"] body[class*="admin-"] main .table-responsive {
+    border-color: #303b4e;
+    background: #182233;
+    scrollbar-color: #52627b #182233;
+}
+
+html[data-admin-theme="dark"] body[class*="admin-"] main .admin-heading-icon {
+    border-color: #45466c;
+    background: #2a2a4b;
+    color: #c5c3ff;
+    box-shadow: none;
+}
+
+html[data-admin-theme="dark"] body[class*="admin-"] main .admin-section-heading > div {
+    color: #e5eaf2;
+}
+
+html[data-admin-theme="dark"] body[class*="admin-"] main .admin-section-heading i {
+    color: #9dcaff;
+}
+
+html[data-admin-theme="dark"] body[class*="admin-"] main .admin-section-heading .badge.text-bg-light {
+    border-color: #52617a;
+    background: #35445d !important;
+    color: #e5eaf2 !important;
+}
+
+html[data-admin-theme="dark"] body[class*="admin-"] main .form-label,
+html[data-admin-theme="dark"] body[class*="admin-"] main .admin-facility-form .form-label {
+    color: #d6deea;
+}
+
+html[data-admin-theme="dark"] body[class*="admin-"] main .text-muted {
+    color: #9aa8bb !important;
+}
+
+html[data-admin-theme="dark"] body[class*="admin-"] main .form-control,
+html[data-admin-theme="dark"] body[class*="admin-"] main .form-select,
+html[data-admin-theme="dark"] body[class*="admin-"] main .input-group-text {
+    border-color: #39465b;
+    background-color: #202c40;
+    color: #e5eaf2;
+}
+
+html[data-admin-theme="dark"] body[class*="admin-"] main .form-control::placeholder {
+    color: #9aa8bb;
+}
+
+html[data-admin-theme="dark"] body[class*="admin-"] main table {
+    --bs-table-bg: #182233;
+    --bs-table-color: #e5eaf2;
+    --bs-table-border-color: #303b4e;
+    --bs-table-striped-bg: #202c40;
+    --bs-table-striped-color: #e5eaf2;
+    --bs-table-hover-bg: #2b3a51;
+    --bs-table-hover-color: #fff;
+    border-color: #303b4e;
+    background-color: #182233;
+    color: #e5eaf2;
+}
+
+html[data-admin-theme="dark"] body[class*="admin-"] main table thead th {
+    border-color: #303b4e;
+    background: #25334a !important;
+    color: #e5eaf2;
+}
+
+html[data-admin-theme="dark"] body[class*="admin-"] main table > :not(caption) > * > * {
+    border-color: #303b4e;
+    color: #e5eaf2;
+}
+
+html[data-admin-theme="dark"] body[class*="admin-"] main table tbody tr:hover > * {
+    background-color: #2b3a51;
+    color: #fff;
+}
+
+html[data-admin-theme="dark"] body[class*="admin-"] main table a:not(.btn) {
+    color: #9dcaff;
+}
+
+html[data-admin-theme="dark"] body[class*="admin-"] main table a:not(.btn):hover {
+    color: #c6e0ff;
 }

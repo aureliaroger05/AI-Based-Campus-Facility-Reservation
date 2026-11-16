@@ -68,6 +68,36 @@ foreach ($reservations as $reservation) {
     }
 }
 $reservations = $currentReservations;
+$groupReservationsByMonth = function (array $items, $newestFirst = false) {
+    $groups = [];
+    foreach ($items as $item) {
+        $reserveDate = (string)($item['reserve_date'] ?? '');
+        $monthKey = preg_match('/^\d{4}-\d{2}/', $reserveDate) ? substr($reserveDate, 0, 7) : 'unknown';
+        $groups[$monthKey][] = $item;
+    }
+
+    foreach ($groups as &$monthItems) {
+        usort($monthItems, function ($left, $right) use ($newestFirst) {
+            $dateOrder = strcmp((string)($left['reserve_date'] ?? ''), (string)($right['reserve_date'] ?? ''));
+            if ($dateOrder === 0) {
+                $leftTime = (string)($left['start_time'] ?? $left['reserve_time'] ?? '');
+                $rightTime = (string)($right['start_time'] ?? $right['reserve_time'] ?? '');
+                $dateOrder = strcmp($leftTime, $rightTime);
+            }
+            return $newestFirst ? -$dateOrder : $dateOrder;
+        });
+    }
+    unset($monthItems);
+
+    if ($newestFirst) {
+        krsort($groups);
+    } else {
+        ksort($groups);
+    }
+    return $groups;
+};
+$reservationsByMonth = $groupReservationsByMonth($reservations);
+$reservationHistoryByMonth = $groupReservationsByMonth($reservationHistory, true);
 ?>
 
 <main class="admin-reservations-main">
@@ -109,7 +139,17 @@ $reservations = $currentReservations;
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($reservations as $r): ?>
+            <?php foreach ($reservationsByMonth as $monthKey => $monthReservations): ?>
+                <?php $monthLabel = $monthKey === 'unknown' ? 'Date not set' : (new DateTimeImmutable($monthKey . '-01'))->format('F Y'); ?>
+                <tr class="reservation-month-divider">
+                    <td colspan="10">
+                        <div class="reservation-month-divider-content">
+                            <strong><?php echo htmlspecialchars($monthLabel, ENT_QUOTES, 'UTF-8'); ?></strong>
+                            <span class="badge text-bg-light"><?php echo count($monthReservations); ?> reservation<?php echo count($monthReservations) === 1 ? '' : 's'; ?></span>
+                        </div>
+                    </td>
+                </tr>
+                <?php foreach ($monthReservations as $r): ?>
                 <?php
                 $reservationStart = $r['start_time'] ?? '';
                 if ($reservationStart === '' || $reservationStart === '00:00:00') {
@@ -178,7 +218,11 @@ $reservations = $currentReservations;
                         <?php endif; ?>
                     </td>
                 </tr>
+                <?php endforeach; ?>
             <?php endforeach; ?>
+            <?php if (empty($reservations)): ?>
+                <tr><td colspan="10" class="py-4 text-center text-muted">There are no current or upcoming reservations.</td></tr>
+            <?php endif; ?>
         </tbody>
     </table>
     </div>
@@ -209,7 +253,17 @@ $reservations = $currentReservations;
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($reservationHistory as $r): ?>
+            <?php foreach ($reservationHistoryByMonth as $monthKey => $monthReservations): ?>
+                <?php $monthLabel = $monthKey === 'unknown' ? 'Date not set' : (new DateTimeImmutable($monthKey . '-01'))->format('F Y'); ?>
+                <tr class="reservation-month-divider">
+                    <td colspan="9">
+                        <div class="reservation-month-divider-content">
+                            <strong><?php echo htmlspecialchars($monthLabel, ENT_QUOTES, 'UTF-8'); ?></strong>
+                            <span class="badge text-bg-light"><?php echo count($monthReservations); ?> reservation<?php echo count($monthReservations) === 1 ? '' : 's'; ?></span>
+                        </div>
+                    </td>
+                </tr>
+                <?php foreach ($monthReservations as $r): ?>
                 <?php
                 $reservationStart = $r['start_time'] ?? '';
                 if ($reservationStart === '' || $reservationStart === '00:00:00') {
@@ -241,6 +295,7 @@ $reservations = $currentReservations;
                         <?php endif; ?>
                     </td>
                 </tr>
+                <?php endforeach; ?>
             <?php endforeach; ?>
         </tbody>
     </table>

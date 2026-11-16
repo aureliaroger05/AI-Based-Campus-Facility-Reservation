@@ -25,6 +25,115 @@
     let liveRevision = null;
     let liveStatus = 'connecting';
     let livePollInProgress = false;
+    const themeToggle = document.querySelector('[data-admin-theme-toggle]');
+    const notificationToggle = document.querySelector('[data-admin-notifications-toggle]');
+    const notificationPanel = document.getElementById('adminNotificationPanel');
+
+    function updateChartTheme(isDark) {
+        if (!window.Chart) return;
+
+        const tickColor = isDark ? '#c1ccda' : '#788397';
+        const gridColor = isDark ? 'rgba(170, 184, 204, 0.2)' : 'rgba(120, 131, 151, 0.14)';
+        document.querySelectorAll('.admin-dashboard-shell main canvas').forEach(function (canvas) {
+            const chart = window.Chart.getChart(canvas);
+            if (!chart) return;
+
+            Object.keys(chart.options.scales || {}).forEach(function (scaleName) {
+                const scale = chart.options.scales[scaleName];
+                if (scale.ticks) scale.ticks.color = tickColor;
+                if (scale.grid && scale.grid.display !== false) scale.grid.color = gridColor;
+                if (scale.border) scale.border.color = gridColor;
+            });
+
+            const tooltip = chart.options.plugins && chart.options.plugins.tooltip;
+            if (tooltip) {
+                tooltip.backgroundColor = isDark ? '#25334a' : '#172b4d';
+                tooltip.titleColor = isDark ? '#f4f7fc' : '#fff';
+                tooltip.bodyColor = isDark ? '#e5eaf2' : '#fff';
+            }
+            chart.update('none');
+        });
+    }
+
+    function setAdminTheme(theme) {
+        const isDark = theme === 'dark';
+        document.documentElement.dataset.adminTheme = isDark ? 'dark' : 'light';
+        updateChartTheme(isDark);
+        if (!themeToggle) return;
+
+        const icon = themeToggle.querySelector('i');
+        if (icon) {
+            icon.classList.toggle('bi-sun', isDark);
+            icon.classList.toggle('bi-moon-stars', !isDark);
+        }
+        themeToggle.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+        themeToggle.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+        themeToggle.title = isDark ? 'Switch to light mode' : 'Switch to dark mode';
+    }
+
+    function updateNotificationCount(count) {
+        if (!Number.isSafeInteger(count) || count < 0) {
+            throw new Error('Live updates returned an invalid pending-reservation count.');
+        }
+
+        if (!notificationToggle) return;
+        const badge = notificationToggle.querySelector('[data-admin-notification-badge]');
+        const message = notificationPanel && notificationPanel.querySelector('[data-admin-notification-message]');
+        const label = count === 1 ? 'pending reservation' : 'pending reservations';
+
+        notificationToggle.setAttribute(
+            'aria-label',
+            count > 0 ? 'Notifications, ' + count + ' ' + label : 'Notifications, no pending reservations'
+        );
+        if (badge) {
+            badge.textContent = count > 99 ? '99+' : String(count);
+            badge.hidden = count === 0;
+        }
+        if (message) {
+            message.textContent = count > 0
+                ? count + ' reservation' + (count === 1 ? '' : 's') + ' waiting for review.'
+                : 'You are all caught up.';
+        }
+    }
+
+    setAdminTheme(document.documentElement.dataset.adminTheme || 'light');
+    if (themeToggle) {
+        themeToggle.addEventListener('click', function () {
+            const nextTheme = document.documentElement.dataset.adminTheme === 'dark' ? 'light' : 'dark';
+            setAdminTheme(nextTheme);
+            window.localStorage.setItem('admin-dashboard-theme', nextTheme);
+        });
+    }
+    if (notificationToggle) {
+        updateNotificationCount(Number(notificationToggle.dataset.pendingCount || 0));
+    }
+
+    function closeNotifications(returnFocus) {
+        if (!notificationToggle || !notificationPanel) return;
+        notificationPanel.hidden = true;
+        notificationToggle.setAttribute('aria-expanded', 'false');
+        if (returnFocus) notificationToggle.focus();
+    }
+
+    document.addEventListener('click', function (event) {
+        const toggle = event.target.closest('[data-admin-notifications-toggle]');
+        if (toggle && notificationPanel) {
+            const isOpening = notificationPanel.hidden;
+            notificationPanel.hidden = !isOpening;
+            toggle.setAttribute('aria-expanded', isOpening ? 'true' : 'false');
+            return;
+        }
+
+        if (notificationPanel && !notificationPanel.hidden && !notificationPanel.contains(event.target)) {
+            closeNotifications(false);
+        }
+    });
+
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape' && notificationPanel && !notificationPanel.hidden) {
+            closeNotifications(true);
+        }
+    });
 
     function updateSidebar(view, section) {
         const selectedSection = section ||
@@ -475,11 +584,17 @@
             }
 
             const state = await response.json();
-            if (!state || typeof state.revision !== 'string') {
+            if (
+                !state ||
+                typeof state.revision !== 'string' ||
+                !Number.isSafeInteger(state.pendingReservations) ||
+                state.pendingReservations < 0
+            ) {
                 throw new Error('Live updates returned an invalid response.');
             }
 
             setLiveStatus('online');
+            updateNotificationCount(state.pendingReservations);
             const changed = liveRevision !== null && liveRevision !== state.revision;
             if (liveRevision === null) {
                 liveRevision = state.revision;
@@ -509,6 +624,19 @@
     }
 
     document.addEventListener('click', function (event) {
+        const shellViewLink = event.target.closest('[data-admin-shell-view]');
+        if (
+            shellViewLink &&
+            isUnmodifiedPrimaryClick(event) &&
+            !event.defaultPrevented
+        ) {
+            event.preventDefault();
+            closeNotifications(false);
+            const view = shellViewLink.dataset.adminShellView;
+            if (viewRoutes[view]) loadView(view);
+            return;
+        }
+
         const monthLink = event.target.closest('.facility-calendar .calendar-heading a[href]');
         if (
             monthLink &&

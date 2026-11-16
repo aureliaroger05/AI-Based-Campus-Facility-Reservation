@@ -140,6 +140,31 @@ $recentReservations = $pdo->query(
                 <input type="search" id="adminDashboardSearch" placeholder="Filter recent reservations..." autocomplete="off">
                 <kbd>Ctrl K</kbd>
             </label>
+            <div class="admin-topbar-tools">
+                <button class="admin-topbar-icon-button" type="button" data-admin-theme-toggle aria-label="Switch to dark mode" title="Switch to dark mode" aria-pressed="false">
+                    <i class="bi bi-moon-stars" aria-hidden="true"></i>
+                </button>
+                <div class="admin-notifications">
+                    <button class="admin-topbar-icon-button admin-notification-toggle" type="button" data-admin-notifications-toggle data-pending-count="<?php echo (int)$pendingReservations['total']; ?>" aria-label="Notifications" aria-expanded="false" aria-controls="adminNotificationPanel">
+                        <i class="bi bi-bell" aria-hidden="true"></i>
+                        <span class="admin-notification-badge" data-admin-notification-badge<?php echo (int)$pendingReservations['total'] > 0 ? '' : ' hidden'; ?>><?php echo (int)$pendingReservations['total'] > 99 ? '99+' : (int)$pendingReservations['total']; ?></span>
+                    </button>
+                    <section class="admin-notification-panel" id="adminNotificationPanel" aria-label="Notifications" hidden>
+                        <div class="admin-notification-panel-heading">
+                            <strong>Notifications</strong>
+                            <span>Live updates</span>
+                        </div>
+                        <div class="admin-notification-item" aria-live="polite">
+                            <span class="admin-notification-item-icon"><i class="bi bi-calendar2-check" aria-hidden="true"></i></span>
+                            <div>
+                                <strong>Reservation requests</strong>
+                                <p data-admin-notification-message><?php echo (int)$pendingReservations['total'] > 0 ? (int)$pendingReservations['total'] . ' reservation' . ((int)$pendingReservations['total'] === 1 ? '' : 's') . ' waiting for review.' : 'You are all caught up.'; ?></p>
+                            </div>
+                        </div>
+                        <a href="reservations.php" data-admin-shell-view="reservations">Review reservations<i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
+                    </section>
+                </div>
+            </div>
             <div class="admin-topbar-user">
                 <span class="admin-user-avatar"><?php echo htmlspecialchars(strtoupper(substr((string)($_SESSION['username'] ?? 'A'), 0, 1)), ENT_QUOTES, 'UTF-8'); ?></span>
                 <span><strong><?php echo htmlspecialchars($_SESSION['username'] ?? 'Admin', ENT_QUOTES, 'UTF-8'); ?></strong><small>Administrator</small></span>
@@ -393,6 +418,11 @@ $recentReservations = $pdo->query(
             if (!chartCanvas || !window.Chart) return;
             const existingChart = Chart.getChart(chartCanvas);
             if (existingChart) existingChart.destroy();
+            const isDarkTheme = document.documentElement.dataset.adminTheme === 'dark';
+            const chartTickColor = isDarkTheme ? '#c1ccda' : '#788397';
+            const chartGridColor = isDarkTheme
+                ? 'rgba(170, 184, 204, 0.2)'
+                : 'rgba(120, 131, 151, 0.14)';
 
             new Chart(chartCanvas, {
             type: 'line',
@@ -421,12 +451,12 @@ $recentReservations = $pdo->query(
                 scales: {
                     x: {
                         grid: { display: false },
-                        ticks: { color: '#788397' }
+                        ticks: { color: chartTickColor }
                     },
                     y: {
                         beginAtZero: true,
-                        ticks: { precision: 0, color: '#788397' },
-                        grid: { color: 'rgba(120, 131, 151, 0.14)', borderDash: [4, 4] }
+                        ticks: { precision: 0, color: chartTickColor },
+                        grid: { color: chartGridColor, borderDash: [4, 4] }
                     }
                 }
             }

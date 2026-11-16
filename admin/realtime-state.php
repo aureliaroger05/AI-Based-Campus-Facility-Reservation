@@ -31,7 +31,14 @@ try {
         }
     }
 
-    echo json_encode(['revision' => hash_final($revision)]);
+    $pendingReservations = (int)$pdo->query(
+        "SELECT COUNT(*) FROM reservations WHERE status = 'pending'"
+    )->fetchColumn();
+
+    echo json_encode([
+        'revision' => hash_final($revision),
+        'pendingReservations' => $pendingReservations,
+    ]);
 } catch (PDOException $exception) {
     error_log('Failed to check admin live-update state: ' . $exception->getMessage());
     http_response_code(500);

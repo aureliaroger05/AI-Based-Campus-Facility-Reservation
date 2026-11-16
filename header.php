@@ -16,6 +16,9 @@ if (!defined('HEADER_INCLUDED')) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="<?php echo (strpos($_SERVER['PHP_SELF'], '/admin/') !== false) ? '../assets/css/style.css' : 'assets/css/style.css'; ?>?v=<?php echo (int)filemtime(__DIR__ . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'style.css'); ?>" rel="stylesheet">
+    <?php if (strpos($_SERVER['PHP_SELF'] ?? '', '/admin/') !== false): ?>
+    <script>document.documentElement.dataset.adminTheme = window.localStorage.getItem('admin-dashboard-theme') === 'dark' ? 'dark' : 'light';</script>
+    <?php endif; ?>
 </head>
 <body<?php echo !empty($body_class) ? ' class="' . htmlspecialchars($body_class, ENT_QUOTES, 'UTF-8') . '"' : ''; ?>>
 <?php if (!in_array($body_class ?? '', ['login-page', 'welcome-page'], true)): ?>
