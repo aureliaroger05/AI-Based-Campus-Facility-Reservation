@@ -135,21 +135,47 @@
         }
     });
 
+    const sectionAliases = {
+        'add-user': 'users',
+        'edit-user': 'users',
+        'add-facility': 'facilities',
+        'edit-facility': 'facilities'
+    };
+
+    function resolveSidebarTarget(view, section) {
+        return {
+            view: view || 'dashboard',
+            section: section || sectionAliases[view] || ''
+        };
+    }
+
     function updateSidebar(view, section) {
-        const selectedSection = section ||
-            (view === 'add-user' || view === 'edit-user' ? 'users' :
-                view === 'add-facility' || view === 'edit-facility' ? 'facilities' : '');
+        const target = resolveSidebarTarget(view, section);
+        let highlighted = false;
+
         document.querySelectorAll('.admin-sidebar-link[data-spa-view]').forEach(function (link) {
-            const isActive = selectedSection
-                ? link.dataset.spaSection === selectedSection
-                : link.dataset.spaView === view && !link.dataset.spaSection;
-            link.classList.toggle('is-active', isActive);
+            const linkSection = link.dataset.spaSection || '';
+            const matchesSection = target.section !== '' && linkSection === target.section;
+            const matchesView = target.section === '' && linkSection === '' && link.dataset.spaView === target.view;
+            const isActive = !highlighted && (matchesSection || matchesView);
+
             if (isActive) {
+                highlighted = true;
+                link.classList.add('is-active');
                 link.setAttribute('aria-current', 'page');
             } else {
+                link.classList.remove('is-active');
                 link.removeAttribute('aria-current');
             }
         });
+    }
+
+    function normalizeSidebarFromUrl() {
+        const params = new URLSearchParams(window.location.search);
+        const requestedView = params.get('view');
+        const view = requestedView && viewRoutes[requestedView] ? requestedView : 'dashboard';
+        const hash = window.location.hash.slice(1);
+        updateSidebar(view, hash === 'users' || hash === 'facilities' ? hash : '');
     }
 
     function updateAddress(view, section, replace, routeParams) {
@@ -759,6 +785,7 @@
         const view = link.dataset.spaView || 'dashboard';
         const section = link.dataset.spaSection || '';
         if (view === activeView && section === activeSection) {
+            updateSidebar(view, section);
             const target = section ? document.getElementById(section) : null;
             if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
             shell.classList.remove('is-sidebar-open');
@@ -766,7 +793,13 @@
             if (toggle) toggle.setAttribute('aria-expanded', 'false');
             return;
         }
-        loadView(view, { section: section });
+
+        const previousView = activeView;
+        const previousSection = activeSection;
+        updateSidebar(view, section);
+        loadView(view, { section: section }).then(function (loaded) {
+            if (!loaded) updateSidebar(previousView, previousSection);
+        });
     });
 
     document.addEventListener('submit', function (event) {
@@ -811,6 +844,8 @@
             routeParams: queryParamsFromUrl(new URL(window.location.href)),
             updateAddress: false
         });
+    } else {
+        normalizeSidebarFromUrl();
     }
 
     pollLiveState();

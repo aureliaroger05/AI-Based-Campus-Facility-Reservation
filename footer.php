@@ -88,15 +88,6 @@ if (defined('HEADER_INCLUDED')):
                 bestMatch.setAttribute('aria-current', 'page');
             }
 
-            document.querySelectorAll('.admin-sidebar-link').forEach(function (link) {
-                var href = link.getAttribute('href') || '';
-                var target = (href.split('?')[0].split('/').pop() || 'index.php').toLowerCase();
-                var isActive = link.classList.contains('is-active');
-                if (!isActive && target === page) {
-                    link.classList.add('is-active');
-                    link.setAttribute('aria-current', 'page');
-                }
-            });
         })();
     </script>
     <div class="mt-auto pt-5 pb-5"></div>
