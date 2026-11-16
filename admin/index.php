@@ -92,36 +92,64 @@ $recentReservations = $pdo->query(
 )->fetchAll();
 ?>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
-    <div class="container">
-        <a class="navbar-brand fw-bold" href="index.php"><i class="bi bi-building me-2"></i>AI Reservation</a>
+<div class="admin-dashboard-shell">
+    <aside class="admin-sidebar" id="adminSidebar" aria-label="Admin navigation">
+        <a class="admin-sidebar-brand" href="index.php">
+            <img src="../images/aclc logo.png" alt="">
+            <span><strong>ACLC Reservation</strong><small>Campus workspace</small></span>
+        </a>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <div class="navbar-nav ms-auto">
-                <a class="nav-link" href="../index.php"><i class="bi bi-house"></i> Home</a>
-                <a class="nav-link" href="../profile.php"><i class="bi bi-person"></i> Profile</a>
-                <a class="nav-link active" href="index.php"><i class="bi bi-speedometer2"></i> Dashboard</a>
-                <a class="nav-link" href="ai-forecast.php"><i class="bi bi-graph-up"></i> Forecast</a>
-                <a class="nav-link" href="reservations.php"><i class="bi bi-clipboard-check"></i> Reservations</a>
+        <nav class="admin-sidebar-nav">
+            <span class="admin-nav-caption">Workspace</span>
+            <a class="admin-sidebar-link is-active" href="index.php" aria-current="page"><i class="bi bi-grid-1x2-fill"></i><span>Dashboard</span></a>
+            <a class="admin-sidebar-link" href="reservations.php"><i class="bi bi-calendar2-check"></i><span>Reservations</span><i class="bi bi-arrow-up-right admin-nav-external"></i></a>
+            <a class="admin-sidebar-link" href="ai-forecast.php"><i class="bi bi-graph-up-arrow"></i><span>Usage forecast</span><i class="bi bi-arrow-up-right admin-nav-external"></i></a>
 
-                <a class="nav-link" href="../logout.php" data-confirm="Are you sure you want to log out?"><i class="bi bi-box-arrow-right"></i> Logout (<?php echo htmlspecialchars($_SESSION['username']); ?>)</a>
+            <span class="admin-nav-caption">Management</span>
+            <a class="admin-sidebar-link" href="#users"><i class="bi bi-people"></i><span>Users</span></a>
+            <a class="admin-sidebar-link" href="#facilities"><i class="bi bi-buildings"></i><span>Facilities</span></a>
+            <a class="admin-sidebar-link" href="class_schedules.php"><i class="bi bi-calendar3"></i><span>Class schedules</span></a>
 
-            </div>
+            <span class="admin-nav-caption">Account</span>
+            <a class="admin-sidebar-link" href="../index.php"><i class="bi bi-house-door"></i><span>Reservation calendar</span><i class="bi bi-arrow-up-right admin-nav-external"></i></a>
+            <a class="admin-sidebar-link" href="../profile.php"><i class="bi bi-person"></i><span>My profile</span></a>
+        </nav>
+
+        <div class="admin-sidebar-footer">
+            <span class="admin-user-avatar"><?php echo htmlspecialchars(strtoupper(substr((string)($_SESSION['username'] ?? 'A'), 0, 1)), ENT_QUOTES, 'UTF-8'); ?></span>
+            <span class="admin-sidebar-user"><strong><?php echo htmlspecialchars($_SESSION['username'] ?? 'Admin', ENT_QUOTES, 'UTF-8'); ?></strong><small>Administrator</small></span>
+            <a class="admin-logout-link" href="../logout.php" data-confirm="Are you sure you want to log out?" aria-label="Log out"><i class="bi bi-box-arrow-right"></i></a>
         </div>
-    </div>
-</nav>
+    </aside>
 
-<main class="py-4 admin-dashboard-main">
+    <button class="admin-sidebar-backdrop" type="button" aria-label="Close navigation" tabindex="-1"></button>
+
+    <div class="admin-dashboard-workspace">
+        <header class="admin-topbar">
+            <button class="admin-sidebar-toggle" type="button" aria-label="Open navigation" aria-controls="adminSidebar" aria-expanded="false">
+                <i class="bi bi-list"></i>
+            </button>
+            <div class="admin-topbar-breadcrumb"><span>Workspace</span><i class="bi bi-chevron-right"></i><strong>Dashboard</strong></div>
+            <label class="admin-dashboard-search">
+                <i class="bi bi-search" aria-hidden="true"></i>
+                <span class="visually-hidden">Filter users, facilities, and recent reservations</span>
+                <input type="search" id="adminDashboardSearch" placeholder="Filter users, facilities, activity..." autocomplete="off">
+                <kbd>Ctrl K</kbd>
+            </label>
+            <div class="admin-topbar-user">
+                <span class="admin-user-avatar"><?php echo htmlspecialchars(strtoupper(substr((string)($_SESSION['username'] ?? 'A'), 0, 1)), ENT_QUOTES, 'UTF-8'); ?></span>
+                <span><strong><?php echo htmlspecialchars($_SESSION['username'] ?? 'Admin', ENT_QUOTES, 'UTF-8'); ?></strong><small>Administrator</small></span>
+            </div>
+        </header>
+
+<main class="admin-dashboard-main">
     <div class="container-fluid admin-dashboard-content">
         <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
             <div class="admin-dashboard-heading">
                 <span class="admin-heading-icon"><i class="bi bi-speedometer2"></i></span>
                 <div>
-                    <h2 class="mb-1">Dashboard</h2>
-                    <p class="mb-0">A quick overview of campus reservations and activity.</p>
+                    <h2 class="mb-1">Good day, <?php echo htmlspecialchars($_SESSION['username'] ?? 'Admin', ENT_QUOTES, 'UTF-8'); ?></h2>
+                    <p class="mb-0">Here is your campus reservation overview.</p>
                 </div>
             </div>
             <div class="admin-dashboard-actions">
@@ -210,7 +238,7 @@ $recentReservations = $pdo->query(
                                     'cancelled' => 'cancelled',
                                 ][$recentReservation['status']] ?? 'pending';
                                 ?>
-                                <li class="admin-recent-item">
+                                <li class="admin-recent-item" data-admin-search-item>
                                     <span class="admin-recent-icon"><i class="bi bi-calendar2-check"></i></span>
                                     <div class="admin-recent-details">
                                         <strong><?php echo htmlspecialchars($recentReservation['facility'] ?? 'Facility unavailable', ENT_QUOTES, 'UTF-8'); ?></strong>
@@ -233,14 +261,14 @@ $recentReservations = $pdo->query(
 
     <div class="row g-4 mt-1 admin-management-row">
         <div class="col-xl-6">
-            <section class="card admin-management-card">
+            <section class="card admin-management-card" id="users">
             <div class="card-header admin-section-heading">
                 <div><i class="bi bi-people me-2"></i>Users</div>
                 <span class="badge text-bg-light"><?php echo count($users); ?></span>
             </div>
             <div class="card-body">
             <div class="table-responsive">
-            <table class="table table-striped align-middle admin-data-table">
+            <table class="table table-striped align-middle admin-data-table" data-admin-search-table>
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -275,14 +303,14 @@ $recentReservations = $pdo->query(
         </div>
 
         <div class="col-xl-6">
-            <section class="card admin-management-card">
+            <section class="card admin-management-card" id="facilities">
             <div class="card-header admin-section-heading">
                 <div><i class="bi bi-building me-2"></i>Facilities</div>
                 <span class="badge text-bg-light"><?php echo count($facilities); ?></span>
             </div>
             <div class="card-body">
             <div class="table-responsive">
-            <table class="table table-striped align-middle admin-data-table">
+            <table class="table table-striped align-middle admin-data-table" data-admin-search-table>
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -315,6 +343,7 @@ $recentReservations = $pdo->query(
             </section>
         </div>
     </div>
+    <p class="admin-search-empty" id="adminSearchEmpty" hidden>No matching users, facilities, or recent reservations.</p>
     </div>
     </main>
 
@@ -363,6 +392,70 @@ $recentReservations = $pdo->query(
     });
 </script>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const shell = document.querySelector('.admin-dashboard-shell');
+        const sidebarToggle = document.querySelector('.admin-sidebar-toggle');
+        const sidebarBackdrop = document.querySelector('.admin-sidebar-backdrop');
+        const sidebarLinks = document.querySelectorAll('.admin-sidebar-link');
+        const searchInput = document.getElementById('adminDashboardSearch');
+        const searchEmpty = document.getElementById('adminSearchEmpty');
+
+        function setSidebarOpen(isOpen) {
+            if (!shell || !sidebarToggle) return;
+            shell.classList.toggle('is-sidebar-open', isOpen);
+            sidebarToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+            sidebarToggle.setAttribute('aria-label', isOpen ? 'Close navigation' : 'Open navigation');
+        }
+
+        if (sidebarToggle) {
+            sidebarToggle.addEventListener('click', function () {
+                setSidebarOpen(!shell.classList.contains('is-sidebar-open'));
+            });
+        }
+        if (sidebarBackdrop) {
+            sidebarBackdrop.addEventListener('click', function () {
+                setSidebarOpen(false);
+            });
+        }
+        sidebarLinks.forEach(function (link) {
+            link.addEventListener('click', function () {
+                setSidebarOpen(false);
+            });
+        });
+
+        if (searchInput) {
+            searchInput.addEventListener('input', function () {
+                const query = searchInput.value.trim().toLocaleLowerCase();
+                let visibleMatches = 0;
+
+                document.querySelectorAll('[data-admin-search-table] tbody tr').forEach(function (row) {
+                    const matches = !query || row.textContent.toLocaleLowerCase().includes(query);
+                    row.hidden = !matches;
+                    if (matches && query) visibleMatches++;
+                });
+
+                document.querySelectorAll('[data-admin-search-item]').forEach(function (item) {
+                    const matches = !query || item.textContent.toLocaleLowerCase().includes(query);
+                    item.hidden = !matches;
+                    if (matches && query) visibleMatches++;
+                });
+
+                if (searchEmpty) {
+                    searchEmpty.hidden = !query || visibleMatches > 0;
+                }
+            });
+        }
+
+        document.addEventListener('keydown', function (event) {
+            if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k' && searchInput) {
+                event.preventDefault();
+                searchInput.focus();
+            }
+        });
+    });
+</script>
+
 <?php if (is_array($dashboardNotification) && isset($dashboardNotification['message'])): ?>
     <?php $notificationIsSuccess = ($dashboardNotification['type'] ?? '') === 'success'; ?>
     <div class="modal fade action-result-modal<?php echo $notificationIsSuccess ? '' : ' action-result-modal-error'; ?>" id="dashboardResultModal" tabindex="-1" aria-labelledby="dashboardResultTitle" aria-hidden="true">
@@ -390,5 +483,8 @@ $recentReservations = $pdo->query(
         });
     </script>
 <?php endif; ?>
+
+</div>
+</div>
 
 <?php require '../footer.php'; ?>
