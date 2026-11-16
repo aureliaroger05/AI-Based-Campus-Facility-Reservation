@@ -1,0 +1,23 @@
+<?php
+require_once __DIR__ . '/auth.php';
+require_once __DIR__ . '/notifications.php';
+
+header('Content-Type: application/json; charset=utf-8');
+header('X-Content-Type-Options: nosniff');
+
+if (!isLoggedIn()) {
+    http_response_code(401);
+    echo json_encode(['error' => 'You need to sign in to read notifications.']);
+    exit;
+}
+
+try {
+    $payload = getUserNotifications((int)$_SESSION['user_id']);
+} catch (Throwable $exception) {
+    error_log('User notifications failed: ' . $exception->getMessage());
+    http_response_code(500);
+    echo json_encode(['error' => 'Notifications are unavailable right now.']);
+    exit;
+}
+
+echo json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);

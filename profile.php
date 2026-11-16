@@ -162,6 +162,7 @@
                     <a class="nav-link" href="logout.php" data-confirm="Are you sure you want to log out?"><i class="bi bi-box-arrow-right"></i> Logout (<?php echo htmlspecialchars($_SESSION['username']); ?>)</a>
 
                 </div>
+                <?php require __DIR__ . '/notifications_bar.php'; ?>
             </div>
         </div>
     </nav>

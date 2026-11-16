@@ -61,6 +61,7 @@ if (defined('HEADER_INCLUDED')):
         </div>
     </section>
     <script src="<?php echo $chatAssetPrefix; ?>assets/js/ai-chat.js?v=<?php echo (int)filemtime(__DIR__ . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'ai-chat.js'); ?>"></script>
+    <script src="<?php echo $chatAssetPrefix; ?>assets/js/user-notifications.js?v=<?php echo (int)filemtime(__DIR__ . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . 'user-notifications.js'); ?>"></script>
     <script>
         // Highlight the nav link / sidebar option matching the current page.
         (function () {
