@@ -522,13 +522,15 @@ $minimumReservationDate = $manilaNow->setTime(0, 0)->modify('+3 days')->format('
     }
 
     body.calendar-page {
-        background: #f7f8fb;
+        background:
+            radial-gradient(ellipse at 92% 4%, rgba(23, 105, 170, 0.1), transparent 32rem),
+            #f3f6fb;
     }
 
     body.calendar-page > .navbar.bg-primary {
-        border-bottom: 1px solid #e8ebf2;
+        border-bottom: 1px solid #dce5ef;
         background: #fff !important;
-        box-shadow: 0 3px 14px rgba(24, 35, 58, 0.055);
+        box-shadow: 0 5px 18px rgba(18, 59, 102, 0.08);
     }
 
     body.calendar-page > .navbar .navbar-brand,
@@ -537,14 +539,15 @@ $minimumReservationDate = $manilaNow->setTime(0, 0)->modify('+3 days')->format('
     }
 
     body.calendar-page > .navbar .nav-link {
-        border-color: #e7e9f0;
+        border-color: transparent;
+        border-radius: 0.65rem;
     }
 
     body.calendar-page > .navbar .nav-link:hover,
     body.calendar-page > .navbar .nav-link:focus-visible {
-        border-color: #d7d5ff;
-        background: #f3f2ff;
-        color: #625fe0 !important;
+        border-color: #c9dced;
+        background: #eaf4fc;
+        color: #1769aa !important;
     }
 
     body.calendar-page > .navbar .navbar-toggler {
@@ -556,10 +559,10 @@ $minimumReservationDate = $manilaNow->setTime(0, 0)->modify('+3 days')->format('
     }
 
     body.calendar-page .reservation-calendar-card {
-        border-color: #eceef4;
-        border-radius: 1rem;
+        border-color: #e0e9f2;
+        border-radius: 1.1rem;
         background: #fff;
-        box-shadow: 0 8px 26px rgba(28, 38, 63, 0.06);
+        box-shadow: 0 9px 26px rgba(23, 43, 77, 0.065);
     }
 
     body.calendar-page .reservation-calendar-card > .card-body {
@@ -567,43 +570,69 @@ $minimumReservationDate = $manilaNow->setTime(0, 0)->modify('+3 days')->format('
     }
 
     body.calendar-page .calendar-intro {
+        position: relative;
+        isolation: isolate;
         display: flex;
+        min-height: 4.5rem;
         align-items: center;
         justify-content: space-between;
+        overflow: hidden;
         gap: 0.5rem 1rem;
-        padding: 0;
-        background: transparent;
-        color: #27334a !important;
+        margin-bottom: 0.9rem !important;
+        padding: 0.85rem clamp(1rem, 3vw, 1.3rem);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 1rem;
+        background: linear-gradient(115deg, #123b66 0%, #1769aa 58%, #438cc2 100%);
+        box-shadow: 0 10px 24px rgba(18, 59, 102, 0.16);
+        color: #fff !important;
         font-size: clamp(1rem, 2.4vh, 1.2rem);
         letter-spacing: -0.02em;
     }
 
+    body.calendar-page .calendar-intro::after {
+        position: absolute;
+        z-index: -1;
+        top: -4rem;
+        right: 7%;
+        width: 12rem;
+        height: 12rem;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 50%;
+        content: "";
+        box-shadow: 0 0 0 1.5rem rgba(255, 255, 255, 0.035), 0 0 0 3rem rgba(255, 255, 255, 0.025);
+        pointer-events: none;
+    }
+
     body.calendar-page .calendar-intro > span {
+        position: relative;
+        z-index: 1;
         display: inline-flex;
         align-items: center;
         gap: 0.55rem;
     }
 
     body.calendar-page .calendar-intro > span i {
-        color: #6865e8;
+        color: #fff;
     }
 
     body.calendar-page .calendar-intro small {
-        color: #8992a2;
+        position: relative;
+        z-index: 1;
+        color: rgba(255, 255, 255, 0.78);
         font-size: 0.72rem;
         font-weight: 500;
         letter-spacing: 0;
     }
 
     body.calendar-page .facility-calendar {
-        border-color: #eceef4;
-        border-radius: 0.85rem;
-        box-shadow: 0 3px 12px rgba(28, 38, 63, 0.035);
+        border-color: #e0e9f2;
+        border-radius: 1rem;
+        box-shadow: 0 5px 18px rgba(30, 64, 110, 0.07);
     }
 
     body.calendar-page .calendar-heading {
-        background: #fff;
-        border-bottom-color: #f0f1f5;
+        background: linear-gradient(110deg, #f7fafe 0%, #edf5fc 100%);
+        border-bottom-color: #e8eef5;
     }
 
     body.calendar-page .calendar-heading h5,
@@ -612,8 +641,8 @@ $minimumReservationDate = $manilaNow->setTime(0, 0)->modify('+3 days')->format('
     }
 
     body.calendar-page .calendar-heading .calendar-year {
-        background: #f0efff;
-        color: #625fe0;
+        background: #eaf4fc;
+        color: #1769aa;
     }
 
     body.calendar-page .calendar-heading .btn {
@@ -622,9 +651,9 @@ $minimumReservationDate = $manilaNow->setTime(0, 0)->modify('+3 days')->format('
     }
 
     body.calendar-page .calendar-heading .btn:hover {
-        border-color: #d7d5ff;
-        background: #f3f2ff;
-        color: #625fe0;
+        border-color: #c9dced;
+        background: #eaf4fc;
+        color: #1769aa;
     }
 
     body.calendar-page .calendar-weekdays {
@@ -661,11 +690,11 @@ $minimumReservationDate = $manilaNow->setTime(0, 0)->modify('+3 days')->format('
     }
 
     body.calendar-page .calendar-day.today .day-number {
-        background: #6865e8;
+        background: #1769aa;
     }
 
     body.calendar-page .calendar-day.selected {
-        outline-color: #6865e8;
+        outline-color: #1769aa;
     }
 
     body.calendar-page .calendar-legend {

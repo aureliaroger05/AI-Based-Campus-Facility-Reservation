@@ -19,6 +19,15 @@ if (!defined('HEADER_INCLUDED')) {
     <?php if (strpos($_SERVER['PHP_SELF'] ?? '', '/admin/') !== false): ?>
     <script>document.documentElement.dataset.adminTheme = window.localStorage.getItem('admin-dashboard-theme') === 'dark' ? 'dark' : 'light';</script>
     <?php endif; ?>
+    <?php if (!in_array($body_class ?? '', ['login-page', 'welcome-page'], true)): ?>
+    <script>
+        window.addEventListener('pageshow', function (event) {
+            if (event.persisted) {
+                window.location.reload();
+            }
+        });
+    </script>
+    <?php endif; ?>
 </head>
 <body<?php echo !empty($body_class) ? ' class="' . htmlspecialchars($body_class, ENT_QUOTES, 'UTF-8') . '"' : ''; ?>>
 <?php if (!in_array($body_class ?? '', ['login-page', 'welcome-page'], true)): ?>
