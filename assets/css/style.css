@@ -5394,7 +5394,8 @@ html[data-admin-theme="dark"] body[class*="admin-"] main .table-pagination .page
 }
 
 body.profile-page > .navbar .navbar-icon-button,
-body.calendar-page > .navbar .navbar-icon-button {
+body.calendar-page > .navbar .navbar-icon-button,
+body.reservation-view-page > .navbar .navbar-icon-button {
     border-color: #dce5ef;
     background: #f4f8fc;
     color: #33465f;
@@ -5403,7 +5404,9 @@ body.calendar-page > .navbar .navbar-icon-button {
 body.profile-page > .navbar .navbar-icon-button:hover,
 body.profile-page > .navbar .navbar-icon-button:focus-visible,
 body.calendar-page > .navbar .navbar-icon-button:hover,
-body.calendar-page > .navbar .navbar-icon-button:focus-visible {
+body.calendar-page > .navbar .navbar-icon-button:focus-visible,
+body.reservation-view-page > .navbar .navbar-icon-button:hover,
+body.reservation-view-page > .navbar .navbar-icon-button:focus-visible {
     border-color: #c9dced;
     background: #eaf4fc;
     color: #1769aa;
@@ -5683,4 +5686,26 @@ html[data-admin-theme="dark"] .navbar-notification-footer:hover,
 html[data-admin-theme="dark"] .navbar-notification-footer:focus-visible {
     background: #1b2939;
     color: #a9d8f7;
+}
+
+/* Navbar toggler: dark mode */
+html[data-admin-theme="dark"] .navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+html[data-admin-theme="dark"] .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.9%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* Sign-in button for guests: dark mode */
+html[data-admin-theme="dark"] .btn-outline-light {
+    border-color: rgba(255, 255, 255, 0.4);
+    color: #dbe4f0;
+}
+
+html[data-admin-theme="dark"] .btn-outline-light:hover,
+html[data-admin-theme="dark"] .btn-outline-light:focus-visible {
+    border-color: rgba(255, 255, 255, 0.7);
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
 }
