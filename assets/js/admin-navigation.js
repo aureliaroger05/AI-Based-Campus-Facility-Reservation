@@ -255,6 +255,63 @@
         });
     }
 
+    function createViewHeading(title, description, iconName) {
+        const heading = document.createElement('section');
+        heading.className = 'admin-page-heading admin-shell-view-heading';
+        heading.setAttribute('aria-label', title);
+
+        const icon = document.createElement('span');
+        icon.className = 'admin-heading-icon';
+        icon.setAttribute('aria-hidden', 'true');
+        const iconGlyph = document.createElement('i');
+        iconGlyph.className = 'bi ' + iconName;
+        icon.appendChild(iconGlyph);
+
+        const copy = document.createElement('div');
+        const titleElement = document.createElement('h2');
+        titleElement.className = 'mb-1';
+        titleElement.textContent = title;
+        const descriptionElement = document.createElement('p');
+        descriptionElement.className = 'mb-0';
+        descriptionElement.textContent = description;
+        copy.append(titleElement, descriptionElement);
+        heading.append(icon, copy);
+        return heading;
+    }
+
+    function ensureViewHeading(main, view) {
+        const headingSelectors = {
+            dashboard: '.admin-dashboard-heading',
+            reservations: '.admin-page-heading',
+            forecast: '.forecast-hero',
+            schedules: '.admin-page-heading',
+            'add-user': '.admin-page-heading',
+            'edit-user': '.admin-page-heading',
+            'add-facility': '.admin-page-heading',
+            'edit-facility': '.admin-page-heading',
+            profile: '.profile-page-heading'
+        };
+        const existingHeading = headingSelectors[view]
+            ? main.querySelector(headingSelectors[view])
+            : null;
+        if (existingHeading) {
+            existingHeading.classList.add('admin-shell-view-heading');
+            return;
+        }
+
+        const details = {
+            calendar: [
+                'Reservation calendar',
+                'Choose a date and facility to check availability or request a booking.',
+                'bi-calendar2-week'
+            ]
+        }[view];
+        if (!details) return;
+
+        const container = main.querySelector('.container-fluid, .container') || main;
+        container.prepend(createViewHeading(details[0], details[1], details[2]));
+    }
+
     function runPageScripts(container) {
         container.querySelectorAll('script:not([src])').forEach(function (pageScript) {
             if (
@@ -375,8 +432,19 @@
                 sectionTitle = settings.section === 'users' ? 'Users' : 'Facilities';
                 const sectionContainer = document.createElement('div');
                 sectionContainer.className = 'container-fluid admin-dashboard-content';
+                const sectionDetails = settings.section === 'users'
+                    ? ['Users', 'Manage campus accounts and access roles.', 'bi-people']
+                    : ['Facilities', 'Manage campus spaces and their availability.', 'bi-buildings'];
+                sectionContainer.appendChild(createViewHeading(
+                    sectionDetails[0],
+                    sectionDetails[1],
+                    sectionDetails[2]
+                ));
                 sectionContainer.appendChild(section);
                 nextMain.replaceChildren(sectionContainer);
+            }
+            if (!settings.section) {
+                ensureViewHeading(nextMain, view);
             }
 
             const currentChart = document.getElementById('adminReservationChart');

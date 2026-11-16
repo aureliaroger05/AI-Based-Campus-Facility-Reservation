@@ -174,7 +174,7 @@ $recentReservations = $pdo->query(
 <main class="admin-dashboard-main">
     <div class="container-fluid admin-dashboard-content">
         <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
-            <div class="admin-dashboard-heading">
+            <div class="admin-dashboard-heading admin-shell-view-heading">
                 <span class="admin-heading-icon"><i class="bi bi-speedometer2"></i></span>
                 <div>
                     <h2 class="mb-1">Good day, <?php echo htmlspecialchars($_SESSION['username'] ?? 'Admin', ENT_QUOTES, 'UTF-8'); ?></h2>

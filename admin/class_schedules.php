@@ -109,101 +109,110 @@ require '../header.php';
     </div>
 </nav>
 
-<main class="container py-4">
-    <div class="mb-4">
-        <h1 class="h2">Import Class Schedule</h1>
-        <p class="text-muted mb-0">Class times will be blocked from reservations for the matching facility and date.</p>
-    </div>
-
-    <?php if ($formErrors): ?>
-        <div class="alert alert-danger" role="alert">
-            <strong>Schedule not imported:</strong>
-            <ul class="mb-0 mt-2">
-                <?php foreach ($formErrors as $error): ?>
-                    <li><?php echo htmlspecialchars($error, ENT_QUOTES, 'UTF-8'); ?></li>
-                <?php endforeach; ?>
-            </ul>
-        </div>
-    <?php endif; ?>
-
-    <section class="card shadow-sm mb-4">
-        <div class="card-body">
-            <h2 class="h5">Upload a CSV file</h2>
-            <p>
-                Use one row per class, with the facility name exactly as it appears in the system.
-                Required columns: <code>facility, subject, date, start_time, end_time</code>.
-                Dates: <code>YYYY-MM-DD</code> or <code>M/D/YYYY</code>. Times: <code>HH:MM</code>,
-                <code>HH:MM:SS</code>, or a 12-hour time with AM/PM.
-            </p>
-            <div class="d-flex flex-wrap gap-2 mb-3">
-                <a class="btn btn-outline-primary" href="../assets/templates/class_schedule_template.csv" download>
-                    <i class="bi bi-download me-1"></i>Download CSV Template
-                </a>
+<main class="admin-schedules-main">
+    <div class="container-fluid admin-schedules-content">
+        <div class="admin-page-heading">
+            <span class="admin-heading-icon"><i class="bi bi-calendar3"></i></span>
+            <div>
+                <h2 class="mb-1">Class schedules</h2>
+                <p class="mb-0">Import and review facility class times blocked from reservations.</p>
             </div>
-            <form method="POST" enctype="multipart/form-data">
-                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['class_schedule_csrf'], ENT_QUOTES, 'UTF-8'); ?>">
-                <input type="hidden" name="MAX_FILE_SIZE" value="5242880">
-                <div class="mb-3">
-                    <label class="form-label" for="schedule-file">Schedule CSV (maximum 5 MB)</label>
-                    <input class="form-control" id="schedule-file" type="file" name="schedule_file" accept=".csv,text/csv" required>
-                </div>
-                <button class="btn btn-primary" type="submit">
-                    <i class="bi bi-upload me-1"></i>Validate and Import
-                </button>
-            </form>
-            <p class="small text-muted mt-3 mb-0">
-                The import is all-or-nothing. Invalid rows or overlapping classes prevent the entire file from being imported.
-                Excel workbooks must be saved as CSV first; recurring weekday schedules are not supported by this date-based importer.
-            </p>
         </div>
-    </section>
 
-    <section class="card shadow-sm">
-        <div class="card-body">
-            <h2 class="h5">Upcoming imported classes</h2>
-            <?php if (!$scheduleRows): ?>
-                <p class="text-muted mb-0">No upcoming classes have been imported.</p>
-            <?php else: ?>
-                <div class="table-responsive">
-                    <table class="table table-striped align-middle mb-0" data-pagination-page-size="10" data-pagination-label="Upcoming class schedules">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Time</th>
-                                <th>Facility</th>
-                                <th>Subject</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($scheduleRows as $row): ?>
-                                <tr>
-                                    <td><?php echo htmlspecialchars($row['class_date'], ENT_QUOTES, 'UTF-8'); ?></td>
-                                    <td>
-                                        <?php echo htmlspecialchars(date('g:i A', strtotime($row['start_time'])), ENT_QUOTES, 'UTF-8'); ?>
-                                        –
-                                        <?php echo htmlspecialchars(date('g:i A', strtotime($row['end_time'])), ENT_QUOTES, 'UTF-8'); ?>
-                                    </td>
-                                    <td><?php echo htmlspecialchars($row['facility_name'], ENT_QUOTES, 'UTF-8'); ?></td>
-                                    <td><?php echo htmlspecialchars($row['subject'], ENT_QUOTES, 'UTF-8'); ?></td>
-                                    <td>
-                                        <form method="POST" data-confirm="Delete this class schedule block?">
-                                            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['class_schedule_csrf'], ENT_QUOTES, 'UTF-8'); ?>">
-                                            <input type="hidden" name="schedule_id" value="<?php echo (int)$row['id']; ?>">
-                                            <button class="btn btn-sm btn-outline-danger" type="submit" name="delete_schedule">
-                                                <i class="bi bi-trash me-1"></i>Delete
-                                            </button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
+        <?php if ($formErrors): ?>
+            <div class="alert alert-danger" role="alert">
+                <strong>Schedule not imported:</strong>
+                <ul class="mb-0 mt-2">
+                    <?php foreach ($formErrors as $error): ?>
+                        <li><?php echo htmlspecialchars($error, ENT_QUOTES, 'UTF-8'); ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        <?php endif; ?>
+
+        <section class="card admin-view-card mb-4">
+            <div class="card-header admin-section-heading">
+                <span><i class="bi bi-upload me-2"></i>Import a schedule</span>
+            </div>
+            <div class="card-body">
+                <p>
+                    Use one row per class, with the facility name exactly as it appears in the system.
+                    Required columns: <code>facility, subject, date, start_time, end_time</code>.
+                    Dates: <code>YYYY-MM-DD</code> or <code>M/D/YYYY</code>. Times: <code>HH:MM</code>,
+                    <code>HH:MM:SS</code>, or a 12-hour time with AM/PM.
+                </p>
+                <div class="d-flex flex-wrap gap-2 mb-3">
+                    <a class="btn btn-outline-primary" href="../assets/templates/class_schedule_template.csv" download>
+                        <i class="bi bi-download me-1"></i>Download CSV Template
+                    </a>
                 </div>
-                <p class="small text-muted mt-2 mb-0">Showing up to 200 upcoming schedule rows.</p>
-            <?php endif; ?>
-        </div>
-    </section>
+                <form method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['class_schedule_csrf'], ENT_QUOTES, 'UTF-8'); ?>">
+                    <input type="hidden" name="MAX_FILE_SIZE" value="5242880">
+                    <div class="mb-3">
+                        <label class="form-label" for="schedule-file">Schedule CSV (maximum 5 MB)</label>
+                        <input class="form-control" id="schedule-file" type="file" name="schedule_file" accept=".csv,text/csv" required>
+                    </div>
+                    <button class="btn btn-primary" type="submit">
+                        <i class="bi bi-upload me-1"></i>Validate and Import
+                    </button>
+                </form>
+                <p class="small text-muted mt-3 mb-0">
+                    The import is all-or-nothing. Invalid rows or overlapping classes prevent the entire file from being imported.
+                    Excel workbooks must be saved as CSV first; recurring weekday schedules are not supported by this date-based importer.
+                </p>
+            </div>
+        </section>
+
+        <section class="card admin-view-card">
+            <div class="card-header admin-section-heading">
+                <span><i class="bi bi-list-check me-2"></i>Upcoming imported classes</span>
+            </div>
+            <div class="card-body">
+                <?php if (!$scheduleRows): ?>
+                    <p class="text-muted mb-0">No upcoming classes have been imported.</p>
+                <?php else: ?>
+                    <div class="table-responsive">
+                        <table class="table table-striped align-middle mb-0" data-pagination-page-size="10" data-pagination-label="Upcoming class schedules">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                    <th>Facility</th>
+                                    <th>Subject</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($scheduleRows as $row): ?>
+                                    <tr>
+                                        <td><?php echo htmlspecialchars($row['class_date'], ENT_QUOTES, 'UTF-8'); ?></td>
+                                        <td>
+                                            <?php echo htmlspecialchars(date('g:i A', strtotime($row['start_time'])), ENT_QUOTES, 'UTF-8'); ?>
+                                            –
+                                            <?php echo htmlspecialchars(date('g:i A', strtotime($row['end_time'])), ENT_QUOTES, 'UTF-8'); ?>
+                                        </td>
+                                        <td><?php echo htmlspecialchars($row['facility_name'], ENT_QUOTES, 'UTF-8'); ?></td>
+                                        <td><?php echo htmlspecialchars($row['subject'], ENT_QUOTES, 'UTF-8'); ?></td>
+                                        <td>
+                                            <form method="POST" data-confirm="Delete this class schedule block?">
+                                                <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['class_schedule_csrf'], ENT_QUOTES, 'UTF-8'); ?>">
+                                                <input type="hidden" name="schedule_id" value="<?php echo (int)$row['id']; ?>">
+                                                <button class="btn btn-sm btn-outline-danger" type="submit" name="delete_schedule">
+                                                    <i class="bi bi-trash me-1"></i>Delete
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="small text-muted mt-2 mb-0">Showing up to 200 upcoming schedule rows.</p>
+                <?php endif; ?>
+            </div>
+        </section>
+    </div>
 </main>
 
 <?php require '../footer.php'; ?>

@@ -5228,3 +5228,73 @@ html[data-admin-theme="dark"] body[class*="admin-"] main .table-pagination .page
     background: #2b3a51;
     color: #fff;
 }
+
+.admin-schedules-main {
+    min-height: calc(100vh - 9rem);
+    padding: 1.7rem 0 2.5rem;
+}
+
+.admin-schedules-content {
+    max-width: 1500px;
+    padding-right: clamp(1rem, 3vw, 2.5rem);
+    padding-left: clamp(1rem, 3vw, 2.5rem);
+}
+
+.admin-view-card {
+    overflow: hidden;
+    border-color: #e0e9f2;
+    border-radius: 1.1rem;
+    box-shadow: 0 9px 26px rgba(23, 43, 77, 0.065);
+}
+
+.admin-view-card .card-body {
+    padding: clamp(1rem, 3vw, 1.6rem);
+}
+
+@media (max-width: 767.98px) {
+    .admin-schedules-main {
+        padding-top: 1.25rem;
+    }
+
+    .admin-schedules-content {
+        padding-right: 1rem;
+        padding-left: 1rem;
+    }
+}
+
+.admin-dashboard-page .admin-dashboard-heading.admin-shell-view-heading {
+    flex: 1 1 auto;
+    gap: 1rem;
+    margin: 0;
+    padding: 1.15rem clamp(1.25rem, 3vw, 1.75rem);
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 1.1rem;
+    background: linear-gradient(115deg, #123b66 0%, #1769aa 58%, #438cc2 100%);
+    box-shadow: 0 14px 32px rgba(18, 59, 102, 0.16);
+    color: #fff;
+}
+
+.admin-dashboard-page .admin-dashboard-heading.admin-shell-view-heading::after {
+    display: block;
+}
+
+.admin-dashboard-page .admin-dashboard-heading.admin-shell-view-heading h2 {
+    color: #fff;
+}
+
+.admin-dashboard-page .admin-dashboard-heading.admin-shell-view-heading p {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.admin-dashboard-page .admin-dashboard-heading.admin-shell-view-heading .admin-heading-icon {
+    width: 3.25rem;
+    height: 3.25rem;
+    flex-basis: 3.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    border-radius: 1rem;
+    background: rgba(255, 255, 255, 0.13);
+    color: #fff;
+    box-shadow: none;
+    font-size: 1.45rem;
+}
