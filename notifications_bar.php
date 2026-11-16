@@ -1,8 +1,4 @@
 <?php
-if (!isLoggedIn()) {
-    return;
-}
-
 require_once __DIR__ . '/notifications.php';
 
 $notificationFeed = ['count' => 0, 'items' => []];

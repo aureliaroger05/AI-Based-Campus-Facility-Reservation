@@ -3,10 +3,6 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 require 'auth.php';
-if (!isLoggedIn()) {
-    header('Location: welcome.php');
-    exit;
-}
 $page_title = 'Facility Reservation Calendar';
 $body_class = 'calendar-page';
 require 'header.php';
@@ -725,18 +721,19 @@ $minimumReservationDate = $manilaNow->setTime(0, 0)->modify('+3 days')->format('
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <?php if (isLoggedIn()): ?>
-                <div class="navbar-nav ms-auto">
+            <div class="navbar-nav ms-auto">
+                <?php if (isLoggedIn()): ?>
                     <a class="nav-link" href="index.php"><i class="bi bi-house"></i> Home</a>
                     <a class="nav-link" href="profile.php"><i class="bi bi-person"></i> Profile</a>
                     <?php if (isAdmin()): ?>
                         <a class="nav-link" href="admin/"><i class="bi bi-gear"></i> Admin</a>
                     <?php endif; ?>
                     <a class="nav-link" href="logout.php" data-confirm="Are you sure you want to log out?"><i class="bi bi-box-arrow-right"></i> Logout (<?php echo htmlspecialchars($_SESSION['username'] ?? ''); ?>)</a>
-                </div>
-            <?php else: ?>
-                <a class="nav-link ms-auto btn btn-outline-light" href="login.php"><i class="bi bi-box-arrow-in-right me-1"></i>Sign in</a>
-            <?php endif; ?>
+                <?php else: ?>
+                    <a class="nav-link ms-auto btn btn-outline-light" href="login.php"><i class="bi bi-box-arrow-in-right me-1"></i>Sign in</a>
+                <?php endif; ?>
+            </div>
+            <?php require __DIR__ . '/notifications_bar.php'; ?>
         </div>
     </div>
 </nav>
