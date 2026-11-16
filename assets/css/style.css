@@ -3338,8 +3338,22 @@ body:not(.calendar-page) footer .container {
     display: none;
 }
 
+body.admin-dashboard-page {
+    display: block;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+}
+
 .admin-dashboard-shell {
-    min-height: 100vh;
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
 }
 
 .admin-sidebar {
@@ -3515,7 +3529,12 @@ body:not(.calendar-page) footer .container {
 }
 
 .admin-dashboard-workspace {
-    min-height: 100vh;
+    display: flex;
+    height: 100vh;
+    height: 100dvh;
+    min-height: 0;
+    flex-direction: column;
+    overflow: hidden;
     margin-left: 258px;
 }
 
@@ -3524,6 +3543,7 @@ body:not(.calendar-page) footer .container {
     z-index: 1020;
     top: 0;
     display: flex;
+    flex: 0 0 auto;
     min-height: 4.25rem;
     align-items: center;
     gap: 1.25rem;
@@ -3665,8 +3685,19 @@ body:not(.calendar-page) footer .container {
 }
 
 .admin-dashboard-main {
-    min-height: calc(100vh - 4.25rem);
+    min-height: 0;
+    flex: 1 1 auto;
+    overflow-y: auto;
+    overscroll-behavior: contain;
     padding: 1.7rem 0 2.5rem !important;
+}
+
+.admin-dashboard-workspace > main {
+    min-height: 0;
+    flex: 1 1 auto;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
 }
 
 .admin-dashboard-content {
@@ -3710,6 +3741,11 @@ body:not(.calendar-page) footer .container {
 }
 
 .admin-sidebar-backdrop {
+    display: none;
+}
+
+.admin-dashboard-page > .mt-auto.pt-5.pb-5,
+.admin-dashboard-page > footer {
     display: none;
 }
 
@@ -3819,18 +3855,18 @@ body:not(.calendar-page) footer .container {
 
 .admin-dashboard-page.calendar-page {
     display: block;
-    width: auto;
-    height: auto;
-    min-height: 100vh;
-    min-height: 100dvh;
-    overflow-x: hidden;
-    overflow-y: auto;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
 }
 
 .admin-dashboard-page.calendar-page main#reservation-main {
-    flex: 0 0 auto;
+    flex: 1 1 auto;
     min-height: 0 !important;
-    overflow: visible;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .admin-dashboard-page.calendar-page main#reservation-main > .container {

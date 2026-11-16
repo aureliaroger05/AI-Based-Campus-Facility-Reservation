@@ -20,7 +20,7 @@ if (isset($_POST['login'])) {
         if (!isAdmin() && !empty($_SESSION['admin_scan_return'])) {
             $message = 'Only an administrator account can scan a reservation QR code.';
         } else {
-            header('Location: index.php');
+            header('Location: ' . (isAdmin() ? 'admin/index.php' : 'index.php'));
             exit;
         }
     } else {
