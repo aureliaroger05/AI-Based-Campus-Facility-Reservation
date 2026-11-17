@@ -303,6 +303,11 @@ body.calendar-page > .navbar .navbar-toggler-icon {
     transition: background-color 0.18s ease, border-color 0.18s ease;
 }
 
+.navbar-notification-toggle {
+    margin: 0.12rem 0.5rem;
+    padding: 0.45rem 0.8rem !important;
+}
+
 .navbar-nav .nav-link:hover,
 .navbar-nav .nav-link:focus-visible {
     border-color: rgba(255, 255, 255, 0.55);

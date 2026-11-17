@@ -24,7 +24,7 @@ $notificationSummary = $notificationCount === 0
     
 
     <div class="navbar-notifications" data-user-notifications data-endpoint="user-notifications.php">
-        <button class="navbar-icon-button navbar-notification-toggle" type="button" data-user-notifications-toggle aria-expanded="false" aria-controls="userNotificationPanel" aria-label="Notifications">
+        <button class="navbar-icon-button navbar-notification-toggle" type="button" data-user-notifications-toggle aria-expanded="false" aria-controls="userNotificationPanel" aria-label="Notification">
             <i class="bi bi-bell" aria-hidden="true"></i>
             <span class="navbar-notification-badge" data-user-notification-badge<?php echo $notificationCount > 0 ? '' : ' hidden'; ?>><?php echo $notificationCount > 99 ? '99+' : $notificationCount; ?></span>
         </button>
