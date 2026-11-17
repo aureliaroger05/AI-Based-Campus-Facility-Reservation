@@ -1,0 +1,41 @@
+<?php
+$file = 'c:/xampp_new/htdocs/reservation 0/class_schedules.php';
+$lines = [];
+
+$lines[] = '<?php';
+$lines[] = 'require_once __DIR__ . \'/config.php\';';
+$lines[] = 'require_once __DIR__ . \'/facilities.php\';';
+$lines[] = '';
+$lines[] = 'function parseClassScheduleDate(string $value): ?string {';
+$lines[] = '    foreach ([\'!Y-m-d\' => \'Y-m-d\', \'!m/d/Y\' => \'m/d/Y\', \'!n/j/Y\' => \'n/j/Y\'] as $format => $outputFormat) {';
+$lines[] = '        $date = DateTimeImmutable::createFromFormat($format, trim($value));';
+$lines[] = '        $errors = DateTimeImmutable::getLastErrors();';
+$lines[] = '        if (';
+$lines[] = '            $date !== false &&';
+$lines[] = '            ($errors === false || ($errors[\'warning_count\'] === 0 && $errors[\'error_count\'] === 0)) &&';
+$lines[] = '            $date->format($outputFormat) === trim($value)';
+$lines[] = '        ) {';
+$lines[] = '            return $date->format(\'Y-m-d\');';
+$lines[] = '        }';
+$lines[] = '    }';
+$lines[] = '';
+$lines[] = '    return null;';
+$lines[] = '}';
+$lines[] = '';
+$lines[] = 'function parseClassScheduleTime(string $value): ?string {';
+$lines[] = '    $value = trim($value);';
+$lines[] = '    foreach ([\'!H:i\', \'!H:i:s\', \'!g:i A\', \'!h:i A\'] as $format) {';
+$lines[] = '        $time = DateTimeImmutable::createFromFormat($format, $value);';
+$lines[] = '        $errors = DateTimeImmutable::getLastErrors();';
+$lines[] = '        if ($time !== false && ($errors === false || ($errors[\'warning_count\'] === 0 && $errors[\'error_count\'] === 0))) {';
+$lines[] = '            return $time->format(\'H:i:s\');';
+$lines[] = '        }';
+$lines[] = '    }';
+$lines[] = '';
+$lines[] = '    return null;';
+$lines[] = '}';
+$lines[] = '';
+
+$content = implode("\n", $lines);
+file_put_contents($file, $content);
+echo "Part 1 done: " . strlen($content) . " chars\n";
