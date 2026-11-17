@@ -284,14 +284,14 @@ body.calendar-page > .navbar .navbar-toggler-icon {
 }
 
 .navbar-brand {
-    margin-left: 3.25rem;
+    margin-left: clamp(4rem, 6vw, 4.6rem);
     font-size: 1.25rem;
     font-weight: 750;
     letter-spacing: 0.01em;
 }
 
 .navbar-nav .nav-link {
-    margin: 0.15rem 0.2rem;
+    margin: 0.12rem 0.5rem;
     padding: 0.45rem 0.8rem !important;
     border: 1px solid rgba(255, 255, 255, 0.24);
     border-radius: 0.75rem;
@@ -1970,7 +1970,7 @@ canvas {
     }
 
     .navbar-brand {
-        margin-left: 3.3rem;
+        margin-left: 4rem;
         font-size: 1.05rem;
     }
 
@@ -2100,7 +2100,6 @@ a {
 }
 
 .navbar-brand {
-    margin-left: clamp(2.9rem, 4.5vw, 3.7rem);
     letter-spacing: -0.015em;
 }
 
@@ -3106,7 +3105,7 @@ a {
     }
 
     .navbar-brand {
-        margin-left: clamp(2.7rem, 11vw, 3.1rem);
+        margin-left: clamp(3.6rem, 11vw, 4.2rem);
         font-size: clamp(0.9rem, 4vw, 1.05rem);
     }
 
