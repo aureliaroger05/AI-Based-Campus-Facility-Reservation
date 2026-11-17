@@ -33,7 +33,4 @@ if (!defined('HEADER_INCLUDED')) {
     <?php endif; ?>
 </head>
 <body<?php echo !empty($body_class) ? ' class="' . htmlspecialchars($body_class, ENT_QUOTES, 'UTF-8') . '"' : ''; ?>>
-<?php if (!in_array($body_class ?? '', ['login-page', 'welcome-page'], true)): ?>
-<img src="<?php echo (strpos($_SERVER['PHP_SELF'], '/admin/') !== false) ? '../images/aclc logo.png' : 'images/aclc logo.png'; ?>" alt="ACLC Logo" class="aclc-logo">
-<?php endif; ?>
 <?php } ?>

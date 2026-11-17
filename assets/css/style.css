@@ -283,11 +283,13 @@ body.calendar-page > .navbar .navbar-toggler-icon {
     }
 }
 
-.navbar-brand {
-    margin-left: calc(clamp(2.5rem, 4vw, 3.4rem) + 0.5rem);
-    font-size: 1.25rem;
-    font-weight: 750;
-    letter-spacing: 0.01em;
+.navbar-aclc-logo {
+    width: clamp(2.5rem, 4vw, 3.4rem);
+    height: clamp(2.5rem, 4vw, 3.4rem);
+    object-fit: contain;
+    margin-right: 0.5rem;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .navbar-nav .nav-link {
@@ -1970,7 +1972,7 @@ canvas {
     }
 
     .navbar-brand {
-        margin-left: calc(clamp(2.35rem, 10vw, 2.8rem) + 0.5rem);
+        margin-left: 0;
         font-size: 1.05rem;
     }
 
@@ -3105,7 +3107,7 @@ a {
     }
 
     .navbar-brand {
-        margin-left: calc(clamp(2.35rem, 10vw, 2.8rem) + 0.5rem);
+        margin-left: 0;
         font-size: clamp(0.9rem, 4vw, 1.05rem);
     }
 
