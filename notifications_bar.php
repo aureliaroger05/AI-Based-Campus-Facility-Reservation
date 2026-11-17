@@ -21,9 +21,7 @@ $notificationSummary = $notificationCount === 0
     : $notificationCount . ' need' . ($notificationCount === 1 ? 's' : '') . ' attention';
 ?>
 <div class="navbar-tools" data-user-toolbar>
-    <button class="navbar-icon-button" type="button" data-user-theme-toggle aria-pressed="false" aria-label="Switch to dark mode" title="Switch to dark mode">
-        <i class="bi bi-moon-stars" aria-hidden="true"></i>
-    </button>
+    
 
     <div class="navbar-notifications" data-user-notifications data-endpoint="user-notifications.php">
         <button class="navbar-icon-button navbar-notification-toggle" type="button" data-user-notifications-toggle aria-expanded="false" aria-controls="userNotificationPanel" aria-label="Notifications">

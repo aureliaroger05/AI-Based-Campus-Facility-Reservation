@@ -20,7 +20,7 @@ $logoutHref = 'logout.php';
     <div class="bb-sidebar__top">
         <div class="bb-sidebar__brand">
             <i class="bi bi-building"></i>
-            <span>AI Reservation</span>
+            <span>ACLC Reservation</span>
         </div>
         <button class="bb-sidebar__toggle" type="button" aria-label="Toggle sidebar" onclick="window.bbSidebar?.toggle();">
             <i class="bi bi-list"></i>

@@ -98,7 +98,7 @@ require '../header.php';
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
     <div class="container">
-        <a class="navbar-brand fw-bold" href="index.php"><i class="bi bi-building me-2"></i>AI Reservation</a>
+        <a class="navbar-brand fw-bold" href="index.php"><i class="bi bi-building me-2"></i>ACLC Reservation</a>
         <div class="navbar-nav ms-auto">
             <a class="nav-link" href="../index.php"><i class="bi bi-house"></i> Home</a>
             <a class="nav-link" href="index.php"><i class="bi bi-speedometer2"></i> Dashboard</a>

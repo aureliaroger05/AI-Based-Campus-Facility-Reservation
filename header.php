@@ -17,8 +17,7 @@ if (!defined('HEADER_INCLUDED')) {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="<?php echo (strpos($_SERVER['PHP_SELF'], '/admin/') !== false) ? '../assets/css/style.css' : 'assets/css/style.css'; ?>?v=<?php echo (int)filemtime(__DIR__ . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'style.css'); ?>" rel="stylesheet">
     <?php
-    $hasThemeToggle = strpos($_SERVER['PHP_SELF'] ?? '', '/admin/') !== false
-        || (!in_array($body_class ?? '', ['login-page', 'welcome-page'], true) && function_exists('isLoggedIn'));
+    $hasThemeToggle = strpos($_SERVER['PHP_SELF'] ?? '', '/admin/') !== false;
     ?>
     <?php if ($hasThemeToggle): ?>
     <script>document.documentElement.dataset.adminTheme = window.localStorage.getItem('admin-dashboard-theme') === 'dark' ? 'dark' : 'light';</script>

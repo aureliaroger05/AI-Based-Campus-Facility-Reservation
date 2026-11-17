@@ -1,7 +1,6 @@
 (function () {
     'use strict';
 
-    var THEME_STORAGE_KEY = 'admin-dashboard-theme';
     var REFRESH_INTERVAL_MS = 45000;
     var NOTIFICATION_ICONS = {
         pending: 'bi-hourglass-split',
@@ -10,53 +9,8 @@
         cancelled: 'bi-x-circle'
     };
 
-    function readStoredTheme() {
-        try {
-            return window.localStorage.getItem(THEME_STORAGE_KEY) === 'dark' ? 'dark' : 'light';
-        } catch (error) {
-            return 'light';
-        }
-    }
 
-    function applyTheme(theme, toggle) {
-        var isDark = theme === 'dark';
-        document.documentElement.dataset.adminTheme = isDark ? 'dark' : 'light';
-        if (!toggle) {
-            return;
-        }
 
-        var icon = toggle.querySelector('i');
-        if (icon) {
-            icon.classList.toggle('bi-sun', isDark);
-            icon.classList.toggle('bi-moon-stars', !isDark);
-        }
-
-        var label = isDark ? 'Switch to light mode' : 'Switch to dark mode';
-        toggle.setAttribute('aria-pressed', isDark ? 'true' : 'false');
-        toggle.setAttribute('aria-label', label);
-        toggle.title = label;
-    }
-
-    function initThemeToggle() {
-        var toggle = document.querySelector('[data-user-theme-toggle]');
-        var activeTheme = document.documentElement.dataset.adminTheme === 'dark' ? 'dark' : readStoredTheme();
-        applyTheme(activeTheme, toggle);
-
-        if (!toggle) {
-            return;
-        }
-
-        toggle.addEventListener('click', function () {
-            var nextTheme = document.documentElement.dataset.adminTheme === 'dark' ? 'light' : 'dark';
-            applyTheme(nextTheme, toggle);
-            try {
-                window.localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
-            } catch (error) {
-                /* Storage can be blocked; the theme simply will not persist. */
-            }
-            document.dispatchEvent(new CustomEvent('user:theme-change', { detail: { theme: nextTheme } }));
-        });
-    }
 
     function createTextElement(tagName, text) {
         var element = document.createElement(tagName);
@@ -199,6 +153,5 @@
         refresh();
     }
 
-    initThemeToggle();
     initNotifications();
 })();

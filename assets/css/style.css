@@ -33,7 +33,7 @@ body::before {
 .aclc-logo {
     position: fixed !important;
     top: max(0.25rem, env(safe-area-inset-top, 0px));
-    left: max(0.75rem, calc((100vw - 1320px) / 2));
+    left: 0.75rem;
     z-index: 1031;
     width: clamp(2.5rem, 4vw, 3.4rem);
     height: clamp(2.5rem, 4vw, 3.4rem);
