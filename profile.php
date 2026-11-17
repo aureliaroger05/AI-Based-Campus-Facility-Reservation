@@ -224,7 +224,7 @@
             <div class="card-body p-4">
         <div class="profile-photo-section">
             <?php if (!empty($user['profile_image'])): ?>
-                <img class="profile-photo" src="<?php echo htmlspecialchars($user['profile_image'], ENT_QUOTES, 'UTF-8'); ?>" alt="Your profile photo">
+                <img class="profile-photo" src="<?php echo htmlspecialchars($user['profile_image'], ENT_QUOTES, 'UTF-8'); ?>?v=<?php echo (int)filemtime(__DIR__ . DIRECTORY_SEPARATOR . $user['profile_image']); ?>" alt="Your profile photo">
             <?php else: ?>
                 <span class="profile-photo profile-photo-placeholder" aria-label="No profile photo">
                     <i class="bi bi-person-fill" aria-hidden="true"></i>
