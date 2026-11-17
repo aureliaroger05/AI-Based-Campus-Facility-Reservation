@@ -5710,3 +5710,445 @@ html[data-admin-theme="dark"] .btn-outline-light:focus-visible {
     background: rgba(255, 255, 255, 0.08);
     color: #fff;
 }
+
+
+/* ============================================================
+   PROFILE PAGE UI/UX ENHANCEMENTS
+   ============================================================ */
+
+/* Stat overview cards */
+.profile-stat-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem;
+    border: 1px solid var(--site-line);
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(23, 43, 77, 0.06);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.profile-stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(23, 43, 77, 0.1);
+    border-color: #c9d7e6;
+}
+
+.profile-stat-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    flex: 0 0 3rem;
+    border-radius: 0.85rem;
+    background: #f1f7fd;
+    color: var(--site-blue);
+    font-size: 1.35rem;
+    box-shadow: 0 4px 10px rgba(23, 105, 170, 0.12);
+}
+
+.profile-stat-icon.text-success {
+    background: #f0fdf4;
+    color: var(--site-blue-dark);
+    box-shadow: 0 4px 10px rgba(34, 197, 94, 0.15);
+}
+
+.profile-stat-icon.text-primary {
+    background: #fef3f2;
+    color: var(--site-blue-dark);
+    box-shadow: 0 4px 10px rgba(239, 68, 68, 0.12);
+}
+
+.profile-stat-content {
+    min-width: 0;
+}
+
+.profile-stat-label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--site-muted);
+    margin-bottom: 0.15rem;
+}
+
+.profile-stat-value {
+    display: block;
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--site-ink);
+    line-height: 1.1;
+}
+
+/* Enhanced profile panel cards */
+.profile-panel {
+    border: 1px solid var(--site-line);
+    box-shadow: 0 4px 16px rgba(23, 43, 77, 0.05);
+}
+
+.profile-panel .card-body {
+    background: #fff;
+}
+
+/* Enhanced profile photo section */
+.profile-photo-section {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    max-width: 900px;
+    margin: 0 auto 2rem;
+    padding: 1.75rem;
+    border-radius: 1.25rem;
+    background: linear-gradient(135deg, #f8fbfe, #f1f7fd);
+    border: 1px solid var(--site-line);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.profile-photo {
+    width: 7rem;
+    height: 7rem;
+    flex: 0 0 7rem;
+    border: 3px solid #fff;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 8px 24px rgba(23, 43, 77, 0.12);
+}
+
+.profile-photo-placeholder {
+    width: 7rem;
+    height: 7rem;
+    flex: 0 0 7rem;
+    display: grid;
+    place-items: center;
+    background: #eaf2f9;
+    color: var(--site-blue);
+    font-size: 2.75rem;
+    border-radius: 50%;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.profile-photo-controls {
+    margin-left: auto;
+    min-width: 0;
+}
+
+.profile-photo-controls .btn-outline-primary {
+    border-color: var(--site-blue);
+    color: var(--site-blue);
+    font-weight: 600;
+    padding: 0.55rem 1rem;
+    font-size: 0.9rem;
+}
+
+.profile-photo-controls .btn-outline-primary:hover {
+    background: var(--site-blue);
+    color: #fff;
+}
+
+.profile-photo-controls .btn-primary {
+    padding: 0.55rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.profile-photo-form .form-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #294766;
+    margin-bottom: 0.4rem;
+}
+
+.profile-photo-form .form-text {
+    font-size: 0.78rem;
+    color: var(--site-muted);
+    margin-bottom: 0.75rem;
+}
+
+/* Enhanced form fields */
+.profile-edit-form .form-label {
+    margin-bottom: 0.45rem;
+    color: #294766;
+    font-size: 0.875rem;
+    font-weight: 650;
+    letter-spacing: 0.01em;
+}
+
+.profile-edit-form .form-control,
+.profile-edit-form .form-select {
+    border: 1.5px solid var(--site-line);
+    border-radius: 0.7rem;
+    font-size: 0.92rem;
+    padding: 0.65rem 0.85rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    background: #fff;
+}
+
+.profile-edit-form .form-control:focus,
+.profile-edit-form .form-select:focus {
+    border-color: var(--site-blue);
+    box-shadow: 0 0 0 4px rgba(23, 105, 170, 0.1);
+    outline: none;
+}
+
+.profile-edit-form .form-control:disabled {
+    border-color: #dce5ef;
+    background: #f2f6fa;
+    color: #64748b;
+    opacity: 1;
+    cursor: not-allowed;
+}
+
+.profile-panel .form-control-sm {
+    min-height: 2.75rem;
+    padding: 0.6rem 0.75rem;
+    font-size: 0.92rem;
+}
+
+/* Form actions */
+.profile-form-actions {
+    display: flex;
+    justify-content: flex-start;
+    gap: 0.75rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--site-line);
+    margin-top: 0.75rem;
+}
+
+.profile-form-actions .btn {
+    min-width: 11rem;
+    padding: 0.7rem 1.25rem;
+    box-shadow: 0 5px 14px rgba(23, 105, 170, 0.18);
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.profile-form-actions .btn-primary {
+    background: var(--site-blue);
+    border-color: var(--site-blue);
+}
+
+.profile-form-actions .btn-primary:hover {
+    background: var(--site-blue-dark);
+    border-color: var(--site-blue-dark);
+    transform: translateY(-1px);
+}
+
+/* Enhanced empty state */
+.profile-empty-state {
+    display: flex;
+    min-height: 12rem;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.9rem;
+    border: 2px dashed #c9d7e6;
+    border-radius: 1rem;
+    background: linear-gradient(135deg, #f8fbfe, #f1f7fd);
+    color: var(--site-muted);
+    text-align: center;
+    padding: 2rem;
+}
+
+.profile-empty-state i {
+    color: #7b9bbb;
+    font-size: 3rem;
+}
+
+.profile-empty-state p {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #475569;
+    margin-bottom: 0;
+}
+
+.profile-empty-state .btn-outline-primary {
+    border-color: var(--site-blue);
+    color: var(--site-blue);
+    font-weight: 600;
+    padding: 0.55rem 1.25rem;
+    font-size: 0.9rem;
+}
+
+.profile-empty-state .btn-outline-primary:hover {
+    background: var(--site-blue);
+    color: #fff;
+}
+
+/* Enhanced reservations table */
+.profile-reservations-table {
+    border: 1px solid var(--site-line);
+    border-radius: 0.9rem;
+    overflow: hidden;
+    background: #fff;
+}
+
+.profile-reservations-table thead th {
+    background: #f7fafe;
+    color: #294766;
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    border-bottom: 2px solid var(--site-line);
+    padding: 1rem 0.85rem;
+    white-space: nowrap;
+}
+
+.profile-reservations-table tbody td {
+    font-size: 0.9rem;
+    color: var(--site-ink);
+    padding: 1rem 0.85rem;
+    border-bottom: 1px solid rgba(220, 229, 239, 0.5);
+    vertical-align: middle;
+}
+
+.profile-reservations-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.profile-reservations-table tbody tr:hover {
+    background: #f0f7fd !important;
+    transition: background 0.2s ease;
+}
+
+.profile-reservations-table tbody tr:hover td {
+    border-color: transparent;
+}
+
+.profile-reservations-table .badge {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    padding: 0.45rem 0.7rem;
+    border-radius: 0.6rem;
+}
+
+.profile-reservations-table a {
+    font-weight: 600;
+    color: var(--site-blue);
+    text-decoration: none;
+    font-size: 0.85rem;
+}
+
+.profile-reservations-table a:hover {
+    color: var(--site-blue-dark);
+    text-decoration: underline;
+}
+
+.profile-reservations-table .btn-outline-danger.btn-sm {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.75rem;
+    border-color: rgba(220, 53, 69, 0.4);
+    color: #dc3545;
+}
+
+.profile-reservations-table .btn-outline-danger.btn-sm:hover {
+    background: #dc3545;
+    color: #fff;
+    border-color: #dc3545;
+}
+
+/* Responsive tweaks */
+@media (max-width: 767.98px) {
+    .profile-stat-card {
+        padding: 1rem 1.25rem;
+    }
+
+    .profile-stat-value {
+        font-size: 1.5rem;
+    }
+
+    .profile-stat-icon {
+        width: 2.5rem;
+        height: 2.5rem;
+        font-size: 1.15rem;
+    }
+
+    .profile-photo-section {
+        flex-direction: column;
+        text-align: center;
+        gap: 1.25rem;
+        padding: 1.5rem;
+    }
+
+    .profile-photo-controls {
+        margin-left: 0;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        align-items: stretch;
+    }
+
+    .profile-photo-controls .btn-outline-primary,
+    .profile-photo-controls .btn-primary {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .profile-reservations-table thead th,
+    .profile-reservations-table tbody td {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.8rem;
+    }
+
+    .profile-form-actions {
+        flex-direction: column;
+    }
+
+    .profile-form-actions .btn {
+        min-width: auto;
+        width: 100%;
+    }
+}
+
+/* Dark mode overrides for profile */
+html[data-admin-theme="dark"] .profile-stat-card {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+html[data-admin-theme="dark"] .profile-stat-value {
+    color: #e2e8f0;
+}
+
+html[data-admin-theme="dark"] .profile-stat-label {
+    color: #94a3b8;
+}
+
+html[data-admin-theme="dark"] .profile-photo-section {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+html[data-admin-theme="dark"] .profile-empty-state {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.08);
+    color: #94a3b8;
+}
+
+html[data-admin-theme="dark"] .profile-empty-state p {
+    color: #cbd5e1;
+}
+
+html[data-admin-theme="dark"] .profile-reservations-table {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+html[data-admin-theme="dark"] .profile-reservations-table thead th {
+    background: rgba(255, 255, 255, 0.03);
+    color: #e2e8f0;
+}
+
+html[data-admin-theme="dark"] .profile-reservations-table tbody td {
+    color: #f1f5f9;
+    border-bottom-color: rgba(255, 255, 255, 0.05);
+}
+
+html[data-admin-theme="dark"] .profile-reservations-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.04) !important;
+}

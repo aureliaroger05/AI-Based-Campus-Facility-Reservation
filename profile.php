@@ -172,16 +172,51 @@
                 <p class="mb-0">Manage your personal information and view your reservations.</p>
             </div>
         </div>
+
         <?php if ($reservationActionMessage !== null): ?>
-            <div class="alert alert-<?php echo htmlspecialchars($reservationActionMessage[0]); ?>" role="status">
+            <div class="alert alert-<?php echo htmlspecialchars($reservationActionMessage[0]); ?> alert-dismissible fade show" role="status">
                 <?php echo htmlspecialchars($reservationActionMessage[1]); ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         <?php endif; ?>
         <?php if ($profileMessage !== null): ?>
-            <div class="alert alert-<?php echo htmlspecialchars($profileMessage[0]); ?>" role="status">
+            <div class="alert alert-<?php echo htmlspecialchars($profileMessage[0]); ?> alert-dismissible fade show" role="status">
                 <?php echo htmlspecialchars($profileMessage[1]); ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         <?php endif; ?>
+
+        <!-- Stats Overview -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-4">
+                <div class="profile-stat-card">
+                    <span class="profile-stat-icon"><i class="bi bi-calendar2-check"></i></span>
+                    <div class="profile-stat-content">
+                        <span class="profile-stat-label">Total Reservations</span>
+                        <span class="profile-stat-value"><?php echo count($res ?? []); ?></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="profile-stat-card">
+                    <span class="profile-stat-icon text-success"><i class="bi bi-check2-circle"></i></span>
+                    <div class="profile-stat-content">
+                        <span class="profile-stat-label">Upcoming</span>
+                        <span class="profile-stat-value"><?php echo count(array_filter($res ?? [], fn($r) => $r['status'] === 'confirmed')); ?></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="profile-stat-card">
+                    <span class="profile-stat-icon text-primary"><i class="bi bi-patch-check"></i></span>
+                    <div class="profile-stat-content">
+                        <span class="profile-stat-label">Completed</span>
+                        <span class="profile-stat-value"><?php echo count(array_filter($res ?? [], fn($r) => $r['status'] === 'completed')); ?></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <section class="card profile-panel mb-4">
             <div class="card-header profile-panel-heading">
                 <i class="bi bi-person-lines-fill me-2"></i>Personal information
@@ -297,6 +332,7 @@
             <div class="profile-empty-state">
                 <i class="bi bi-calendar-x"></i>
                 <p class="mb-0">You don't have any reservations yet.</p>
+                <a href="index.php" class="btn btn-outline-primary btn-sm mt-3"><i class="bi bi-building me-2"></i>Browse Facilities</a>
             </div>
         <?php else: ?>
         <div class="table-responsive">
@@ -325,7 +361,7 @@
                         <?php if (in_array($r['status'], ['pending', 'confirmed'], true)): ?>
                             <form method="POST" class="d-inline" data-confirm="Cancel this reservation?">
                                 <input type="hidden" name="res_id" value="<?php echo (int)$r['id']; ?>">
-                                <button type="submit" name="cancel_reservation" class="btn btn-outline-danger btn-sm">Cancel</button>
+                                <button type="submit" name="cancel_reservation" class="btn btn-outline-danger btn-sm"><i class="bi bi-x-circle me-1"></i>Cancel</button>
                             </form>
                         <?php else: ?>
                             <span class="text-muted">—</span>
