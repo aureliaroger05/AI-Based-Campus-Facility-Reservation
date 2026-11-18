@@ -43,6 +43,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $formErrors[] = 'The class schedule could not be deleted. Please try again.';
             }
         }
+    } elseif (isset($_POST['clear_all_schedules'])) {
+        try {
+            getDB()->exec('DELETE FROM class_schedules');
+            $_SESSION['dashboard_notification'] = [
+                'type' => 'success',
+                'message' => 'All class schedules have been cleared successfully.',
+            ];
+            header('Location: index.php');
+            exit;
+        } catch (PDOException $exception) {
+            error_log('Failed to clear schedules: ' . $exception->getMessage());
+            $formErrors[] = 'Failed to clear schedules. Please try again.';
+        }
     } elseif (!isset($_FILES['schedule_file']) || !is_array($_FILES['schedule_file'])) {
         $formErrors[] = 'Choose a CSV schedule file to upload.';
     } else {
@@ -62,7 +75,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $formErrors[] = 'The CSV file must be 5 MB or smaller.';
         } else {
             try {
-                $result = importClassScheduleCsv((string)$upload['tmp_name']);
+                $replaceExisting = !empty($_POST['replace_existing']);
+                $result = importClassScheduleCsv((string)$upload['tmp_name'], $replaceExisting);
                 $formErrors = $result['errors'];
                 if (!$formErrors) {
                     $_SESSION['dashboard_notification'] = [
@@ -150,6 +164,14 @@ require '../header.php';
                     <a class="btn btn-outline-primary" href="../assets/templates/class_schedule_template.csv" download>
                         <i class="bi bi-download me-1"></i>Download CSV Template
                     </a>
+                    <?php if (!empty($scheduleRows)): ?>
+                    <form method="POST" class="d-inline" data-confirm="Are you sure you want to delete ALL imported class schedules?">
+                        <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['class_schedule_csrf'], ENT_QUOTES, 'UTF-8'); ?>">
+                        <button class="btn btn-outline-danger" type="submit" name="clear_all_schedules">
+                            <i class="bi bi-trash3 me-1"></i>Clear All Schedules
+                        </button>
+                    </form>
+                    <?php endif; ?>
                 </div>
                 <form method="POST" enctype="multipart/form-data">
                     <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['class_schedule_csrf'], ENT_QUOTES, 'UTF-8'); ?>">
@@ -157,6 +179,12 @@ require '../header.php';
                     <div class="mb-3">
                         <label class="form-label" for="schedule-file">Schedule CSV (maximum 5 MB)</label>
                         <input class="form-control" id="schedule-file" type="file" name="schedule_file" accept=".csv,text/csv" required>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" name="replace_existing" id="replace-existing" value="1" checked>
+                        <label class="form-check-label" for="replace-existing">
+                            <strong>Replace existing class schedules</strong> (clears older / outdated schedules before importing this file)
+                        </label>
                     </div>
                     <button class="btn btn-primary" type="submit">
                         <i class="bi bi-upload me-1"></i>Validate and Import

@@ -151,7 +151,7 @@ function resolveDayToDates(string $day, int $weeks = 12): array {
     return $dates;
 }
 
-function importClassScheduleCsv(string $filePath): array {
+function importClassScheduleCsv(string $filePath, bool $replaceExisting = false): array {
     $handle = fopen($filePath, 'rb');
     if ($handle === false) {
         throw new RuntimeException('The uploaded schedule file could not be opened.');
@@ -312,6 +312,10 @@ function importClassScheduleCsv(string $filePath): array {
         $pdo = getDB();
         $pdo->beginTransaction();
         try {
+            if ($replaceExisting) {
+                $pdo->exec('DELETE FROM class_schedules');
+            }
+
             $exact = $pdo->prepare(
                 'SELECT id FROM class_schedules WHERE facility_id = ? AND class_date = ? AND start_time = ? AND end_time = ? LIMIT 1'
             );
