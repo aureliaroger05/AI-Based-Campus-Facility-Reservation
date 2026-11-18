@@ -338,6 +338,10 @@ function importClassScheduleCsv(string $filePath, bool $replaceExisting = false)
                 $row['start_time'] = parseClassScheduleTime($row['start_time']);
                 $row['end_time'] = parseClassScheduleTime($row['end_time']);
 
+                // Calculate day name from class_date for display
+                $classDate = DateTime::createFromFormat('Y-m-d', $row['class_date']);
+                $row['day_name'] = $classDate ? $classDate->format('l') : '';
+
                 // If exact block already exists, skip quietly
                 $exact->execute([$row['facility_id'], $row['class_date'], $row['start_time'], $row['end_time']]);
                 if ($exact->fetchColumn() !== false) {

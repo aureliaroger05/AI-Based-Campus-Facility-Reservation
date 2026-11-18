@@ -221,6 +221,7 @@ require '../header.php';
                         <table class="table table-striped align-middle mb-0" data-pagination-page-size="10" data-pagination-label="Upcoming class schedules">
                             <thead>
                                 <tr>
+                                    <th>Day</th>
                                     <th>Date</th>
                                     <th>Time</th>
                                     <th>Facility</th>
@@ -231,6 +232,7 @@ require '../header.php';
                             <tbody>
                                 <?php foreach ($scheduleRows as $row): ?>
                                     <tr>
+                                        <td><?php echo htmlspecialchars($row['day_name'] ?? '', ENT_QUOTES, 'UTF-8'); ?></td>
                                         <td><?php echo htmlspecialchars($row['class_date'], ENT_QUOTES, 'UTF-8'); ?></td>
                                         <td>
                                             <?php echo htmlspecialchars(date('g:i A', strtotime($row['start_time'])), ENT_QUOTES, 'UTF-8'); ?>
