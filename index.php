@@ -847,7 +847,7 @@ $minimumReservationDate = $manilaNow->setTime(0, 0)->modify('+3 days')->format('
         <a class="btn btn-sm btn-outline-secondary ms-auto" href="javascript:void(0)" data-action="next" aria-label="Next month">
             <i class="bi bi-chevron-right"></i>
         </a>
-    </div>
+
 </div>
                         <div class="calendar-weekdays" aria-hidden="true">
                             <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
