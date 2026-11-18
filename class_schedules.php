@@ -334,6 +334,10 @@ function importClassScheduleCsv(string $filePath, bool $replaceExisting = false)
             $imported = 0;
 
             foreach ($rows as $row) {
+                // Parse times from CSV format (e.g., "7:30 AM") to H:i:s
+                $row['start_time'] = parseClassScheduleTime($row['start_time']);
+                $row['end_time'] = parseClassScheduleTime($row['end_time']);
+
                 // If exact block already exists, skip quietly
                 $exact->execute([$row['facility_id'], $row['class_date'], $row['start_time'], $row['end_time']]);
                 if ($exact->fetchColumn() !== false) {
