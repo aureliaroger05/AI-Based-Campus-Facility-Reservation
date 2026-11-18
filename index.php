@@ -1440,7 +1440,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
-<!-- Calendar navigation AJAX (fixes page reload on prev/next click) -->
+<!-- Calendar navigation AJAX (fixes page reload and month name) -->
 <script>
 document.body.addEventListener('click', function(e) {
     const link = e.target.closest('.calendar-heading a[data-action]');
@@ -1488,7 +1488,7 @@ document.body.addEventListener('click', function(e) {
                 yearEl.textContent = newYearEl.textContent;
             }
             
-            // Update month name - try to get from new HTML, fallback to calculation
+            // Update month name - this fixes the missing month name issue
             const newMonthNameEl = doc.querySelector('.calendar-heading h5 span:first-child');
             if (newMonthNameEl) {
                 document.querySelector('.calendar-heading h5 span:first-child').textContent = newMonthNameEl.textContent;
