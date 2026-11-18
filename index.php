@@ -832,7 +832,8 @@ $minimumReservationDate = $manilaNow->setTime(0, 0)->modify('+3 days')->format('
                     </h3>
                     <div class="facility-calendar mb-3">
                         <div class="calendar-heading">
-                            <a class="btn btn-sm btn-outline-secondary" href="index.php?month=<?php echo htmlspecialchars($previousMonth); ?>" aria-label="Previous month">
+                            <a class="btn btn-sm btn-outline-secondary" href="javascript:void(0)" data-action="prev"
+<?php echo htmlspecialchars($previousMonth); ?>" aria-label="Previous month">
                                 <i class="bi bi-chevron-left"></i>
                             </a>
                             <h5 class="mb-0 text-center">
