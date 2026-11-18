@@ -1389,5 +1389,55 @@ function formatTimeRange(range) {
         window.reservationTimeUpdateInterval = null;
     }, { once: true });
 </script>
+<!-- Calendar navigation fix - prevents page reload -->
+<script>
+document.body.addEventListener('click', function(e) {
+    const link = e.target.closest('.calendar-heading a');
+    if (!link || !link.href.includes('index.php?month=')) return;
+    
+    e.preventDefault();
+    const href = link.href;
+    const url = new URL(href, window.location.origin);
+    const month = url.searchParams.get('month');
+    
+    if (!month) return;
+    
+    // Parse year and month from the URL
+    const [year, monthNum] = month.split('-');
+    const currentYear = year ? parseInt(year) : new Date().getFullYear();
+    const currentMonth = monthNum ? parseInt(monthNum) : new Date().getMonth() + 1;
+    
+    let newMonth, newYear;
+    if (link.classList.contains('next') || link.getAttribute('aria-label').includes('Next')) {
+        newMonth = currentMonth + 1;
+        newYear = newMonth > 12 ? currentYear + 1 : currentYear;
+        newMonth = newMonth > 12 ? newMonth - 12 : newMonth;
+    } else {
+        newMonth = currentMonth - 1;
+        newYear = newMonth < 1 ? currentYear - 1 : currentYear;
+        newMonth = newMonth < 1 ? newMonth + 12 : newMonth;
+    }
+    
+    const dateStr = newYear + '-' + ('0' + newMonth).slice(-2);
+    
+    // Load calendar via AJAX without page reload
+    const container = document.getElementById('reservation-calendar');
+    if (!container) return;
+    
+    fetch('index.php?month=' + dateStr)
+        .then(response => response.text())
+        .then(html => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            const newCalendar = doc.querySelector('#reservation-calendar');
+            if (newCalendar) {
+                container.innerHTML = newCalendar.innerHTML;
+            }
+        })
+        .catch(error => {
+            console.error('Error loading calendar:', error);
+        });
+});
+</script>
 
 <?php require 'footer.php'; ?>
