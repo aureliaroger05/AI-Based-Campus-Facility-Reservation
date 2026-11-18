@@ -832,16 +832,13 @@ $minimumReservationDate = $manilaNow->setTime(0, 0)->modify('+3 days')->format('
                     </h3>
                     <div class="facility-calendar mb-3">
                         <div class="calendar-heading">
-                            <a class="btn btn-sm btn-outline-secondary" href="index.php?month=<?php echo htmlspecialchars($previousMonth); ?>" aria-label="Previous month">
-                                <i class="bi bi-chevron-left"></i>
-                            </a>
-                            <h5 class="mb-0 text-center">
-                                <span><?php echo htmlspecialchars($monthStart->format('F')); ?></span>
-                                <span class="calendar-year"><?php echo htmlspecialchars($monthStart->format('Y')); ?></span>
-                            </h5>
-                            <a class="btn btn-sm btn-outline-secondary ms-auto" href="index.php?month=<?php echo htmlspecialchars($nextMonth); ?>" aria-label="Next month">
-                                <i class="bi bi-chevron-right"></i>
-                            </a>
+                           <a class="btn btn-sm btn-outline-secondary" href="javascript:void(0)" data-action="prev" aria-label="Previous month">
+    <i class="bi bi-chevron-left"></i>
+</a>
+<a class="btn btn-sm btn-outline-secondary ms-auto" href="javascript:void(0)" data-action="next" aria-label="Next month">
+    <i class="bi bi-chevron-right"></i>
+</a>
+
                         </div>
                         <div class="calendar-weekdays" aria-hidden="true">
                             <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
@@ -1388,6 +1385,121 @@ function formatTimeRange(range) {
         window.reservationCalendarClickHandler = null;
         window.reservationTimeUpdateInterval = null;
     }, { once: true });
+}
+
+<!-- Calendar navigation AJAX -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const navLinks = document.querySelectorAll('.calendar-heading a[data-action]');
+    
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const action = this.dataset.action;
+            const yearEl = document.querySelector('.calendar-year');
+            const year = yearEl ? parseInt(yearEl.textContent) : new Date().getFullYear();
+            const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+            const monthEl = document.querySelector('.calendar-heading h5 span:first-child');
+            const currentMonthText = monthEl ? monthEl.textContent : 'January';
+            const currentMonth = monthNames.indexOf(currentMonthText) + 1;
+            
+            let newMonth, newYear;
+            if (action === 'next') {
+                newMonth = currentMonth + 1;
+                newYear = newMonth > 12 ? year + 1 : year;
+                newMonth = newMonth > 12 ? newMonth - 12 : newMonth;
+            } else {
+                newMonth = currentMonth - 1;
+                newYear = newMonth < 1 ? year - 1 : year;
+                newMonth = newMonth < 1 ? newMonth + 12 : newMonth;
+            }
+            
+            const dateStr = newYear + '-' + ('0' + newMonth).slice(-2);
+            
+            fetch('index.php?month=' + dateStr)
+                .then(response => response.text())
+                .then(html => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    const newCalendar = doc.querySelector('#reservation-calendar');
+                    if (newCalendar) {
+                        document.getElementById('reservation-calendar').innerHTML = newCalendar.innerHTML;
+                    }
+                    const newYearEl = doc.querySelector('.calendar-year');
+                    if (newYearEl) {
+                        yearEl.textContent = newYearEl.textContent;
+                    }
+                    if (monthEl) {
+                        monthEl.textContent = monthNames[newMonth - 1];
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading calendar:', error);
+                });
+        });
+    });
+});
+</script>
+<!-- Calendar navigation AJAX (fixes page reload and month name) -->
+<script>
+document.body.addEventListener('click', function(e) {
+    const link = e.target.closest('.calendar-heading a[data-action]');
+    if (!link) return;
+    
+    e.preventDefault();
+    const action = link.dataset.action;
+    const yearEl = document.querySelector('.calendar-year');
+    const year = yearEl ? parseInt(yearEl.textContent) : new Date().getFullYear();
+    const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    
+    // Get current month from the displayed month name
+    const monthEl = document.querySelector('.calendar-heading h5 span:first-child');
+    const currentMonthText = monthEl ? monthEl.textContent : 'January';
+    const currentMonth = monthNames.indexOf(currentMonthText) + 1;
+    
+    let newMonth, newYear;
+    if (action === 'next') {
+        newMonth = currentMonth + 1;
+        newYear = newMonth > 12 ? year + 1 : year;
+        newMonth = newMonth > 12 ? newMonth - 12 : newMonth;
+    } else {
+        newMonth = currentMonth - 1;
+        newYear = newMonth < 1 ? year - 1 : year;
+        newMonth = newMonth < 1 ? newMonth + 12 : newMonth;
+    }
+    
+    const dateStr = newYear + '-' + ('0' + newMonth).slice(-2);
+    
+    fetch('index.php?month=' + dateStr)
+        .then(response => response.text())
+        .then(html => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            
+            // Update calendar days
+            const newCalendar = doc.querySelector('#reservation-calendar');
+            if (newCalendar) {
+                document.getElementById('reservation-calendar').innerHTML = newCalendar.innerHTML;
+            }
+            
+            // Update year
+            const newYearEl = doc.querySelector('.calendar-year');
+            if (newYearEl) {
+                yearEl.textContent = newYearEl.textContent;
+            }
+            
+            // Update month name - this fixes the missing month name issue
+            const newMonthNameEl = doc.querySelector('.calendar-heading h5 span:first-child');
+            if (newMonthNameEl) {
+                document.querySelector('.calendar-heading h5 span:first-child').textContent = newMonthNameEl.textContent;
+            } else {
+                document.querySelector('.calendar-heading h5 span:first-child').textContent = monthNames[newMonth - 1];
+            }
+        })
+        .catch(error => {
+            console.error('Error loading calendar:', error);
+        });
+});
 </script>
 <!-- Calendar navigation fix - prevents page reload -->
 <script>
@@ -1439,5 +1551,6 @@ document.body.addEventListener('click', function(e) {
         });
 });
 </script>
+
 
 <?php require 'footer.php'; ?>
