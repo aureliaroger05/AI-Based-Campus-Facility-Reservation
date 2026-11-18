@@ -49,17 +49,22 @@ if (!function_exists('getFacilityMonthStatuses')) {
 
         $intervalsByDate = [];
 
-        $classStmt = $pdo->prepare(
-            "SELECT class_date, start_time, end_time FROM class_schedules " .
-            "WHERE facility_id = ? AND class_date BETWEEN ? AND ? " .
-            "ORDER BY class_date ASC, start_time ASC"
-        );
-        $classStmt->execute([$facility_id, $firstDate, $lastDate]);
-        foreach ($classStmt->fetchAll() as $class) {
-            $intervalsByDate[$class['class_date']][] = [
-                max(0, timeToMinutesFromString($class['start_time'])),
-                min(1440, timeToMinutesFromString($class['end_time'])),
-            ];
+        try {
+            $classStmt = $pdo->prepare(
+                "SELECT class_date, start_time, end_time FROM class_schedules " .
+                "WHERE facility_id = ? AND class_date BETWEEN ? AND ? " .
+                "ORDER BY class_date ASC, start_time ASC"
+            );
+            $classStmt->execute([$facility_id, $firstDate, $lastDate]);
+            foreach ($classStmt->fetchAll() as $class) {
+                $intervalsByDate[$class['class_date']][] = [
+                    max(0, timeToMinutesFromString($class['start_time'])),
+                    min(1440, timeToMinutesFromString($class['end_time'])),
+                ];
+            }
+        } catch (PDOException $e) {
+            // class_schedules table may not exist yet; skip blocked intervals gracefully
+            error_log('class_schedules query failed: ' . $e->getMessage());
         }
 
         $reservationIntervalsByDate = [];

@@ -84,14 +84,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$scheduleStmt = getDB()->prepare(
-    'SELECT cs.id, cs.class_date, cs.start_time, cs.end_time, cs.subject, f.name AS facility_name ' .
-    'FROM class_schedules cs JOIN facilities f ON f.id = cs.facility_id ' .
-    'WHERE cs.class_date >= ? ' .
-    'ORDER BY cs.class_date ASC, cs.start_time ASC LIMIT 200'
-);
-$scheduleStmt->execute([date('Y-m-d')]);
-$scheduleRows = $scheduleStmt->fetchAll();
+try {
+    $scheduleStmt = getDB()->prepare(
+        'SELECT cs.id, cs.class_date, cs.start_time, cs.end_time, cs.subject, f.name AS facility_name ' .
+        'FROM class_schedules cs JOIN facilities f ON f.id = cs.facility_id ' .
+        'WHERE cs.class_date >= ? ' .
+        'ORDER BY cs.class_date ASC, cs.start_time ASC LIMIT 200'
+    );
+    $scheduleStmt->execute([date('Y-m-d')]);
+    $scheduleRows = $scheduleStmt->fetchAll();
+} catch (PDOException $exception) {
+    $scheduleRows = [];
+    $formErrors[] = 'The class_schedules table does not exist yet. Run the database migration (migrations/20261112_create_class_schedules.sql) first.';
+}
 
 require '../header.php';
 ?>
