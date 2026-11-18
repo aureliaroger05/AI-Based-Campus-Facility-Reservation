@@ -1,1 +1,36 @@
-﻿facility,subject,date,start_time,end_time,instructor
+facility,day,subject,start_time,end_time
+
+; CSV Template for Class Schedule Import
+; ---------------------------------------------
+; This template uses day names instead of specific dates.
+; The system will auto-convert day names to actual dates.
+; Example: Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday
+
+; Required columns (in order):
+; 1. facility  - Must match facility name in the system (e.g., SLAB1, SLAB2, Room 101)
+; 2. day       - Day name (Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday)
+; 3. subject   - Subject code and name (e.g., "1478 IT1D ITE6102 Computer Programming 1 (LEC)")
+; 4. start_time - Start time (7:30 AM, 10:30 AM, 1:30 PM, etc. - 12-hour format with AM/PM)
+; 5. end_time   - End time (same format as start_time)
+
+; ---------------------------------------------
+; Important Notes:
+; - Facility name must exactly match what's in the system
+; - Day names are NOT case-sensitive: monday, Monday, MONDAY all work
+; - Times support: 7:30 AM, 10:30 AM, 1:30 PM, 4:30 PM, etc.
+; - The system will calculate the actual date from the day name
+; - Use "Replace existing schedules" option to clear old schedules before importing
+
+; ---------------------------------------------
+; Sample Rows (remove the semicolon ; from lines below to use):
+;facility,day,subject,start_time,end_time
+;SLAB1,Monday,"1478 IT1D ITE6102 Computer Programming 1 (LEC)",7:30 AM,10:30 AM
+;SLAB1,Tuesday,"1553 IT2B ITE6201 Data Structures and Algorithms (LEC)",7:30 AM,10:30 AM
+;SLAB1,Wednesday,"4484 W1A ITE 6102 Computer Programming 1",7:30 AM,10:30 AM
+;SLAB1,Thursday,"1853 BSA3A IT6256 IT Application Tools in Business",7:30 AM,10:30 AM
+;SLAB1,Friday,"2214 W2R IT6208 System Integration and Architecture 1 LAB",7:30 AM,10:30 AM
+
+; ---------------------------------------------
+; Old format (dates instead of day names) is no longer required:
+; facility,subject,date,start_time,end_time,instructor
+; ---------------------------------------------
