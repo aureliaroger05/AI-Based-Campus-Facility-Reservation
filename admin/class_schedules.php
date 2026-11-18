@@ -30,13 +30,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $delete = getDB()->prepare('DELETE FROM class_schedules WHERE id = ?');
                 $delete->execute([$scheduleId]);
                 $deleted = $delete->rowCount() > 0;
-                $_SESSION['dashboard_notification'] = [
+                $_SESSION['class_schedule_notification'] = [
                     'type' => $deleted ? 'success' : 'danger',
                     'message' => $deleted
                         ? 'Class schedule deleted successfully.'
                         : 'The class schedule could not be found.',
                 ];
-                header('Location: index.php');
+                header('Location: class_schedules.php');
                 exit;
             } catch (PDOException $exception) {
                 error_log('Failed to delete class schedule: ' . $exception->getMessage());
@@ -46,11 +46,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (isset($_POST['clear_all_schedules'])) {
         try {
             getDB()->exec('DELETE FROM class_schedules');
-            $_SESSION['dashboard_notification'] = [
+            $_SESSION['class_schedule_notification'] = [
                 'type' => 'success',
                 'message' => 'All class schedules have been cleared successfully.',
             ];
-            header('Location: index.php');
+            header('Location: class_schedules.php');
             exit;
         } catch (PDOException $exception) {
             error_log('Failed to clear schedules: ' . $exception->getMessage());
@@ -79,13 +79,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $result = importClassScheduleCsv((string)$upload['tmp_name'], $replaceExisting);
                 $formErrors = $result['errors'];
                 if (!$formErrors) {
-                    $_SESSION['dashboard_notification'] = [
+                    $_SESSION['class_schedule_notification'] = [
                         'type' => 'success',
                         'message' => $result['imported'] > 0
                             ? $result['imported'] . ' class schedule row(s) imported successfully.'
                             : 'No new rows were added; all schedule blocks were already imported.',
                     ];
-                    header('Location: index.php');
+                    header('Location: class_schedules.php');
                     exit;
                 }
             } catch (PDOException $exception) {
@@ -98,14 +98,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
+$scheduleNotification = $_SESSION['class_schedule_notification'] ?? null;
+unset($_SESSION['class_schedule_notification']);
+
 try {
     $scheduleStmt = getDB()->prepare(
-        'SELECT cs.id, cs.class_date, cs.start_time, cs.end_time, cs.subject, f.name AS facility_name ' .
-        'FROM class_schedules cs JOIN facilities f ON f.id = cs.facility_id ' .
-        'WHERE cs.class_date >= ? ' .
-        'ORDER BY cs.class_date ASC, cs.start_time ASC LIMIT 200'
+        'SELECT cs.id, cs.class_date, cs.start_time, cs.end_time, cs.subject, COALESCE(f.name, "Facility " || cs.facility_id) AS facility_name ' .
+        'FROM class_schedules cs LEFT JOIN facilities f ON f.id = cs.facility_id ' .
+        'ORDER BY cs.class_date DESC, cs.start_time ASC LIMIT 300'
     );
-    $scheduleStmt->execute([date('Y-m-d')]);
+    $scheduleStmt->execute();
     $scheduleRows = $scheduleStmt->fetchAll();
 } catch (PDOException $exception) {
     $scheduleRows = [];
@@ -137,6 +139,13 @@ require '../header.php';
                 <p class="mb-0">Import and review facility class times blocked from reservations.</p>
             </div>
         </div>
+
+        <?php if ($scheduleNotification): ?>
+            <div class="alert alert-<?php echo htmlspecialchars($scheduleNotification['type'] ?? 'info', ENT_QUOTES, 'UTF-8'); ?> alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i><?php echo htmlspecialchars($scheduleNotification['message'] ?? '', ENT_QUOTES, 'UTF-8'); ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php endif; ?>
 
         <?php if ($formErrors): ?>
             <div class="alert alert-danger" role="alert">
@@ -198,8 +207,11 @@ require '../header.php';
         </section>
 
         <section class="card admin-view-card">
-            <div class="card-header admin-section-heading">
-                <span><i class="bi bi-list-check me-2"></i>Upcoming imported classes</span>
+            <div class="card-header admin-section-heading d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-list-check me-2"></i>Imported class schedules</span>
+                <?php if ($scheduleRows): ?>
+                    <span class="badge bg-primary rounded-pill"><?php echo count($scheduleRows); ?> block(s)</span>
+                <?php endif; ?>
             </div>
             <div class="card-body">
                 <?php if (!$scheduleRows): ?>
