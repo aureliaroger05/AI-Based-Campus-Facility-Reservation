@@ -1440,5 +1440,67 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
+<!-- Calendar navigation AJAX (fixes page reload on prev/next click) -->
+<script>
+document.body.addEventListener('click', function(e) {
+    const link = e.target.closest('.calendar-heading a[data-action]');
+    if (!link) return;
+    
+    e.preventDefault();
+    const action = link.dataset.action;
+    const yearEl = document.querySelector('.calendar-year');
+    const year = yearEl ? parseInt(yearEl.textContent) : new Date().getFullYear();
+    const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    
+    // Get current month from the displayed month name
+    const monthEl = document.querySelector('.calendar-heading h5 span:first-child');
+    const currentMonthText = monthEl ? monthEl.textContent : 'January';
+    const currentMonth = monthNames.indexOf(currentMonthText) + 1;
+    
+    let newMonth, newYear;
+    if (action === 'next') {
+        newMonth = currentMonth + 1;
+        newYear = newMonth > 12 ? year + 1 : year;
+        newMonth = newMonth > 12 ? newMonth - 12 : newMonth;
+    } else {
+        newMonth = currentMonth - 1;
+        newYear = newMonth < 1 ? year - 1 : year;
+        newMonth = newMonth < 1 ? newMonth + 12 : newMonth;
+    }
+    
+    const dateStr = newYear + '-' + ('0' + newMonth).slice(-2);
+    
+    fetch('index.php?month=' + dateStr)
+        .then(response => response.text())
+        .then(html => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            
+            // Update calendar days
+            const newCalendar = doc.querySelector('#reservation-calendar');
+            if (newCalendar) {
+                document.getElementById('reservation-calendar').innerHTML = newCalendar.innerHTML;
+            }
+            
+            // Update year
+            const newYearEl = doc.querySelector('.calendar-year');
+            if (newYearEl) {
+                yearEl.textContent = newYearEl.textContent;
+            }
+            
+            // Update month name - try to get from new HTML, fallback to calculation
+            const newMonthNameEl = doc.querySelector('.calendar-heading h5 span:first-child');
+            if (newMonthNameEl) {
+                document.querySelector('.calendar-heading h5 span:first-child').textContent = newMonthNameEl.textContent;
+            } else {
+                document.querySelector('.calendar-heading h5 span:first-child').textContent = monthNames[newMonth - 1];
+            }
+        })
+        .catch(error => {
+            console.error('Error loading calendar:', error);
+        });
+});
+</script>
+
 
 <?php require 'footer.php'; ?>
