@@ -110,6 +110,37 @@ body.profile-page > .navbar .navbar-toggler-icon {
     filter: invert(0.7);
 }
 
+body.reservation-view-page > .navbar.bg-primary {
+    border-bottom: 1px solid #dce5ef;
+    background: #fff !important;
+    box-shadow: 0 5px 18px rgba(18, 59, 102, 0.08);
+}
+
+body.reservation-view-page > .navbar .navbar-brand,
+body.reservation-view-page > .navbar .nav-link {
+    color: #29364d !important;
+}
+
+body.reservation-view-page > .navbar .nav-link {
+    border-color: transparent;
+    border-radius: 0.65rem;
+}
+
+body.reservation-view-page > .navbar .nav-link:hover,
+body.reservation-view-page > .navbar .nav-link:focus-visible {
+    border-color: #c9dced;
+    background: #eaf4fc;
+    color: #1769aa !important;
+}
+
+body.reservation-view-page > .navbar .navbar-toggler {
+    border-color: #dce5ef;
+}
+
+body.reservation-view-page > .navbar .navbar-toggler-icon {
+    filter: invert(0.7);
+}
+
 .welcome-page {
     display: flex;
     min-height: 100vh;
