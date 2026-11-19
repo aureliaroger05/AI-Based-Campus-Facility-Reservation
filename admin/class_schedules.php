@@ -103,7 +103,8 @@ unset($_SESSION['class_schedule_notification']);
 
 try {
     $scheduleStmt = getDB()->prepare(
-        'SELECT cs.id, cs.class_date, cs.start_time, cs.end_time, cs.subject, COALESCE(f.name, "Facility " || cs.facility_id) AS facility_name ' .
+        'SELECT cs.id, cs.day, cs.start_time, cs.end_time, cs.subject, COALESCE(f.name, "Facility " || cs.facility_id) AS facility_name '
+ .
         'FROM class_schedules cs LEFT JOIN facilities f ON f.id = cs.facility_id ' .
         'ORDER BY cs.class_date DESC, cs.start_time ASC LIMIT 300'
     );
@@ -165,7 +166,7 @@ require '../header.php';
             <div class="card-body">
                 <p>
                     Use one row per class, with the facility name exactly as it appears in the system.
-                    Required columns: <code>facility, subject, date, start_time, end_time</code>.
+                    Required columns: <code>facility, day, subject, start_time, end_time</code>.
                     Dates: <code>YYYY-MM-DD</code> or <code>M/D/YYYY</code>. Times: <code>HH:MM</code>,
                     <code>HH:MM:SS</code>, or a 12-hour time with AM/PM.
                 </p>
@@ -232,8 +233,8 @@ require '../header.php';
                             <tbody>
                                 <?php foreach ($scheduleRows as $row): ?>
                                     <tr>
-                                        <td><?php echo htmlspecialchars($row['day_name'] ?? '', ENT_QUOTES, 'UTF-8'); ?></td>
-                                        <td><?php echo htmlspecialchars($row['class_date'], ENT_QUOTES, 'UTF-8'); ?></td>
+                                        <td><?php echo htmlspecialchars($row['day'] ?? '', ENT_QUOTES, 'UTF-8'); ?></td>
+
                                         <td>
                                             <?php echo htmlspecialchars(date('g:i A', strtotime($row['start_time'])), ENT_QUOTES, 'UTF-8'); ?>
                                             –
