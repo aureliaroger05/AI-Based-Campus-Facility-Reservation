@@ -1,6 +1,6 @@
 <?php
     $page_title = 'Profile';
-    $body_class = 'admin-dashboard-page profile-page';
+    $body_class = 'profile-page';
     require 'auth.php';
     if (!isLoggedIn()) {
         header('Location: login.php');
@@ -146,94 +146,73 @@
     require 'reservations.php';
     $res = getUserReservations();
 ?>
-<div class="admin-dashboard-shell">
-    <aside class="admin-sidebar" id="adminSidebar" aria-label="Account navigation">
-        <a class="admin-sidebar-brand" href="index.php">
-            <img src="images/aclc logo.png" alt="">
-            <span><strong>ACLC Reservation</strong><small>Campus workspace</small></span>
-        </a>
-
-        <nav class="admin-sidebar-nav">
-            <span class="admin-nav-caption">Account</span>
-            <a class="admin-sidebar-link" href="index.php" data-spa-view="calendar"><i class="bi bi-house-door"></i><span>Reservation calendar</span></a>
-            <a class="admin-sidebar-link is-active" href="profile.php" data-spa-view="profile" aria-current="page"><i class="bi bi-person"></i><span>My profile</span></a>
-        </nav>
-
-        <div class="admin-sidebar-footer">
-            <span class="admin-user-avatar"><?php echo htmlspecialchars(strtoupper(substr((string)($_SESSION['username'] ?? 'U'), 0, 1)), ENT_QUOTES, 'UTF-8'); ?></span>
-            <span class="admin-sidebar-user"><strong><?php echo htmlspecialchars($_SESSION['username'] ?? 'User', ENT_QUOTES, 'UTF-8'); ?></strong><small>Student</small></span>
-            <a class="admin-logout-link" href="logout.php" data-confirm="Are you sure you want to log out?" aria-label="Log out"><i class="bi bi-box-arrow-right"></i></a>
-        </div>
-    </aside>
-
-    <button class="admin-sidebar-backdrop" type="button" aria-label="Close navigation" tabindex="-1"></button>
-
-    <div class="admin-dashboard-workspace">
-        <header class="admin-topbar">
-            <button class="admin-sidebar-toggle" type="button" aria-label="Open navigation" aria-controls="adminSidebar" aria-expanded="false">
-                <i class="bi bi-list"></i>
+<nav class="navbar navbar-expand-md navbar-dark bg-primary sticky-top">
+        <div class="container">
+            <img src="images/aclc logo.png" alt="ACLC Logo" class="navbar-aclc-logo"><a class="navbar-brand fw-bold" href="index.php"><i class="bi bi-building me-2"></i>ACLC Reservation</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="admin-topbar-breadcrumb"><span>Account</span><i class="bi bi-chevron-right"></i><strong>My Profile</strong></div>
-            <div class="admin-topbar-tools">
-                <?php require __DIR__ . '/notifications_bar.php'; ?>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="navbar-nav ms-auto">
+                    <a class="nav-link<?php echo basename($_SERVER['PHP_SELF']) === 'index.php' ? ' active' : ''; ?>" href="index.php"><i class="bi bi-house"></i> Home</a>
+                    <a class="nav-link" href="profile.php"><i class="bi bi-person"></i> Profile</a>
+                    <?php require __DIR__ . '/notifications_bar.php'; ?>
+                    <a class="nav-link" href="logout.php" data-confirm="Are you sure you want to log out?"><i class="bi bi-box-arrow-right"></i> Logout (<?php echo htmlspecialchars($_SESSION['username']); ?>)</a>
+                </div>
             </div>
-            <div class="admin-topbar-user">
-                <span class="admin-user-avatar"><?php echo htmlspecialchars(strtoupper(substr((string)($_SESSION['username'] ?? 'U'), 0, 1)), ENT_QUOTES, 'UTF-8'); ?></span>
-                <span><strong><?php echo htmlspecialchars($_SESSION['username'] ?? 'User', ENT_QUOTES, 'UTF-8'); ?></strong><small>Student</small></span>
-            </div>
-        </header>
-
-        <main class="admin-dashboard-main">
-            <div class="container-fluid admin-dashboard-content">
-                <div class="profile-main">
-                    <div class="container mt-4">
+        </div>
+    </nav>
+    <main class="py-5 profile-main">
+    <div class="container mt-4">
         <div class="profile-page-heading">
             <span class="profile-heading-icon"><i class="bi bi-person-badge"></i></span>
             <div>
-                <h2 class="mb-1">My Profile</h2>
+                <h2 class="mb-1">My Profile, <?php echo htmlspecialchars($user['first_name'] ?? $user['username'] ?? 'User'); ?></h2>
                 <p class="mb-0">Manage your personal information and view your reservations.</p>
             </div>
         </div>
 
         <?php if ($reservationActionMessage !== null): ?>
-            <div class="alert alert-<?php echo htmlspecialchars($reservationActionMessage[0]); ?> alert-dismissible fade show" role="status">
+            <div class="alert alert-<?php echo htmlspecialchars($reservationActionMessage[0]); ?> alert-dismissible fade show profile-alert" role="status">
+                <span class="profile-alert-icon"><i class="bi bi-<?php echo $reservationActionMessage[0] === 'success' ? 'check-circle' : ($reservationActionMessage[0] === 'danger' ? 'exclamation-triangle' : 'info-circle'); ?>"></i></span>
                 <?php echo htmlspecialchars($reservationActionMessage[1]); ?>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         <?php endif; ?>
         <?php if ($profileMessage !== null): ?>
-            <div class="alert alert-<?php echo htmlspecialchars($profileMessage[0]); ?> alert-dismissible fade show" role="status">
+            <div class="alert alert-<?php echo htmlspecialchars($profileMessage[0]); ?> alert-dismissible fade show profile-alert" role="status">
+                <span class="profile-alert-icon"><i class="bi bi-<?php echo $profileMessage[0] === 'success' ? 'check-circle' : ($profileMessage[0] === 'danger' ? 'exclamation-triangle' : 'info-circle'); ?>"></i></span>
                 <?php echo htmlspecialchars($profileMessage[1]); ?>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         <?php endif; ?>
 
         <!-- Stats Overview -->
-        <div class="row g-3 mb-4">
+        <div class="profile-stats-row row g-3 mb-4">
             <div class="col-md-4">
-                <div class="card admin-stat-card admin-stat-reservations">
-                    <div class="card-body">
-                        <span class="admin-stat-icon"><i class="bi bi-calendar2-check"></i></span>
-                        <div><p class="admin-stat-label">Total Reservations</p>
-                        <h2><?php echo count($res ?? []); ?></h2></div>
+                <div class="profile-stat-card">
+                    <span class="profile-stat-icon"><i class="bi bi-calendar2-check"></i></span>
+                    <div class="profile-stat-content">
+                        <span class="profile-stat-label">Total Reservations</span>
+                        <span class="profile-stat-value"><?php echo count($res ?? []); ?></span>
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card admin-stat-card admin-stat-confirmed">
-                    <div class="card-body">
-                        <span class="admin-stat-icon"><i class="bi bi-check2-circle"></i></span>
-                        <div><p class="admin-stat-label">Upcoming</p>
-                        <h2><?php echo count(array_filter($res ?? [], fn($r) => $r['status'] === 'confirmed')); ?></h2></div>
+                <div class="profile-stat-card">
+                    <span class="profile-stat-icon text-success"><i class="bi bi-check2-circle"></i></span>
+                    <div class="profile-stat-content">
+                        <span class="profile-stat-label">Upcoming</span>
+                        <span class="profile-stat-value"><?php echo count(array_filter($res ?? [], fn($r) => $r['status'] === 'confirmed')); ?></span>
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card admin-stat-card admin-stat-completed">
-                    <div class="card-body">
-                        <span class="admin-stat-icon"><i class="bi bi-patch-check"></i></span>
-                        <div><p class="admin-stat-label">Completed</p>
-                        <h2><?php echo count(array_filter($res ?? [], fn($r) => $r['status'] === 'completed')); ?></h2></div>
+                <div class="profile-stat-card">
+                    <span class="profile-stat-icon text-primary"><i class="bi bi-patch-check"></i></span>
+                    <div class="profile-stat-content">
+                        <span class="profile-stat-label">Completed</span>
+                        <span class="profile-stat-value"><?php echo count(array_filter($res ?? [], fn($r) => $r['status'] === 'completed')); ?></span>
                     </div>
                 </div>
             </div>
@@ -295,7 +274,7 @@
                 <input type="text" class="form-control" value="<?php echo htmlspecialchars($user['username']); ?>" disabled aria-label="Username">
             </div>
             <div class="mb-3 profile-form-field profile-form-name">
-                <label class="form-label">Name</label>
+                <label class="form-label">Full Name</label>
                 <div class="row g-2">
                     <div class="col-6 col-md-3">
                         <input type="text" class="form-control form-control-sm" name="first_name" placeholder="First" value="<?php echo htmlspecialchars($user['first_name'] ?? ''); ?>" required>
@@ -313,28 +292,43 @@
             </div>
 
 
-            <div class="mb-3 profile-form-field">
-                <label class="form-label">Birthdate</label>
-                <input type="date" class="form-control" name="birthdate" value="<?php echo htmlspecialchars($user['birthdate'] ?? ''); ?>">
+            <div class="mb-3 profile-form-field profile-form-contact">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" name="email" value="<?php echo htmlspecialchars($user['email'] ?? ''); ?>">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Phone</label>
+                            <input type="tel" class="form-control" name="phone" value="<?php echo htmlspecialchars($user['phone'] ?? ''); ?>">
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="mb-3 profile-form-field">
-                <label class="form-label">Gender</label>
-                <select class="form-select" name="gender" required>
-                    <?php $g = $user['gender'] ?? ''; ?>
-                    <option value="" <?php echo ($g === '' || $g === null) ? 'selected' : ''; ?> disabled>Choose gender</option>
-                    <option value="male" <?php echo ($g === 'male') ? 'selected' : ''; ?>>Male</option>
-                    <option value="female" <?php echo ($g === 'female') ? 'selected' : ''; ?>>Female</option>
-                </select>
-            </div>
-
-            <div class="mb-3 profile-form-field">
-                <label class="form-label">Email</label>
-                <input type="email" class="form-control" name="email" value="<?php echo htmlspecialchars($user['email'] ?? ''); ?>">
-            </div>
-            <div class="mb-3 profile-form-field">
-                <label class="form-label">Phone</label>
-                <input type="tel" class="form-control" name="phone" value="<?php echo htmlspecialchars($user['phone'] ?? ''); ?>">
+            <div class="mb-3 profile-form-field profile-form-details">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Birthdate</label>
+                            <input type="date" class="form-control" name="birthdate" value="<?php echo htmlspecialchars($user['birthdate'] ?? ''); ?>">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Gender</label>
+                            <select class="form-select" name="gender" required>
+                                <?php $g = $user['gender'] ?? ''; ?>
+                                <option value="" <?php echo ($g === '' || $g === null) ? 'selected' : ''; ?> disabled>Choose gender</option>
+                                <option value="male" <?php echo ($g === 'male') ? 'selected' : ''; ?>>Male</option>
+                                <option value="female" <?php echo ($g === 'female') ? 'selected' : ''; ?>>Female</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="profile-form-actions">
                 <button type="submit" name="update" class="btn btn-primary"><i class="bi bi-check2-circle me-2"></i>Update Profile</button>
@@ -352,9 +346,9 @@
             <div class="card-body p-4">
         <?php if (empty($res)): ?>
             <div class="profile-empty-state">
-                <i class="bi bi-calendar-x"></i>
+                <div class="profile-empty-icon"><i class="bi bi-calendar-x"></i></div>
                 <p class="mb-0">You don't have any reservations yet.</p>
-                <a href="index.php" class="btn btn-outline-primary btn-sm mt-3"><i class="bi bi-building me-2"></i>Browse Facilities</a>
+                <a href="index.php" class="btn btn-primary btn-sm mt-3"><i class="bi bi-building me-2"></i>Browse Facilities</a>
             </div>
         <?php else: ?>
         <div class="table-responsive">
@@ -397,10 +391,6 @@
         <?php endif; ?>
             </div>
         </section>
-                </div>
-            </div>
-        </main>
-    </div>
 </div>
-</div>
+</main>
 <?php require 'footer.php'; ?>

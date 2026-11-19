@@ -48,28 +48,22 @@ body::before {
     box-shadow: 0 6px 20px rgba(16, 47, 80, 0.2);
 }
 
-body.profile-page > .navbar.bg-primary,
 body.calendar-page > .navbar.bg-primary {
     border-bottom: 1px solid #dce5ef;
     background: #fff !important;
     box-shadow: 0 5px 18px rgba(18, 59, 102, 0.08);
 }
 
-body.profile-page > .navbar .navbar-brand,
-body.profile-page > .navbar .nav-link,
 body.calendar-page > .navbar .navbar-brand,
 body.calendar-page > .navbar .nav-link {
     color: #29364d !important;
 }
 
-body.profile-page > .navbar .nav-link,
 body.calendar-page > .navbar .nav-link {
     border-color: transparent;
     border-radius: 0.65rem;
 }
 
-body.profile-page > .navbar .nav-link:hover,
-body.profile-page > .navbar .nav-link:focus-visible,
 body.calendar-page > .navbar .nav-link:hover,
 body.calendar-page > .navbar .nav-link:focus-visible {
     border-color: #c9dced;
@@ -77,12 +71,10 @@ body.calendar-page > .navbar .nav-link:focus-visible {
     color: #1769aa !important;
 }
 
-body.profile-page > .navbar .navbar-toggler,
 body.calendar-page > .navbar .navbar-toggler {
     border-color: #dce5ef;
 }
 
-body.profile-page > .navbar .navbar-toggler-icon,
 body.calendar-page > .navbar .navbar-toggler-icon {
     filter: invert(0.7);
 }
@@ -1118,6 +1110,14 @@ canvas {
 
 .admin-stat-reservations {
     background: linear-gradient(135deg, #7144b5, #8b5ccb);
+}
+
+.admin-stat-confirmed {
+    background: linear-gradient(135deg, #1e8e49, #27ae60);
+}
+
+.admin-stat-completed {
+    background: linear-gradient(135deg, #087f75, #139b83);
 }
 
 .admin-stat-icon {
@@ -5788,7 +5788,93 @@ html[data-admin-theme="dark"] .btn-outline-light:focus-visible {
     line-height: 1.1;
 }
 
-/* Enhanced profile panel cards */
+/* Profile alerts with icons */
+.profile-alert {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid transparent;
+    border-radius: 0.85rem;
+}
+
+.profile-alert-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    flex: 0 0 2rem;
+    border-radius: 0.55rem;
+    font-size: 1rem;
+}
+
+.profile-alert.alert-success {
+    background: #f0fdf4;
+    border-color: #bbf7d0;
+    color: #166534;
+}
+
+.profile-alert.alert-success .profile-alert-icon {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.profile-alert.alert-danger {
+    background: #fef2f2;
+    border-color: #fecaca;
+    color: #991b1b;
+}
+
+.profile-alert.alert-danger .profile-alert-icon {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.profile-alert.alert-warning,
+.profile-alert.alert-info {
+    background: #fffbeb;
+    border-color: #fde68a;
+    color: #92400e;
+}
+
+.profile-alert.alert-warning .profile-alert-icon,
+.profile-alert.alert-info .profile-alert-icon {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+/* Enhanced empty state */
+.profile-empty-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 1rem;
+    background: #eef6fd;
+    color: var(--site-blue);
+    font-size: 1.75rem;
+    box-shadow: 0 4px 10px rgba(23, 105, 170, 0.1);
+}
+
+.profile-empty-state {
+    display: flex;
+    min-height: 9rem;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    border: 1px dashed #c9d7e6;
+    border-radius: 0.85rem;
+    background: #f8fbfe;
+    color: var(--site-muted);
+}
+
+.profile-empty-state i {
+    color: #7b9bbb;
+    font-size: 2rem;
+}
 .profile-panel {
     border: 1px solid var(--site-line);
     box-shadow: 0 4px 16px rgba(23, 43, 77, 0.05);
