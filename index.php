@@ -811,24 +811,20 @@ $calendarPagePath = ($qsPos !== false ? substr($uri, 0, $qsPos) : $uri) ?: '/ind
             for ($day = 1; $day <= $daysInMonth; $day++) {
                 $dateString = $monthStart->format('Y-m-') . str_pad((string)$day, 2, '0', STR_PAD_LEFT);
                 $reservedFacilities = 0;
-                $partiallyReservedFacilities = 0;
 
                 foreach ($facilityStatuses as $statuses) {
                     $state = $statuses[$dateString]['state'] ?? 'available';
                     if ($state === 'reserved') {
                         $reservedFacilities++;
-                    } elseif ($state === 'partial') {
-                        $partiallyReservedFacilities++;
                     }
                 }
 
                 $allFacilitiesReserved = count($facilities) === 0 || $reservedFacilities === count($facilities);
-                $dateIsPartial = $reservedFacilities > 0 || $partiallyReservedFacilities > 0;
                 $allDateStatuses[$dateString] = [
-                    'state' => $allFacilitiesReserved ? 'reserved' : ($dateIsPartial ? 'partial' : 'available'),
+                    'state' => $allFacilitiesReserved ? 'reserved' : 'available',
                     'label' => $allFacilitiesReserved
                         ? 'No facilities available'
-                        : ($dateIsPartial ? 'Some facilities reserved' : 'Available'),
+                        : 'Available',
                     'available' => !$allFacilitiesReserved,
                 ];
             }
@@ -897,7 +893,6 @@ $calendarPagePath = ($qsPos !== false ? substr($uri, 0, $qsPos) : $uri) ?: '/ind
                     </div>
                     <div class="calendar-legend d-flex flex-wrap gap-3 small text-muted">
                         <span><span class="d-inline-block rounded me-1" style="width:12px;height:12px;background:#edf8f2;"></span>Available</span>
-                        <span><span class="d-inline-block rounded me-1" style="width:12px;height:12px;background:linear-gradient(135deg,#f8e9c9 50%,#fff 50%);"></span>Some facilities reserved</span>
                         <span><span class="d-inline-block rounded me-1" style="width:12px;height:12px;background:#d9575c;"></span>No facilities available</span>
                         <span><span class="d-inline-block rounded me-1" style="width:12px;height:12px;background:#e9ebf0;"></span>School closed</span>
                     </div>
