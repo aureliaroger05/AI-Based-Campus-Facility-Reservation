@@ -172,6 +172,11 @@ $previousMonth = $monthStart->modify('-1 month')->format('Y-m');
 $nextMonth = $monthStart->modify('+1 month')->format('Y-m');
 $today = $manilaNow->format('Y-m-d');
 $minimumReservationDate = $manilaNow->setTime(0, 0)->modify('+3 days')->format('Y-m-d');
+
+// Compute the path for the calendar page (used for AJAX month navigation)
+$uri = $_SERVER['REQUEST_URI'] ?? '/index.php';
+$qsPos = strpos($uri, '?');
+$calendarPagePath = ($qsPos !== false ? substr($uri, 0, $qsPos) : $uri) ?: '/index.php';
 ?>
 
 <style>
@@ -1400,73 +1405,24 @@ function formatTimeRange(range) {
         window.reservationTimeUpdateInterval = null;
     }, { once: true });
 </script>
-<!-- Calendar navigation fix - prevents page reload -->
+<!-- Calendar navigation AJAX (fixes page reload, keeps buttons side-by-side) -->
 <script>
-document.body.addEventListener('click', function(e) {
-    const link = e.target.closest('.calendar-heading a');
-    if (!link || !link.href.includes('index.php?month=')) return;
-    
-    e.preventDefault();
-    const href = link.href;
-    const url = new URL(href, window.location.origin);
-    const month = url.searchParams.get('month');
-    
-    if (!month) return;
-    
-    // Parse year and month from the URL
-    const [year, monthNum] = month.split('-');
-    const currentYear = year ? parseInt(year) : new Date().getFullYear();
-    const currentMonth = monthNum ? parseInt(monthNum) : new Date().getMonth() + 1;
-    
-    let newMonth, newYear;
-    if (link.classList.contains('next') || link.getAttribute('aria-label').includes('Next')) {
-        newMonth = currentMonth + 1;
-        newYear = newMonth > 12 ? currentYear + 1 : currentYear;
-        newMonth = newMonth > 12 ? newMonth - 12 : newMonth;
-    } else {
-        newMonth = currentMonth - 1;
-        newYear = newMonth < 1 ? currentYear - 1 : currentYear;
-        newMonth = newMonth < 1 ? newMonth + 12 : newMonth;
-    }
-    
-    const dateStr = newYear + '-' + ('0' + newMonth).slice(-2);
-    
-    // Load calendar via AJAX without page reload
-    const container = document.getElementById('reservation-calendar');
-    if (!container) return;
-    
-    fetch('index.php?month=' + dateStr)
-        .then(response => response.text())
-        .then(html => {
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, 'text/html');
-            const newCalendar = doc.querySelector('#reservation-calendar');
-            if (newCalendar) {
-                container.innerHTML = newCalendar.innerHTML;
-            }
-        })
-        .catch(error => {
-            console.error('Error loading calendar:', error);
-        });
-});
-</script>
-<!-- Calendar navigation AJAX (fixes page reload, buttons side-by-side) -->
-<script>
-document.body.addEventListener('click', function(e) {
+function handleReservationCalendarNavigation(e) {
     const link = e.target.closest('.calendar-heading a[data-action]');
     if (!link) return;
-    
+
     e.preventDefault();
     const action = link.dataset.action;
+    const calendarPageUrl = <?php echo json_encode($calendarPagePath); ?>;
     const yearEl = document.querySelector('.calendar-year');
     const year = yearEl ? parseInt(yearEl.textContent) : new Date().getFullYear();
     const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-    
+
     // Get current month from the displayed month name
     const monthEl = document.querySelector('.calendar-heading h5 span:first-child');
     const currentMonthText = monthEl ? monthEl.textContent : 'January';
     const currentMonth = monthNames.indexOf(currentMonthText) + 1;
-    
+
     let newMonth, newYear;
     if (action === 'next') {
         newMonth = currentMonth + 1;
@@ -1477,39 +1433,49 @@ document.body.addEventListener('click', function(e) {
         newYear = newMonth < 1 ? year - 1 : year;
         newMonth = newMonth < 1 ? newMonth + 12 : newMonth;
     }
-    
+
     const dateStr = newYear + '-' + ('0' + newMonth).slice(-2);
-    
-    fetch('index.php?month=' + dateStr)
+
+    fetch(calendarPageUrl + '?month=' + dateStr)
         .then(response => response.text())
         .then(html => {
             const parser = new DOMParser();
             const doc = parser.parseFromString(html, 'text/html');
-            
-            // Update calendar days
+
+            // Update calendar days and keep the grid row definition in sync
+            // with the new month's week count.
+            const currentCalendar = document.getElementById('reservation-calendar');
             const newCalendar = doc.querySelector('#reservation-calendar');
-            if (newCalendar) {
-                document.getElementById('reservation-calendar').innerHTML = newCalendar.innerHTML;
+            if (currentCalendar && newCalendar) {
+                currentCalendar.innerHTML = newCalendar.innerHTML;
+                if (newCalendar.hasAttribute('style')) {
+                    currentCalendar.setAttribute('style', newCalendar.getAttribute('style'));
+                }
             }
-            
+
             // Update year
             const newYearEl = doc.querySelector('.calendar-year');
-            if (newYearEl) {
+            if (newYearEl && yearEl) {
                 yearEl.textContent = newYearEl.textContent;
             }
-            
-            // Update month name - try to get from new HTML, fallback to calculation
+
+            // Update month name - use the new HTML when available, otherwise
+            // fall back to the locally calculated value.
             const newMonthNameEl = doc.querySelector('.calendar-heading h5 span:first-child');
-            if (newMonthNameEl) {
-                document.querySelector('.calendar-heading h5 span:first-child').textContent = newMonthNameEl.textContent;
-            } else {
-                document.querySelector('.calendar-heading h5 span:first-child').textContent = monthNames[newMonth - 1];
+            if (newMonthNameEl && monthEl) {
+                monthEl.textContent = newMonthNameEl.textContent;
+            } else if (monthEl) {
+                monthEl.textContent = monthNames[newMonth - 1];
             }
         })
         .catch(error => {
             console.error('Error loading calendar:', error);
         });
-});
+}
+document.body.addEventListener('click', handleReservationCalendarNavigation);
+document.addEventListener('admin:view-unloading', function () {
+    document.body.removeEventListener('click', handleReservationCalendarNavigation);
+}, { once: true });
 </script>
 
 <?php require 'footer.php'; ?>
