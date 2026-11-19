@@ -106,7 +106,7 @@ try {
         'SELECT cs.id, cs.day, cs.start_time, cs.end_time, cs.subject, COALESCE(f.name, "Facility " || cs.facility_id) AS facility_name '
  .
         'FROM class_schedules cs LEFT JOIN facilities f ON f.id = cs.facility_id ' .
-        'ORDER BY cs.class_date DESC, cs.start_time ASC LIMIT 300'
+        'ORDER BY cs.class_day DESC, cs.start_time ASC LIMIT 300'
     );
     $scheduleStmt->execute();
     $scheduleRows = $scheduleStmt->fetchAll();
