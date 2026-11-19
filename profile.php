@@ -1,6 +1,6 @@
 <?php
     $page_title = 'Profile';
-    $body_class = 'profile-page';
+    $body_class = 'admin-dashboard-page profile-page';
     require 'auth.php';
     if (!isLoggedIn()) {
         header('Location: login.php');
@@ -146,24 +146,47 @@
     require 'reservations.php';
     $res = getUserReservations();
 ?>
-<nav class="navbar navbar-expand-md navbar-dark bg-primary sticky-top">
-        <div class="container">
-            <img src="images/aclc logo.png" alt="ACLC Logo" class="navbar-aclc-logo"><a class="navbar-brand fw-bold" href="index.php"><i class="bi bi-building me-2"></i>ACLC Reservation</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <div class="navbar-nav ms-auto">
-                    <a class="nav-link<?php echo basename($_SERVER['PHP_SELF']) === 'index.php' ? ' active' : ''; ?>" href="index.php"><i class="bi bi-house"></i> Home</a>
-                    <a class="nav-link" href="profile.php"><i class="bi bi-person"></i> Profile</a>
-                    <?php require __DIR__ . '/notifications_bar.php'; ?>
-                    <a class="nav-link" href="logout.php" data-confirm="Are you sure you want to log out?"><i class="bi bi-box-arrow-right"></i> Logout (<?php echo htmlspecialchars($_SESSION['username']); ?>)</a>
-                </div>
-            </div>
+<div class="admin-dashboard-shell">
+    <aside class="admin-sidebar" id="adminSidebar" aria-label="Account navigation">
+        <a class="admin-sidebar-brand" href="index.php">
+            <img src="images/aclc logo.png" alt="">
+            <span><strong>ACLC Reservation</strong><small>Campus workspace</small></span>
+        </a>
+
+        <nav class="admin-sidebar-nav">
+            <span class="admin-nav-caption">Account</span>
+            <a class="admin-sidebar-link" href="index.php" data-spa-view="calendar"><i class="bi bi-house-door"></i><span>Reservation calendar</span></a>
+            <a class="admin-sidebar-link is-active" href="profile.php" data-spa-view="profile" aria-current="page"><i class="bi bi-person"></i><span>My profile</span></a>
+        </nav>
+
+        <div class="admin-sidebar-footer">
+            <span class="admin-user-avatar"><?php echo htmlspecialchars(strtoupper(substr((string)($_SESSION['username'] ?? 'U'), 0, 1)), ENT_QUOTES, 'UTF-8'); ?></span>
+            <span class="admin-sidebar-user"><strong><?php echo htmlspecialchars($_SESSION['username'] ?? 'User', ENT_QUOTES, 'UTF-8'); ?></strong><small>Student</small></span>
+            <a class="admin-logout-link" href="logout.php" data-confirm="Are you sure you want to log out?" aria-label="Log out"><i class="bi bi-box-arrow-right"></i></a>
         </div>
-    </nav>
-    <main class="py-5 profile-main">
-    <div class="container mt-4">
+    </aside>
+
+    <button class="admin-sidebar-backdrop" type="button" aria-label="Close navigation" tabindex="-1"></button>
+
+    <div class="admin-dashboard-workspace">
+        <header class="admin-topbar">
+            <button class="admin-sidebar-toggle" type="button" aria-label="Open navigation" aria-controls="adminSidebar" aria-expanded="false">
+                <i class="bi bi-list"></i>
+            </button>
+            <div class="admin-topbar-breadcrumb"><span>Account</span><i class="bi bi-chevron-right"></i><strong>My Profile</strong></div>
+            <div class="admin-topbar-tools">
+                <?php require __DIR__ . '/notifications_bar.php'; ?>
+            </div>
+            <div class="admin-topbar-user">
+                <span class="admin-user-avatar"><?php echo htmlspecialchars(strtoupper(substr((string)($_SESSION['username'] ?? 'U'), 0, 1)), ENT_QUOTES, 'UTF-8'); ?></span>
+                <span><strong><?php echo htmlspecialchars($_SESSION['username'] ?? 'User', ENT_QUOTES, 'UTF-8'); ?></strong><small>Student</small></span>
+            </div>
+        </header>
+
+        <main class="admin-dashboard-main">
+            <div class="container-fluid admin-dashboard-content">
+                <div class="profile-main">
+                    <div class="container mt-4">
         <div class="profile-page-heading">
             <span class="profile-heading-icon"><i class="bi bi-person-badge"></i></span>
             <div>
@@ -188,29 +211,29 @@
         <!-- Stats Overview -->
         <div class="row g-3 mb-4">
             <div class="col-md-4">
-                <div class="profile-stat-card">
-                    <span class="profile-stat-icon"><i class="bi bi-calendar2-check"></i></span>
-                    <div class="profile-stat-content">
-                        <span class="profile-stat-label">Total Reservations</span>
-                        <span class="profile-stat-value"><?php echo count($res ?? []); ?></span>
+                <div class="card admin-stat-card admin-stat-reservations">
+                    <div class="card-body">
+                        <span class="admin-stat-icon"><i class="bi bi-calendar2-check"></i></span>
+                        <div><p class="admin-stat-label">Total Reservations</p>
+                        <h2><?php echo count($res ?? []); ?></h2></div>
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="profile-stat-card">
-                    <span class="profile-stat-icon text-success"><i class="bi bi-check2-circle"></i></span>
-                    <div class="profile-stat-content">
-                        <span class="profile-stat-label">Upcoming</span>
-                        <span class="profile-stat-value"><?php echo count(array_filter($res ?? [], fn($r) => $r['status'] === 'confirmed')); ?></span>
+                <div class="card admin-stat-card admin-stat-confirmed">
+                    <div class="card-body">
+                        <span class="admin-stat-icon"><i class="bi bi-check2-circle"></i></span>
+                        <div><p class="admin-stat-label">Upcoming</p>
+                        <h2><?php echo count(array_filter($res ?? [], fn($r) => $r['status'] === 'confirmed')); ?></h2></div>
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="profile-stat-card">
-                    <span class="profile-stat-icon text-primary"><i class="bi bi-patch-check"></i></span>
-                    <div class="profile-stat-content">
-                        <span class="profile-stat-label">Completed</span>
-                        <span class="profile-stat-value"><?php echo count(array_filter($res ?? [], fn($r) => $r['status'] === 'completed')); ?></span>
+                <div class="card admin-stat-card admin-stat-completed">
+                    <div class="card-body">
+                        <span class="admin-stat-icon"><i class="bi bi-patch-check"></i></span>
+                        <div><p class="admin-stat-label">Completed</p>
+                        <h2><?php echo count(array_filter($res ?? [], fn($r) => $r['status'] === 'completed')); ?></h2></div>
                     </div>
                 </div>
             </div>
@@ -374,6 +397,10 @@
         <?php endif; ?>
             </div>
         </section>
+                </div>
+            </div>
+        </main>
+    </div>
 </div>
-</main>
+</div>
 <?php require 'footer.php'; ?>
