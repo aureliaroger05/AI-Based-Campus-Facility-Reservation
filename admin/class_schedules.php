@@ -159,46 +159,7 @@ require '../header.php';
             </div>
         <?php endif; ?>
 
-        <section class="card admin-view-card mb-4">
-            <div class="card-header admin-section-heading">
-                <span><i class="bi bi-upload me-2"></i>Import a schedule</span>
-            </div>
-            <div class="card-body">
-                <p>
-                    Use one row per class, with the facility name exactly as it appears in the system.
-                    Required columns: <code>facility, day, subject, start_time, end_time</code>.
-                    Dates: <code>YYYY-MM-DD</code> or <code>M/D/YYYY</code>. Times: <code>HH:MM</code>,
-                    <code>HH:MM:SS</code>, or a 12-hour time with AM/PM.
-                </p>
-                <div class="d-flex flex-wrap gap-2 mb-3">
-                    <a class="btn btn-outline-primary" href="../assets/templates/class_schedule_template.csv" download>
-                        <i class="bi bi-download me-1"></i>Download CSV Template
-                    </a>
-                    <?php if (!empty($scheduleRows)): ?>
-                    <form method="POST" class="d-inline" data-confirm="Are you sure you want to delete ALL imported class schedules?">
-                        <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['class_schedule_csrf'], ENT_QUOTES, 'UTF-8'); ?>">
-                        <button class="btn btn-outline-danger" type="submit" name="clear_all_schedules">
-                            <i class="bi bi-trash3 me-1"></i>Clear All Schedules
-                        </button>
-                    </form>
-                    <?php endif; ?>
-                </div>
-                <form method="POST" enctype="multipart/form-data">
-                    <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['class_schedule_csrf'], ENT_QUOTES, 'UTF-8'); ?>">
-                    <input type="hidden" name="MAX_FILE_SIZE" value="5242880">
-                    <div class="mb-3">
-                        <label class="form-label" for="schedule-file">Schedule CSV (maximum 5 MB)</label>
-                        <input class="form-control" id="schedule-file" type="file" name="schedule_file" accept=".csv,text/csv" required>
-                    </div>
-                    <div class="form-check mb-3">
-                        <input class="form-check-input" type="checkbox" name="replace_existing" id="replace-existing" value="1" checked>
-                        <label class="form-check-label" for="replace-existing">
-                            <strong>Replace existing class schedules</strong> (clears older / outdated schedules before importing this file)
-                        </label>
-                    </div>
-                    <button class="btn btn-primary" type="submit">
-                        <i class="bi bi-upload me-1"></i>Validate and Import
-                    </button>
+       
                 </form>
                 <p class="small text-muted mt-3 mb-0">
                     The import is all-or-nothing. Invalid rows or overlapping classes prevent the entire file from being imported.
