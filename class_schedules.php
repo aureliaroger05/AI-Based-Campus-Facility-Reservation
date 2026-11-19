@@ -338,43 +338,6 @@ function importClassScheduleCsv(string $filePath, bool $replaceExisting = false)
                 $row['start_time'] = parseClassScheduleTime($row['start_time']);
                 $row['end_time'] = parseClassScheduleTime($row['end_time']);
 
-                // Get day name from CSV (new format: facility,day,subject,start_time,end_time)
-                $dayName = strtolower(trim($row['day'] ?? ''));
-                
-                // Convert day name to actual date (reference: November 2026 dates in existing CSV)
-                // Map day names to dates: Monday=2026-11-23 if we treat week starting, but let's use a smarter approach:
-                // Get the next occurrence of this day from today, or use current week
-                $dayMap = [
-                    'monday' => 1, 'tuesday' => 2, 'wednesday' => 3, 
-                    'thursday' => 4, 'friday' => 5, 'saturday' => 6, 'sunday' => 7
-                ];
-                
-                if (isset($dayMap[$dayName])) {
-                    // Find the next occurrence of this day number from today
-                    $today = new DateTime();
-                    $targetDay = $dayMap[$dayName];
-                    
-                    // Calculate days ahead to next occurrence
-                    $currentDay = (int)$today->format('N'); // 1=Monday, 7=Sunday
-                    $daysAhead = $targetDay - $currentDay;
-                    
-                    // If day already passed this week, go to next week
-                    if ($daysAhead <= 0) {
-                        $daysAhead += 7;
-                    }
-                    
-                    $targetDate = clone $today;
-                    $targetDate->modify("+{$daysAhead} days");
-                    $row['class_date'] = $targetDate->format('Y-m-d');
-                } else {
-                    // Fallback: try to parse as date string
-                    $row['class_date'] = parseClassScheduleDate($row['day'] ?? '');
-                }
-                
-                // Calculate day name from class_date for display (keep existing functionality)
-                $classDate = DateTime::createFromFormat('Y-m-d', $row['class_date']);
-                $row['day_name'] = $classDate ? $classDate->format('l') : $dayName;
-
                 // If exact block already exists, skip quietly
                 $exact->execute([$row['facility_id'], $row['class_date'], $row['start_time'], $row['end_time']]);
                 if ($exact->fetchColumn() !== false) {

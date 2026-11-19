@@ -17,17 +17,25 @@ try {
         'users' => 'SELECT id, username, role FROM users ORDER BY id',
         'facilities' => 'SELECT id, name, avail_slots, max_capacity FROM facilities ORDER BY id',
         'reservations' => 'SELECT id, user_id, facility_id, reserve_date, start_time, end_time, reserve_time, status FROM reservations ORDER BY id',
-        'class_schedules' => 'SELECT id, facility_id, class_date, start_time, end_time FROM class_schedules ORDER BY id',
+        'class_schedules' => 'SELECT id, facility_id, class_date, start_time, end_time, subject FROM class_schedules ORDER BY id',
     ];
 
     foreach ($queries as $table => $query) {
         hash_update($revision, $table . "\n");
-        $statement = $pdo->query($query);
-        while ($row = $statement->fetch(PDO::FETCH_NUM)) {
-            hash_update(
-                $revision,
-                json_encode($row, JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE) . "\n"
-            );
+        try {
+            $statement = $pdo->query($query);
+            while ($row = $statement->fetch(PDO::FETCH_NUM)) {
+                hash_update(
+                    $revision,
+                    json_encode($row, JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE) . "\n"
+                );
+            }
+        } catch (PDOException $e) {
+            // Table may not exist yet (e.g., class_schedules before migration)
+            if ($e->getCode() === '42S02' || (int)($e->errorInfo[1] ?? 0) === 1146) {
+                continue;
+            }
+            throw $e;
         }
     }
 
