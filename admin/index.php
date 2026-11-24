@@ -29,7 +29,7 @@ if (isset($_POST['delete_facility'])) {
             'message' => 'Unable to delete facility. It may still be linked to reservations.',
         ];
     }
-    header('Location: index.php');
+    header('Location: index.php#facilities');
     exit;
 }
 
@@ -47,7 +47,7 @@ if (isset($_POST['delete_user'])) {
             'message' => 'Unable to delete user. The account may still be linked to reservations.',
         ];
     }
-    header('Location: index.php');
+    header('Location: index.php#users');
     exit;
 }
 

@@ -29,7 +29,7 @@ if (isset($_POST['add'])) {
                     'type' => 'success',
                     'message' => 'Facility added successfully.',
                 ];
-                header('Location: index.php');
+                header('Location: index.php#facilities');
                 exit;
             }
             $formError = 'The facility could not be added.';

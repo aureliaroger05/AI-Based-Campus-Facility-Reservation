@@ -42,7 +42,7 @@ if (isset($_POST['save'])) {
                     'type' => 'success',
                     'message' => 'Facility updated successfully.',
                 ];
-                header('Location: index.php');
+                header('Location: index.php#facilities');
                 exit;
             } else {
                 $formError = 'The facility could not be updated.';
