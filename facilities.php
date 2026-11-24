@@ -24,8 +24,12 @@ if (!function_exists('addFacility')) {
 function addFacility($data) {
     if (!isAdmin()) return false;
     $pdo = getDB();
-    $stmt = $pdo->prepare("INSERT INTO facilities (name) VALUES (?)");
-    return $stmt->execute([$data['name']]);
+    $stmt = $pdo->prepare("INSERT INTO facilities (name, description, max_capacity) VALUES (?, ?, ?)");
+    return $stmt->execute([
+        $data['name'],
+        $data['description'] ?? null,
+        (int)($data['max_capacity'] ?? 1)
+    ]);
 }
 }
 
@@ -35,8 +39,13 @@ function updateFacility($id, $data) {
     if (!isAdmin()) return false;
     $pdo = getDB();
 
-    $stmt = $pdo->prepare("UPDATE facilities SET name = ? WHERE id = ?");
-    return $stmt->execute([$data['name'], $id]);
+    $stmt = $pdo->prepare("UPDATE facilities SET name = ?, description = ?, max_capacity = ? WHERE id = ?");
+    return $stmt->execute([
+        $data['name'],
+        $data['description'] ?? null,
+        (int)($data['max_capacity'] ?? 1),
+        $id
+    ]);
 }
 }
 

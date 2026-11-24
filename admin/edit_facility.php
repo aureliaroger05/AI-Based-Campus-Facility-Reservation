@@ -21,15 +21,23 @@ if (!$facility) {
 
 $formError = '';
 $facilityName = (string)$facility['name'];
+$facilityDescription = (string)($facility['description'] ?? '');
+$facilityMaxCapacity = (int)($facility['max_capacity'] ?? 1);
 
 if (isset($_POST['save'])) {
     $facilityName = trim((string)($_POST['name'] ?? ''));
+    $facilityDescription = trim((string)($_POST['description'] ?? ''));
+    $facilityMaxCapacity = (int)($_POST['max_capacity'] ?? 1);
 
     if ($facilityName === '') {
         $formError = 'Facility name is required.';
     } else {
         try {
-            if (updateFacility($facilityId, ['name' => $facilityName])) {
+            if (updateFacility($facilityId, [
+                'name' => $facilityName,
+                'description' => $facilityDescription,
+                'max_capacity' => $facilityMaxCapacity
+            ])) {
                 $_SESSION['dashboard_notification'] = [
                     'type' => 'success',
                     'message' => 'Facility updated successfully.',
@@ -92,6 +100,14 @@ require '../header.php';
                     <div class="mb-3">
                         <label class="form-label" for="facility-name">Facility name</label>
                         <input id="facility-name" type="text" class="form-control" name="name" value="<?php echo htmlspecialchars($facilityName); ?>" maxlength="100" required autofocus>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="facility-description">Description</label>
+                        <textarea id="facility-description" class="form-control" name="description" rows="3"><?php echo htmlspecialchars($facilityDescription); ?></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="facility-capacity">Max capacity</label>
+                        <input id="facility-capacity" type="number" class="form-control" name="max_capacity" value="<?php echo $facilityMaxCapacity; ?>" min="1" required>
                     </div>
                     <div class="admin-edit-user-actions">
                         <button type="submit" name="save" class="btn btn-success"><i class="bi bi-check2-circle me-1"></i>Save Changes</button>

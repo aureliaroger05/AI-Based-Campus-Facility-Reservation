@@ -13,12 +13,18 @@ require '../facilities.php';
 $formError = '';
 if (isset($_POST['add'])) {
     $name = trim((string)($_POST['name'] ?? ''));
+    $description = trim((string)($_POST['description'] ?? ''));
+    $maxCapacity = (int)($_POST['max_capacity'] ?? 1);
 
     if ($name === '') {
         $formError = 'Facility name is required.';
     } else {
         try {
-            if (addFacility(['name' => $name])) {
+            if (addFacility([
+                'name' => $name,
+                'description' => $description,
+                'max_capacity' => $maxCapacity
+            ])) {
                 $_SESSION['dashboard_notification'] = [
                     'type' => 'success',
                     'message' => 'Facility added successfully.',
@@ -79,6 +85,14 @@ require '../header.php';
                     <div class="mb-3">
                         <label class="form-label" for="facility-name">Facility name</label>
                         <input id="facility-name" type="text" class="form-control" name="name" value="<?php echo htmlspecialchars($_POST['name'] ?? ''); ?>" maxlength="100" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="facility-description">Description</label>
+                        <textarea id="facility-description" class="form-control" name="description" rows="3"><?php echo htmlspecialchars($_POST['description'] ?? ''); ?></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="facility-capacity">Max capacity</label>
+                        <input id="facility-capacity" type="number" class="form-control" name="max_capacity" value="<?php echo (int)($_POST['max_capacity'] ?? 1); ?>" min="1" required>
                     </div>
                     <div class="admin-edit-user-actions">
                         <button type="submit" name="add" class="btn btn-primary"><i class="bi bi-plus-circle me-1"></i>Add Facility</button>
