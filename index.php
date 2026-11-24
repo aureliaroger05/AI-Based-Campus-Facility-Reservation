@@ -943,6 +943,12 @@ $calendarPagePath = ($qsPos !== false ? substr($uri, 0, $qsPos) : $uri) ?: '/ind
                                                     <h4><?php echo htmlspecialchars($facilityName); ?></h4>
                                                     <span class="badge text-bg-success" data-facility-availability>Available</span>
                                                 </div>
+                                                <?php if (!empty($facility['description'])): ?>
+                                                <p class="reservation-facility-description text-muted small mb-2"><?php echo htmlspecialchars($facility['description']); ?></p>
+                                                <?php endif; ?>
+                                                <?php if (!empty($facility['max_capacity'])): ?>
+                                                <p class="reservation-facility-capacity text-muted small mb-2"><i class="bi bi-people me-1"></i>Max capacity: <?php echo (int)$facility['max_capacity']; ?></p>
+                                                <?php endif; ?>
                                                 <div class="reservation-facility-busy">
                                                     <span class="reservation-facility-busy-label">Busy times</span>
                                                     <div class="reservation-facility-time-chips" data-facility-reserved-times></div>
